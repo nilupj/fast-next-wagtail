@@ -12,6 +12,7 @@ dependencies = [
     "psycopg2-binary>=2.9.10",
     "pydantic>=2.11.3",
     "python-dotenv>=1.1.0",
+    "pywebpush>=2.0.3",
     "sqlalchemy>=2.0.40",
     "uvicorn>=0.34.1",
     "wagtail>=6.4.1",

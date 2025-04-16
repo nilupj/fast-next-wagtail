@@ -322,3 +322,50 @@ def well_being(request):
             'featured': [],
             'articles': [],
         })
+from django.http import JsonResponse
+from django.core.mail import send_mail
+from django.conf import settings
+from pywebpush import webpush, WebPushException
+import json
+
+def notification_subscribe(request):
+    if request.method == 'POST':
+        try:
+            subscription_info = json.loads(request.body)
+            # Store subscription info in database
+            # Send confirmation push notification
+            try:
+                webpush(
+                    subscription_info=subscription_info,
+                    data="Thanks for subscribing to notifications!",
+                    vapid_private_key=settings.VAPID_PRIVATE_KEY,
+                    vapid_claims={"sub": "mailto:admin@healthinfo.com"}
+                )
+                return JsonResponse({"status": "success"})
+            except WebPushException as e:
+                return JsonResponse({"status": "error", "message": str(e)}, status=500)
+        except json.JSONDecodeError:
+            return JsonResponse({"status": "error", "message": "Invalid JSON"}, status=400)
+    return JsonResponse({"status": "error", "message": "Method not allowed"}, status=405)
+
+def newsletter_subscribe(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            email = data.get('email')
+            if not email:
+                return JsonResponse({"status": "error", "message": "Email required"}, status=400)
+            
+            # Store email in database
+            # Send welcome email
+            send_mail(
+                'Welcome to Health Info Newsletter',
+                'Thank you for subscribing to our newsletter!',
+                'noreply@healthinfo.com',
+                [email],
+                fail_silently=False,
+            )
+            return JsonResponse({"status": "success"})
+        except json.JSONDecodeError:
+            return JsonResponse({"status": "error", "message": "Invalid JSON"}, status=400)
+    return JsonResponse({"status": "error", "message": "Method not allowed"}, status=405)

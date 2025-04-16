@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import NotificationSubscribe from './NotificationSubscribe';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -37,7 +38,7 @@ export default function Footer() {
               </li>
             </ul>
           </div>
-          
+
           <div>
             <h3 className="text-lg font-semibold text-primary mb-4">For Patients</h3>
             <ul className="space-y-2">
@@ -63,7 +64,7 @@ export default function Footer() {
               </li>
             </ul>
           </div>
-          
+
           <div>
             <h3 className="text-lg font-semibold text-primary mb-4">Health Topics</h3>
             <ul className="space-y-2">
@@ -94,7 +95,7 @@ export default function Footer() {
               </li>
             </ul>
           </div>
-          
+
           <div>
             <h3 className="text-lg font-semibold text-primary mb-4">Connect With Us</h3>
             <div className="flex space-x-4 mb-4">
@@ -137,8 +138,9 @@ export default function Footer() {
               </form>
             </div>
           </div>
+          <NotificationSubscribe/>
         </div>
-        
+
         <div className="mt-8 pt-8 border-t border-neutral-200">
           <p className="text-neutral-500 text-sm text-center">
             &copy; {currentYear} HealthInfo. All rights reserved. The content on this site is for informational purposes only and is not intended to be a substitute for professional medical advice, diagnosis, or treatment.

@@ -23,4 +23,6 @@ urlpatterns = [
     path('well-being', views.well_being, name='well_being'),
     #Symptom Checker
     path('symptom-checker/', views.symptom_checker, name='symptom_checker'),
+    path('notifications/subscribe', views.notification_subscribe, name='notification_subscribe'),
+    path('newsletter/subscribe', views.newsletter_subscribe, name='newsletter_subscribe'),
 ]
