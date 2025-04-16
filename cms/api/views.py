@@ -280,48 +280,31 @@ def search_conditions(request):
 
 def well_being(request):
     """Get articles for the well-being section"""
-    try:
-        wellness_category = ArticleCategory.objects.get(slug='wellness')
-        articles = ArticlePage.objects.live().filter(
-            category=wellness_category
-        ).order_by('-first_published_at')
+    categories = ['Nutrition', 'Fitness', 'Mental Health', 'Sleep', 'Stress Management', 'Healthy Aging']
+    articles = ArticlePage.objects.live().filter(
+        category__name__in=categories
+    ).order_by('-first_published_at')
 
-        featured = articles.filter(featured=True)[:3]
-        regular = articles.exclude(id__in=[f.id for f in featured])[:6]
+    featured_articles = articles.filter(featured=True)[:3]
 
-        response = {
-            'featured': [],
-            'articles': [],
-        }
-
-        for article in featured:
-            article_data = {
-                'id': article.id,
-                'title': article.title,
-                'slug': article.slug,
-                'summary': article.summary,
-                'image': article.image.get_rendition('fill-800x500').url if article.image else None,
-                'created_at': article.first_published_at,
-            }
-            response['featured'].append(article_data)
-
-        for article in regular:
-            article_data = {
-                'id': article.id,
-                'title': article.title,
-                'slug': article.slug,
-                'summary': article.summary,
-                'image': article.image.get_rendition('fill-800x500').url if article.image else None,
-                'created_at': article.first_published_at,
-            }
-            response['articles'].append(article_data)
-
-        return JsonResponse(response)
-    except ArticleCategory.DoesNotExist:
-        return JsonResponse({
-            'featured': [],
-            'articles': [],
-        })
+    return JsonResponse({
+        'featured': [{
+            'id': article.id,
+            'title': article.title,
+            'slug': article.slug,
+            'summary': article.summary,
+            'image': article.image.get_rendition('fill-800x500').url if article.image else None,
+            'category': article.category.name if article.category else None,
+        } for article in featured_articles],
+        'articles': [{
+            'id': article.id,
+            'title': article.title,
+            'slug': article.slug,
+            'summary': article.summary,
+            'image': article.image.get_rendition('fill-800x500').url if article.image else None,
+            'category': article.category.name if article.category else None,
+        } for article in articles[:12]]
+    })
 from django.http import JsonResponse
 from django.core.mail import send_mail
 from django.conf import settings
@@ -355,7 +338,7 @@ def newsletter_subscribe(request):
             email = data.get('email')
             if not email:
                 return JsonResponse({"status": "error", "message": "Email required"}, status=400)
-            
+
             # Store email in database
             # Send welcome email
             send_mail(
