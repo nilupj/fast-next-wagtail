@@ -92,10 +92,10 @@ export default function Home({ initialTopStories, healthTopics }) {
   const [topStories, setTopStories] = useState(
     initialTopStories && initialTopStories.length > 0 ? initialTopStories : fallbackTopStories
   );
-  
+
   // Use provided health topics or fallback
   const displayHealthTopics = healthTopics && healthTopics.length > 0 ? healthTopics : fallbackHealthTopics;
-  
+
   useEffect(() => {
     // If no data was provided and we're not using fallback, try fetching client-side
     if (!initialTopStories || initialTopStories.length === 0) {
@@ -110,7 +110,7 @@ export default function Home({ initialTopStories, healthTopics }) {
           // Keep using fallback data if fetch fails
         }
       };
-      
+
       fetchData();
     }
   }, [initialTopStories]);
@@ -120,13 +120,13 @@ export default function Home({ initialTopStories, healthTopics }) {
       {/* Top stories section */}
       <div className="mb-12">
         <h2 className="section-title">TODAY'S TOP STORIES</h2>
-        
+
         {topStories && topStories.length > 0 ? (
           <>
             <div className="mb-8">
               <FeaturedArticle article={topStories[0]} />
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {topStories.slice(1, 4).map((article) => (
                 <ArticleCard key={article.id} article={article} />
@@ -143,7 +143,7 @@ export default function Home({ initialTopStories, healthTopics }) {
           </div>
         )}
       </div>
-      
+
       {/* Health topics section */}
       <div className="mb-12">
         <div className="flex justify-between items-center mb-6">
@@ -152,7 +152,7 @@ export default function Home({ initialTopStories, healthTopics }) {
             View All
           </Link>
         </div>
-        
+
         {displayHealthTopics && displayHealthTopics.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {displayHealthTopics.map((topic) => (
@@ -169,7 +169,7 @@ export default function Home({ initialTopStories, healthTopics }) {
           </div>
         )}
       </div>
-      
+
       {/* Popular health categories */}
       <div>
         <h2 className="section-title">EXPLORE HEALTH CATEGORIES</h2>
