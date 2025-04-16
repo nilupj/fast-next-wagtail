@@ -1,4 +1,3 @@
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
@@ -19,7 +18,7 @@ const nextConfig = {
     return [
       {
         source: '/api/:path*',
-        destination: 'http://0.0.0.0:8001/api/:path*',
+        destination: `${process.env.API_URL}/api/:path*`, // Updated to use environment variable
       },
     ];
   },
