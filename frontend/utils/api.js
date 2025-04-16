@@ -1,3 +1,4 @@
+
 import axios from 'axios';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://0.0.0.0:8001';
@@ -134,7 +135,7 @@ export const searchContent = async (query) => {
 // Symptom checker
 export const checkSymptoms = async (data) => {
   try {
-    const response = await api.post('/api/symptom-checker', data);
+    const response = await api.post('/api/symptom-checker/', data);
     return response.data;
   } catch (error) {
     console.error('Error checking symptoms:', error);
