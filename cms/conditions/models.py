@@ -148,3 +148,27 @@ class ConditionPage(Page):
 
     class Meta:
         verbose_name = "Condition Page"
+class ConditionAZPage(Page):
+    intro = RichTextField(blank=True)
+    
+    content_panels = Page.content_panels + [
+        FieldPanel('intro'),
+    ]
+
+    def get_context(self, request):
+        context = super().get_context(request)
+        conditions = ConditionPage.objects.live().order_by('title')
+        
+        # Group conditions alphabetically
+        conditions_by_letter = {}
+        for letter in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ':
+            conditions_by_letter[letter] = [
+                condition for condition in conditions
+                if condition.title.upper().startswith(letter)
+            ]
+            
+        context['conditions_by_letter'] = conditions_by_letter
+        return context
+
+    class Meta:
+        verbose_name = "Condition A-Z Page"
