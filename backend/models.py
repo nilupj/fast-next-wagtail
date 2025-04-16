@@ -1,7 +1,7 @@
-from pydantic import BaseModel, Field, HttpUrl
-from typing import List, Optional, Dict, Any
-from datetime import datetime
 from enum import Enum
+from pydantic import BaseModel, Field, HttpUrl
+from typing import List, Optional
+from datetime import datetime
 
 class Gender(str, Enum):
     MALE = "male"
@@ -108,7 +108,6 @@ class SymptomResponse(BaseModel):
     conditions: List[PossibleCondition]
     disclaimer: str = "This assessment is for informational purposes only and does not constitute medical advice. Please consult with a healthcare professional for proper diagnosis and treatment."
 
-# Well-being models
 class WellBeingResponse(BaseModel):
     featured: List[ArticlePreview]
     articles: List[ArticlePreview]
