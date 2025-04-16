@@ -4,6 +4,5 @@
   "/_document": "pages/_document.js",
   "/": "pages/index.js",
   "/articles/[slug]": "pages/articles/[slug].js",
-  "/symptom-checker": "pages/symptom-checker.js",
-  "/conditions": "pages/conditions.js"
+  "/symptom-checker": "pages/symptom-checker.js"
 }
