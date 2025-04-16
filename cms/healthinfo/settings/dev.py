@@ -61,5 +61,10 @@ except ImportError:
 
 # CORS and CSRF settings
 CORS_ALLOW_ALL_ORIGINS = True
-CSRF_TRUSTED_ORIGINS = ['https://*.replit.dev']
+CSRF_TRUSTED_ORIGINS = [
+    'https://*.replit.dev',
+    'https://*.replit.dev:3000',
+    'https://*.replit.dev:8000',
+    'https://*.replit.dev:8001'
+]
 WAGTAILAPI_BASE_URL = 'http://localhost:8001'
