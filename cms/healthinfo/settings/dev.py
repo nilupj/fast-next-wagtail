@@ -44,9 +44,7 @@ else:
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Enable media serving
-INSTALLED_APPS += [
-    'django.contrib.staticfiles',
-]
+# Note: django.contrib.staticfiles is already in INSTALLED_APPS in base.py
 
 # Add debug toolbar
 try:

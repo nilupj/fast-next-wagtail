@@ -19,6 +19,10 @@ args = "Health Info Website"
 task = "workflow.run"
 args = "Backend Server"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "CMS Server"
+
 [[workflows.workflow]]
 name = "Health Info Website"
 author = "agent"
@@ -48,6 +52,21 @@ task = "packager.installForAll"
 task = "shell.exec"
 args = "cd backend && python main.py"
 waitForPort = 8000
+
+[[workflows.workflow]]
+name = "CMS Server"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd cms && python manage.py migrate && python manage.py runserver 0.0.0.0:8001"
+waitForPort = 8001
 
 [deployment]
 run = ["sh", "-c", "cd frontend && npm install && npm run dev"]
