@@ -89,9 +89,9 @@ async def get_top_stories():
         return articles
     except HTTPException as exc:
         if exc.status_code == 503:
-            # If CMS is unavailable, log warning and return empty list
-            logger.warning("CMS unavailable, returning empty top stories list")
-            return []
+            # If CMS is unavailable, use mock data for now
+            logger.warning("CMS unavailable, returning mock top stories")
+            return mock_articles
         raise
     except Exception as exc:
         # For development, return mock data
@@ -113,9 +113,9 @@ async def get_health_topics():
         return articles
     except HTTPException as exc:
         if exc.status_code == 503:
-            # If CMS is unavailable, log warning and return empty list
-            logger.warning("CMS unavailable, returning empty health topics list")
-            return []
+            # If CMS is unavailable, use mock data for now
+            logger.warning("CMS unavailable, returning mock health topics")
+            return mock_articles[:2]
         raise
     except Exception as exc:
         # For development, return mock data
@@ -162,6 +162,32 @@ async def get_article(slug: str = Path(..., description="The slug of the article
     except HTTPException as exc:
         if exc.status_code == 404:
             raise HTTPException(status_code=404, detail=f"Article with slug '{slug}' not found")
+        elif exc.status_code == 503:
+            # If CMS is unavailable, check if we have this article in our mock data
+            logger.warning(f"CMS unavailable, trying to serve mock article {slug}")
+            for article in mock_articles:
+                if article.slug == slug:
+                    # Convert to a full Article with content
+                    return Article(
+                        id=article.id,
+                        title=article.title,
+                        slug=article.slug,
+                        summary=article.summary,
+                        subtitle=article.summary,
+                        image=article.image,
+                        content=f"<p>This is the full content of the article about {article.title}.</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin euismod, nunc nec aliquam lacinia, nisl nisl aliquam nisl, eget aliquam nisl nisl sit amet nisl.</p>",
+                        author={
+                            "name": "Dr. Jane Smith",
+                            "credentials": "MD, PhD",
+                            "bio": "Dr. Smith is a specialist in internal medicine with over 15 years of experience.",
+                        },
+                        published_date=article.created_at,
+                        updated_date=None,
+                        tags=["Health", "Wellness"],
+                    )
+            
+            # If not found in mock data, return 404
+            raise HTTPException(status_code=404, detail=f"Article with slug '{slug}' not found")
         raise
     except Exception as exc:
         # For development, return mock data
@@ -207,9 +233,10 @@ async def get_related_articles(slug: str = Path(..., description="The slug of th
             # If the article doesn't exist, return empty list
             return []
         if exc.status_code == 503:
-            # If CMS is unavailable, log warning and return empty list
-            logger.warning("CMS unavailable, returning empty related articles list")
-            return []
+            # If CMS is unavailable, use mock data
+            logger.warning("CMS unavailable, returning mock related articles")
+            # Exclude the current article
+            return [article for article in mock_articles if article.slug != slug][:3]
         raise
     except Exception as exc:
         # For development, return mock data
@@ -232,9 +259,12 @@ async def get_well_being_articles():
         return data
     except HTTPException as exc:
         if exc.status_code == 503:
-            # If CMS is unavailable, log warning and return empty data
-            logger.warning("CMS unavailable, returning empty well-being data")
-            return {"featured": [], "articles": []}
+            # If CMS is unavailable, use mock data for now
+            logger.warning("CMS unavailable, returning mock well-being data")
+            return {
+                "featured": mock_articles[:3],
+                "articles": mock_articles
+            }
         raise
     except Exception as exc:
         # For development, return mock data
@@ -258,9 +288,13 @@ async def search_articles(query: str):
         return articles
     except HTTPException as exc:
         if exc.status_code == 503:
-            # If CMS is unavailable, log warning and return empty list
-            logger.warning("CMS unavailable, returning empty search results")
-            return []
+            # If CMS is unavailable, use mock search results
+            logger.warning("CMS unavailable, returning mock search results")
+            return [
+                article for article in mock_articles 
+                if query.lower() in article.title.lower() or 
+                   (article.summary and query.lower() in article.summary.lower())
+            ]
         raise
     except Exception as exc:
         # For development, return filtered mock data

@@ -77,9 +77,9 @@ async def get_conditions_index():
         return conditions
     except HTTPException as exc:
         if exc.status_code == 503:
-            # If CMS is unavailable, log warning and return empty list
-            logger.warning("CMS unavailable, returning empty conditions index")
-            return []
+            # If CMS is unavailable, use mock data
+            logger.warning("CMS unavailable, returning mock conditions index")
+            return mock_conditions
         raise
     except Exception as exc:
         # For development, return mock data
@@ -126,6 +126,32 @@ async def get_condition(slug: str = Path(..., description="The slug of the condi
     except HTTPException as exc:
         if exc.status_code == 404:
             raise HTTPException(status_code=404, detail=f"Condition with slug '{slug}' not found")
+        elif exc.status_code == 503:
+            # If CMS is unavailable, check for mock data
+            logger.warning(f"CMS unavailable, trying to serve mock condition {slug}")
+            for condition in mock_conditions:
+                if condition.slug == slug:
+                    # Convert to a full Condition with content
+                    return Condition(
+                        id=condition.id,
+                        name=condition.name,
+                        slug=condition.slug,
+                        subtitle=condition.subtitle,
+                        overview="<p>This is an overview of the condition.</p>",
+                        symptoms="<p>Common symptoms include...</p>",
+                        causes="<p>This condition is usually caused by...</p>",
+                        diagnosis="<p>Diagnosis typically involves...</p>",
+                        treatments="<p>Treatment options include...</p>",
+                        prevention="<p>To reduce your risk, consider...</p>",
+                        complications="<p>If left untreated, complications may include...</p>",
+                        image="https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=600&q=80",
+                        related_conditions=[
+                            {"name": rc.name, "slug": rc.slug} 
+                            for rc in mock_conditions if rc.id != condition.id
+                        ][:2],
+                    )
+            # If not found, return 404
+            raise HTTPException(status_code=404, detail=f"Condition with slug '{slug}' not found")
         raise
     except Exception as exc:
         # For development, return mock data
@@ -168,9 +194,13 @@ async def search_conditions(query: str):
         return conditions
     except HTTPException as exc:
         if exc.status_code == 503:
-            # If CMS is unavailable, log warning and return empty list
-            logger.warning("CMS unavailable, returning empty search results")
-            return []
+            # If CMS is unavailable, use mock data
+            logger.warning("CMS unavailable, returning mock search results")
+            return [
+                condition for condition in mock_conditions
+                if query.lower() in condition.name.lower() or 
+                  (condition.subtitle and query.lower() in condition.subtitle.lower())
+            ]
         raise
     except Exception as exc:
         # For development, return filtered mock data
