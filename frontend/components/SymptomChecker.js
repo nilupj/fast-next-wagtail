@@ -58,13 +58,14 @@ export default function SymptomChecker() {
     setError('');
     
     try {
-      const response = await fetch('/api/symptom-checker', {
+      const response = await fetch('http://0.0.0.0:8001/api/symptom-checker/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json',
         },
         body: JSON.stringify({
-          age,
+          age: parseInt(age),
           gender,
           symptoms: selectedSymptoms,
         }),

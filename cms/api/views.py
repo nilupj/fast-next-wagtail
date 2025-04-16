@@ -1,4 +1,6 @@
+import json
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 
 from wagtail.models import Page
@@ -7,11 +9,41 @@ from articles.models import ArticlePage, ArticleCategory
 from conditions.models import ConditionPage, ConditionCategory
 
 
+@csrf_exempt
+def symptom_checker(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            age = data.get('age')
+            gender = data.get('gender')
+            symptoms = data.get('symptoms', [])
+
+            # Mock response for demonstration
+            conditions = [
+                {
+                    "name": "Common Cold",
+                    "description": "A viral infection of the nose and throat",
+                    "probability": 75.5,
+                    "urgency": 1
+                }
+            ]
+
+            return JsonResponse({
+                "conditions": conditions,
+                "disclaimer": "This is for informational purposes only."
+            })
+        except json.JSONDecodeError as e:
+            return JsonResponse({"error": "Invalid JSON data"}, status=400)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+    return JsonResponse({"error": "Method not allowed"}, status=405)
+
+
 def articles_top_stories(request):
     """Get top stories (featured articles)"""
     try:
         articles = ArticlePage.objects.live().filter(featured=True).order_by('-first_published_at')[:5]
-        
+
         response = []
         for article in articles:
             article_data = {
@@ -33,7 +65,7 @@ def articles_top_stories(request):
                 'tags': [tag.name for tag in article.tags.all()],
             }
             response.append(article_data)
-        
+
         return JsonResponse(response, safe=False)
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
@@ -43,7 +75,7 @@ def articles_health_topics(request):
     """Get health topics articles"""
     categories = ArticleCategory.objects.all()
     response = []
-    
+
     for category in categories:
         articles = category.articles.live().order_by('-first_published_at')[:3]
         if articles:
@@ -52,7 +84,7 @@ def articles_health_topics(request):
                 'slug': category.slug,
                 'articles': []
             }
-            
+
             for article in articles:
                 article_data = {
                     'id': article.id,
@@ -63,9 +95,9 @@ def articles_health_topics(request):
                     'created_at': article.first_published_at,
                 }
                 category_data['articles'].append(article_data)
-            
+
             response.append(category_data)
-    
+
     return JsonResponse(response, safe=False)
 
 
@@ -79,7 +111,7 @@ def article_detail(request, slug):
     """Get a single article by its slug"""
     try:
         article = ArticlePage.objects.live().get(slug=slug)
-        
+
         article_data = {
             'id': article.id,
             'title': article.title,
@@ -102,11 +134,11 @@ def article_detail(request, slug):
             'published_date': article.first_published_at,
             'updated_date': article.last_published_at if article.first_published_at != article.last_published_at else None,
         }
-        
+
         # Update view count
         article.view_count += 1
         article.save()
-        
+
         return JsonResponse(article_data)
     except ArticlePage.DoesNotExist:
         return JsonResponse({'message': 'Article not found'}, status=404)
@@ -116,12 +148,12 @@ def article_related(request, slug):
     """Get articles related to the specified article"""
     try:
         article = ArticlePage.objects.live().get(slug=slug)
-        
+
         # Get articles with the same category or tags
         related_articles = ArticlePage.objects.live().filter(
             Q(category=article.category) | Q(tags__in=article.tags.all())
         ).exclude(id=article.id).distinct()[:3]
-        
+
         response = []
         for related in related_articles:
             article_data = {
@@ -133,7 +165,7 @@ def article_related(request, slug):
                 'created_at': related.first_published_at,
             }
             response.append(article_data)
-        
+
         return JsonResponse(response, safe=False)
     except ArticlePage.DoesNotExist:
         return JsonResponse([], safe=False)
@@ -142,7 +174,7 @@ def article_related(request, slug):
 def conditions_index(request):
     """Retrieve a complete index of all health conditions"""
     conditions = ConditionPage.objects.live().order_by('title')
-    
+
     response = []
     for condition in conditions:
         condition_data = {
@@ -152,7 +184,7 @@ def conditions_index(request):
             'subtitle': condition.subtitle,
         }
         response.append(condition_data)
-    
+
     return JsonResponse(response, safe=False)
 
 
@@ -166,7 +198,7 @@ def condition_detail(request, slug):
     """Get a single condition by its slug"""
     try:
         condition = ConditionPage.objects.live().get(slug=slug)
-        
+
         condition_data = {
             'id': condition.id,
             'name': condition.title,
@@ -192,11 +224,11 @@ def condition_detail(request, slug):
                 for rc in condition.related_conditions.all()
             ],
         }
-        
+
         # Update view count
         condition.view_count += 1
         condition.save()
-        
+
         return JsonResponse(condition_data)
     except ConditionPage.DoesNotExist:
         return JsonResponse({'message': 'Condition not found'}, status=404)
@@ -207,9 +239,9 @@ def search_articles(request):
     query = request.GET.get('q', '')
     if not query:
         return JsonResponse([], safe=False)
-    
+
     articles = ArticlePage.objects.live().search(query)
-    
+
     response = []
     for article in articles:
         article_data = {
@@ -221,7 +253,7 @@ def search_articles(request):
             'created_at': article.first_published_at,
         }
         response.append(article_data)
-    
+
     return JsonResponse(response, safe=False)
 
 
@@ -230,9 +262,9 @@ def search_conditions(request):
     query = request.GET.get('q', '')
     if not query:
         return JsonResponse([], safe=False)
-    
+
     conditions = ConditionPage.objects.live().search(query)
-    
+
     response = []
     for condition in conditions:
         condition_data = {
@@ -242,7 +274,7 @@ def search_conditions(request):
             'subtitle': condition.subtitle,
         }
         response.append(condition_data)
-    
+
     return JsonResponse(response, safe=False)
 
 
@@ -253,15 +285,15 @@ def well_being(request):
         articles = ArticlePage.objects.live().filter(
             category=wellness_category
         ).order_by('-first_published_at')
-        
+
         featured = articles.filter(featured=True)[:3]
         regular = articles.exclude(id__in=[f.id for f in featured])[:6]
-        
+
         response = {
             'featured': [],
             'articles': [],
         }
-        
+
         for article in featured:
             article_data = {
                 'id': article.id,
@@ -272,7 +304,7 @@ def well_being(request):
                 'created_at': article.first_published_at,
             }
             response['featured'].append(article_data)
-        
+
         for article in regular:
             article_data = {
                 'id': article.id,
@@ -283,7 +315,7 @@ def well_being(request):
                 'created_at': article.first_published_at,
             }
             response['articles'].append(article_data)
-        
+
         return JsonResponse(response)
     except ArticleCategory.DoesNotExist:
         return JsonResponse({
