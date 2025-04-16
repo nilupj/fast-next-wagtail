@@ -11,7 +11,7 @@ urlpatterns = [
     path('articles/<slug:slug>/related', views.article_related, name='article_related'),
 
     # Conditions
-    path('conditions', views.conditions_index, name='conditions_index'),
+    path('conditions', views.conditions_index, name='conditions_index'), # Added conditions index endpoint
     path('conditions/paths', views.conditions_paths, name='conditions_paths'),
     path('conditions/<slug:slug>', views.condition_detail, name='condition_detail'),
 
