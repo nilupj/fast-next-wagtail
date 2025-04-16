@@ -4,7 +4,7 @@ modules = ["nodejs-20", "python-3.11"]
 channel = "stable-24_05"
 
 [workflows]
-runButton = "Project"
+runButton = "Run CMS"
 
 [[workflows.workflow]]
 name = "Project"
@@ -67,6 +67,24 @@ task = "packager.installForAll"
 task = "shell.exec"
 args = "cd cms && python manage.py migrate && python manage.py runserver 0.0.0.0:8001"
 waitForPort = 8001
+
+[[workflows.workflow]]
+name = "Run Backend"
+author = 41573686
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd backend && python main.py"
+
+[[workflows.workflow]]
+name = "Run CMS"
+author = 41573686
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd cms && python manage.py migrate && python manage.py runserver 0.0.0.0:8001"
 
 [deployment]
 run = ["sh", "-c", "cd frontend && npm install && npm run dev"]
