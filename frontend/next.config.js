@@ -1,9 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  amp: {
-    canonicalBase: 'https://healthinfo.com',
-  },
   images: {
     domains: ['0.0.0.0', 'localhost', 'healthinfocms.com', 'images.unsplash.com'],
     remotePatterns: [
