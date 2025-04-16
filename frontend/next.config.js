@@ -18,7 +18,7 @@ const nextConfig = {
     return [
       {
         source: '/api/:path*',
-        destination: `${process.env.API_URL}/api/:path*`, // Updated to use environment variable
+        destination: 'http://0.0.0.0:8001/api/:path*',
       },
     ];
   },
