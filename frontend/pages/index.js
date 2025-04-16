@@ -4,18 +4,110 @@ import FeaturedArticle from '../components/FeaturedArticle';
 import ArticleCard from '../components/ArticleCard';
 import { fetchTopStories, fetchHealthTopics } from '../utils/api';
 
+// Fallback data for development until backend is ready
+const fallbackTopStories = [
+  {
+    id: 1,
+    title: 'COVID-19 Updates: What You Need to Know',
+    slug: 'covid-19-updates',
+    summary: 'Latest information on COVID-19 variants, vaccines, and prevention measures.',
+    image: 'https://images.unsplash.com/photo-1584118624012-df056829fbd0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=630&q=80',
+    published_date: '2025-03-15T08:00:00Z',
+    author: { name: 'Dr. Sarah Johnson', credentials: 'MD, MPH' },
+    category: { name: 'Infectious Disease', slug: 'infectious-disease' }
+  },
+  {
+    id: 2,
+    title: 'Understanding Heart Health: Risk Factors and Prevention',
+    slug: 'understanding-heart-health',
+    summary: 'Learn about the key risk factors for heart disease and effective prevention strategies.',
+    image: 'https://images.unsplash.com/photo-1559757175-7b21671c7e96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500&q=80',
+    published_date: '2025-03-14T10:30:00Z',
+    author: { name: 'Dr. Robert Chen', credentials: 'MD, FACC' },
+    category: { name: 'Cardiology', slug: 'cardiology' }
+  },
+  {
+    id: 3,
+    title: 'Mental Health Awareness: Breaking the Stigma',
+    slug: 'mental-health-awareness',
+    summary: 'Why it\'s important to discuss mental health openly and seek help when needed.',
+    image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500&q=80',
+    published_date: '2025-03-13T09:45:00Z',
+    author: { name: 'Dr. Emily Watson', credentials: 'Ph.D, Clinical Psychology' },
+    category: { name: 'Mental Health', slug: 'mental-health' }
+  },
+  {
+    id: 4,
+    title: 'Nutrition Myths: Separating Fact from Fiction',
+    slug: 'nutrition-myths',
+    summary: 'Debunking common misconceptions about diet and nutrition for better health.',
+    image: 'https://images.unsplash.com/photo-1490818387583-1baba5e638af?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500&q=80',
+    published_date: '2025-03-12T14:20:00Z',
+    author: { name: 'Lisa Martinez', credentials: 'RD, LDN' },
+    category: { name: 'Nutrition', slug: 'nutrition' }
+  }
+];
+
+const fallbackHealthTopics = [
+  {
+    id: 5,
+    title: 'Sleep Hygiene: Tips for Better Rest',
+    slug: 'sleep-hygiene-tips',
+    summary: 'Simple changes to improve your sleep quality and overall health.',
+    image: 'https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500&q=80',
+    published_date: '2025-03-10T16:15:00Z',
+    category: { name: 'Wellness', slug: 'wellness' }
+  },
+  {
+    id: 6,
+    title: 'Exercise for Beginners: Starting a Sustainable Routine',
+    slug: 'exercise-for-beginners',
+    summary: 'How to build an exercise habit that lasts without getting overwhelmed.',
+    image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500&q=80',
+    published_date: '2025-03-09T11:30:00Z',
+    category: { name: 'Fitness', slug: 'fitness' }
+  },
+  {
+    id: 7,
+    title: 'Stress Management Techniques That Actually Work',
+    slug: 'stress-management-techniques',
+    summary: 'Practical approaches to reduce stress and improve your mental wellbeing.',
+    image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500&q=80',
+    published_date: '2025-03-08T09:45:00Z',
+    category: { name: 'Mental Health', slug: 'mental-health' }
+  },
+  {
+    id: 8,
+    title: 'Healthy Eating on a Budget: Smart Shopping Guide',
+    slug: 'healthy-eating-budget',
+    summary: 'Tips for nutritious meals without breaking the bank.',
+    image: 'https://images.unsplash.com/photo-1543168256-418811576931?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500&q=80',
+    published_date: '2025-03-07T10:20:00Z',
+    category: { name: 'Nutrition', slug: 'nutrition' }
+  }
+];
+
 export default function Home({ initialTopStories, healthTopics }) {
-  const [topStories, setTopStories] = useState(initialTopStories);
+  // Use provided data or fallback to development data
+  const [topStories, setTopStories] = useState(
+    initialTopStories && initialTopStories.length > 0 ? initialTopStories : fallbackTopStories
+  );
+  
+  // Use provided health topics or fallback
+  const displayHealthTopics = healthTopics && healthTopics.length > 0 ? healthTopics : fallbackHealthTopics;
   
   useEffect(() => {
-    // If initial data wasn't provided, fetch it client-side
-    if (!initialTopStories) {
+    // If no data was provided and we're not using fallback, try fetching client-side
+    if (!initialTopStories || initialTopStories.length === 0) {
       const fetchData = async () => {
         try {
           const stories = await fetchTopStories();
-          setTopStories(stories);
+          if (stories && stories.length > 0) {
+            setTopStories(stories);
+          }
         } catch (error) {
           console.error('Error fetching top stories:', error);
+          // Keep using fallback data if fetch fails
         }
       };
       
@@ -61,9 +153,9 @@ export default function Home({ initialTopStories, healthTopics }) {
           </Link>
         </div>
         
-        {healthTopics && healthTopics.length > 0 ? (
+        {displayHealthTopics && displayHealthTopics.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {healthTopics.map((topic) => (
+            {displayHealthTopics.map((topic) => (
               <ArticleCard key={topic.id} article={topic} />
             ))}
           </div>

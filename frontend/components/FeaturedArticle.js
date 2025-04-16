@@ -7,8 +7,15 @@ export default function FeaturedArticle({ article }) {
     slug,
     image,
     summary,
-    created_at
+    published_date,
+    author
   } = article;
+
+  const formattedDate = published_date ? new Date(published_date).toLocaleDateString('en-US', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric'
+  }) : '';
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow">
@@ -18,6 +25,8 @@ export default function FeaturedArticle({ article }) {
             src={image}
             alt={title}
             fill
+            sizes="(max-width: 768px) 100vw, 50vw"
+            priority
             className="object-cover"
           />
         ) : (
@@ -34,6 +43,16 @@ export default function FeaturedArticle({ article }) {
             {title}
           </Link>
         </h2>
+        {author && (
+          <div className="mb-2 text-neutral-600 text-sm">
+            By {author.name}{author.credentials ? `, ${author.credentials}` : ''}
+          </div>
+        )}
+        {formattedDate && (
+          <div className="mb-3 text-neutral-500 text-xs">
+            {formattedDate}
+          </div>
+        )}
         <p className="text-neutral-600 mb-4 line-clamp-3">
           {summary}
         </p>

@@ -8,14 +8,14 @@ export default function ArticleCard({ article }) {
     image,
     summary,
     category,
-    created_at
+    published_date
   } = article;
 
-  const formattedDate = new Date(created_at).toLocaleDateString('en-US', {
+  const formattedDate = published_date ? new Date(published_date).toLocaleDateString('en-US', {
     month: 'long',
     day: 'numeric',
     year: 'numeric'
-  });
+  }) : '';
 
   return (
     <div className="card h-full flex flex-col">
@@ -25,6 +25,7 @@ export default function ArticleCard({ article }) {
             src={image}
             alt={title}
             fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="object-cover"
           />
         ) : (
@@ -36,7 +37,7 @@ export default function ArticleCard({ article }) {
         )}
         {category && (
           <div className="absolute top-0 right-0 bg-primary text-white text-xs px-2 py-1 m-2 rounded">
-            {category}
+            {typeof category === 'string' ? category : category.name}
           </div>
         )}
       </div>
@@ -49,9 +50,11 @@ export default function ArticleCard({ article }) {
         <p className="text-neutral-600 text-sm line-clamp-3 mb-3">
           {summary}
         </p>
-        <div className="mt-auto">
-          <span className="text-neutral-500 text-xs">{formattedDate}</span>
-        </div>
+        {formattedDate && (
+          <div className="mt-auto">
+            <span className="text-neutral-500 text-xs">{formattedDate}</span>
+          </div>
+        )}
       </div>
     </div>
   );
