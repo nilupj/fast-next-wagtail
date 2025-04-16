@@ -4,7 +4,7 @@ modules = ["nodejs-20", "python-3.11"]
 channel = "stable-24_05"
 
 [workflows]
-runButton = "Run CMS"
+runButton = "Start All Services"
 
 [[workflows.workflow]]
 name = "Project"
@@ -85,6 +85,23 @@ mode = "sequential"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "cd cms && python manage.py migrate && python manage.py runserver 0.0.0.0:8001"
+
+[[workflows.workflow]]
+name = "Start All Services"
+author = 41573686
+mode = "parallel"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd cms && python manage.py runserver 0.0.0.0:8001"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd frontend && npm run dev"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd backend && python main.py"
 
 [deployment]
 run = ["sh", "-c", "cd frontend && npm install && npm run dev"]

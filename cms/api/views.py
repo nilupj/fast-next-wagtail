@@ -9,22 +9,34 @@ from conditions.models import ConditionPage, ConditionCategory
 
 def articles_top_stories(request):
     """Get top stories (featured articles)"""
-    articles = ArticlePage.objects.live().filter(featured=True).order_by('-first_published_at')[:5]
-    
-    response = []
-    for article in articles:
-        article_data = {
-            'id': article.id,
-            'title': article.title,
-            'slug': article.slug,
-            'summary': article.summary,
-            'image': article.image.get_rendition('fill-800x500').url if article.image else None,
-            'author': article.author.name if article.author else None,
-            'created_at': article.first_published_at,
-        }
-        response.append(article_data)
-    
-    return JsonResponse(response, safe=False)
+    try:
+        articles = ArticlePage.objects.live().filter(featured=True).order_by('-first_published_at')[:5]
+        
+        response = []
+        for article in articles:
+            article_data = {
+                'id': article.id,
+                'title': article.title,
+                'slug': article.slug,
+                'summary': article.summary,
+                'body': article.body,
+                'image': request.build_absolute_uri(article.image.get_rendition('fill-800x500').url) if article.image else None,
+                'author': {
+                    'name': article.author.name,
+                    'credentials': article.author.credentials,
+                } if article.author else None,
+                'category': {
+                    'name': article.category.name,
+                    'slug': article.category.slug,
+                } if article.category else None,
+                'created_at': article.first_published_at,
+                'tags': [tag.name for tag in article.tags.all()],
+            }
+            response.append(article_data)
+        
+        return JsonResponse(response, safe=False)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
 
 
 def articles_health_topics(request):
