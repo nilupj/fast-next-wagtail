@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'taggit',
     'rest_framework',
     'corsheaders',  # CORS support
+    'api',  # Custom API app
     
     'django.contrib.admin',
     'django.contrib.auth',
