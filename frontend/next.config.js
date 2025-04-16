@@ -1,9 +1,14 @@
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['localhost', 'healthinfocms.com', 'images.unsplash.com', 'example.com'],
+    domains: ['0.0.0.0', 'localhost', 'healthinfocms.com', 'images.unsplash.com'],
     remotePatterns: [
+      {
+        protocol: 'http',
+        hostname: '**',
+      },
       {
         protocol: 'https',
         hostname: '**',
@@ -14,7 +19,7 @@ const nextConfig = {
     return [
       {
         source: '/api/:path*',
-        destination: 'http://localhost:8000/api/:path*',
+        destination: 'http://0.0.0.0:8001/api/:path*',
       },
     ];
   },
