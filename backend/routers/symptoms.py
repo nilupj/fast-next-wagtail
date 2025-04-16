@@ -3,8 +3,9 @@ import httpx
 import os
 import logging
 import random
+from typing import List
 
-from models import SymptomRequest, SymptomResponse, PossibleCondition, ErrorResponse
+from models import SymptomRequest, SymptomResponse, PossibleCondition
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -37,125 +38,57 @@ async def fetch_from_cms(endpoint: str, params=None):
             logger.error(f"Unexpected error fetching {endpoint}: {exc}")
             raise HTTPException(status_code=500, detail=str(exc))
 
-# Mock symptom-to-condition mappings (would be replaced with a proper medical database)
-mock_symptom_mappings = {
-    "Headache": [
-        ("Migraine", "A neurological condition characterized by severe headaches, often with nausea and sensitivity to light", 75),
-        ("Tension Headache", "A common headache characterized by mild to moderate pain, tightness, or pressure around the forehead or back of the head", 65),
-        ("Sinusitis", "Inflammation of the sinuses, often due to infection", 40),
+# Mock symptom checker data
+common_conditions = {
+    "headache": [
+        {"name": "Migraine", "prob": 0.7, "urgency": 2, "description": "A neurological condition characterized by severe headaches, often with nausea and sensitivity to light and sound."},
+        {"name": "Tension Headache", "prob": 0.5, "urgency": 1, "description": "The most common type of headache, characterized by mild to moderate pain that feels like a tight band around the head."},
+        {"name": "Sinusitis", "prob": 0.4, "urgency": 1, "description": "Inflammation of the sinuses, often caused by an infection. Can cause pain and pressure in the face, particularly around the nose, eyes, and forehead."},
     ],
-    "Fever": [
-        ("Common Cold", "A viral infection affecting the upper respiratory tract", 70),
-        ("Influenza", "A viral infection that attacks your respiratory system", 65),
-        ("COVID-19", "A respiratory illness caused by the SARS-CoV-2 virus", 60),
+    "fatigue": [
+        {"name": "Anemia", "prob": 0.6, "urgency": 2, "description": "A condition where you don't have enough healthy red blood cells to carry adequate oxygen to your body's tissues."},
+        {"name": "Depression", "prob": 0.5, "urgency": 3, "description": "A mood disorder causing a persistent feeling of sadness and loss of interest."},
+        {"name": "Hypothyroidism", "prob": 0.4, "urgency": 2, "description": "A condition in which the thyroid gland doesn't produce enough thyroid hormone, resulting in fatigue and slowed metabolism."},
     ],
-    "Cough": [
-        ("Common Cold", "A viral infection affecting the upper respiratory tract", 75),
-        ("Bronchitis", "Inflammation of the lining of your bronchial tubes", 60),
-        ("Asthma", "A condition in which airways narrow and swell", 50),
-        ("COVID-19", "A respiratory illness caused by the SARS-CoV-2 virus", 55),
+    "fever": [
+        {"name": "Flu", "prob": 0.7, "urgency": 2, "description": "A contagious respiratory illness caused by influenza viruses."},
+        {"name": "COVID-19", "prob": 0.6, "urgency": 3, "description": "A respiratory illness caused by the SARS-CoV-2 virus."},
+        {"name": "Pneumonia", "prob": 0.5, "urgency": 4, "description": "An infection that inflames the air sacs in one or both lungs, which may fill with fluid."},
     ],
-    "Fatigue": [
-        ("Anemia", "A condition where you lack enough healthy red blood cells to carry adequate oxygen to your body's tissues", 50),
-        ("Depression", "A mental health disorder characterized by persistently depressed mood", 45),
-        ("Chronic Fatigue Syndrome", "A complicated disorder characterized by extreme fatigue", 40),
-        ("Hypothyroidism", "A condition in which your thyroid gland doesn't produce enough hormones", 35),
+    "cough": [
+        {"name": "Common Cold", "prob": 0.8, "urgency": 1, "description": "A viral infection of the upper respiratory tract."},
+        {"name": "Bronchitis", "prob": 0.6, "urgency": 2, "description": "Inflammation of the lining of the bronchial tubes, which carry air to and from the lungs."},
+        {"name": "COVID-19", "prob": 0.5, "urgency": 3, "description": "A respiratory illness caused by the SARS-CoV-2 virus."},
     ],
-    "Shortness of breath": [
-        ("Asthma", "A condition in which airways narrow and swell", 70),
-        ("COPD", "A chronic inflammatory lung disease that causes obstructed airflow from the lungs", 65),
-        ("Anxiety", "A feeling of worry, nervousness, or unease", 50),
-        ("COVID-19", "A respiratory illness caused by the SARS-CoV-2 virus", 60),
+    "rash": [
+        {"name": "Contact Dermatitis", "prob": 0.7, "urgency": 1, "description": "A red, itchy rash caused by direct contact with a substance or an allergic reaction."},
+        {"name": "Eczema", "prob": 0.6, "urgency": 1, "description": "A condition that makes your skin red, itchy, and sometimes cracked and leaky."},
+        {"name": "Psoriasis", "prob": 0.4, "urgency": 2, "description": "A condition that causes red, itchy, scaly patches on the skin."},
     ],
-    "Nausea": [
-        ("Gastroenteritis", "Inflammation of the lining of the stomach and intestines", 70),
-        ("Motion Sickness", "A feeling of wooziness triggered by movement", 65),
-        ("Migraine", "A neurological condition characterized by severe headaches", 55),
-        ("Food Poisoning", "Illness caused by eating contaminated food", 60),
+    "nausea": [
+        {"name": "Gastroenteritis", "prob": 0.7, "urgency": 2, "description": "Inflammation of the lining of the stomach and intestines, typically resulting from a viral or bacterial infection."},
+        {"name": "Food Poisoning", "prob": 0.6, "urgency": 3, "description": "Illness caused by eating contaminated food."},
+        {"name": "Migraine", "prob": 0.4, "urgency": 2, "description": "A neurological condition characterized by severe headaches, often with nausea and sensitivity to light and sound."},
     ],
-    "Dizziness": [
-        ("Vertigo", "A sensation of feeling off balance", 70),
-        ("Low Blood Pressure", "Blood pressure that is lower than normal", 65),
-        ("Anemia", "A condition where you lack enough healthy red blood cells", 55),
-        ("Inner Ear Infection", "Infection of the inner ear", 50),
+    "dizziness": [
+        {"name": "Vertigo", "prob": 0.6, "urgency": 2, "description": "A sensation of feeling off balance or that you or your surroundings are spinning."},
+        {"name": "Low Blood Pressure", "prob": 0.5, "urgency": 2, "description": "A condition where the blood pressure in your arteries is lower than normal."},
+        {"name": "Dehydration", "prob": 0.4, "urgency": 2, "description": "A condition that occurs when your body loses more fluid than it takes in."},
     ],
-    "Abdominal pain": [
-        ("Gastroenteritis", "Inflammation of the lining of the stomach and intestines", 75),
-        ("Appendicitis", "Inflammation of the appendix", 40),
-        ("Irritable Bowel Syndrome", "A common disorder that affects the large intestine", 60),
-        ("Gastritis", "Inflammation of the lining of the stomach", 65),
+    "chest pain": [
+        {"name": "Angina", "prob": 0.6, "urgency": 4, "description": "Chest pain caused by reduced blood flow to the heart."},
+        {"name": "Heartburn", "prob": 0.5, "urgency": 1, "description": "A burning pain in the chest, just behind the breastbone, often after eating."},
+        {"name": "Heart Attack", "prob": 0.3, "urgency": 5, "description": "A serious medical emergency where the blood supply to the heart is suddenly blocked, usually by a blood clot. Seek immediate medical attention."},
     ],
-    "Chest pain": [
-        ("Angina", "A type of chest pain caused by reduced blood flow to the heart", 60),
-        ("Gastroesophageal Reflux Disease", "A digestive disorder that affects the lower esophageal sphincter", 55),
-        ("Costochondritis", "Inflammation of the cartilage that connects a rib to the breastbone", 50),
-        ("Heart Attack", "When blood flow to a part of the heart is blocked", 30),
+    "shortness of breath": [
+        {"name": "Asthma", "prob": 0.7, "urgency": 3, "description": "A condition in which your airways narrow and swell and may produce extra mucus."},
+        {"name": "Anxiety", "prob": 0.6, "urgency": 2, "description": "A feeling of worry, nervousness, or unease about something with an uncertain outcome."},
+        {"name": "COVID-19", "prob": 0.5, "urgency": 3, "description": "A respiratory illness caused by the SARS-CoV-2 virus."},
     ],
-    "Sore throat": [
-        ("Pharyngitis", "Inflammation of the pharynx", 80),
-        ("Common Cold", "A viral infection affecting the upper respiratory tract", 75),
-        ("Strep Throat", "A bacterial infection that can make your throat feel sore and scratchy", 65),
-        ("Tonsillitis", "Inflammation of the tonsils", 60),
-    ],
-    "Muscle aches": [
-        ("Influenza", "A viral infection that attacks your respiratory system", 70),
-        ("Fibromyalgia", "A disorder characterized by widespread musculoskeletal pain", 55),
-        ("Chronic Fatigue Syndrome", "A complicated disorder characterized by extreme fatigue", 45),
-        ("COVID-19", "A respiratory illness caused by the SARS-CoV-2 virus", 50),
-    ],
-    "Joint pain": [
-        ("Arthritis", "Inflammation of one or more joints", 75),
-        ("Rheumatoid Arthritis", "An autoimmune and inflammatory disease", 65),
-        ("Gout", "A form of inflammatory arthritis", 60),
-        ("Lupus", "A systemic autoimmune disease", 40),
-    ],
-    "Rash": [
-        ("Contact Dermatitis", "A red, itchy rash caused by direct contact with a substance", 75),
-        ("Eczema", "A condition that makes your skin red and itchy", 70),
-        ("Psoriasis", "A skin disease that causes red, itchy scaly patches", 60),
-        ("Allergic Reaction", "An overreaction of the immune system to a substance", 65),
-    ],
-    "Diarrhea": [
-        ("Gastroenteritis", "Inflammation of the lining of the stomach and intestines", 80),
-        ("Food Poisoning", "Illness caused by eating contaminated food", 75),
-        ("Irritable Bowel Syndrome", "A common disorder that affects the large intestine", 65),
-        ("Crohn's Disease", "A type of inflammatory bowel disease", 45),
-    ],
-    "Vomiting": [
-        ("Gastroenteritis", "Inflammation of the lining of the stomach and intestines", 80),
-        ("Food Poisoning", "Illness caused by eating contaminated food", 75),
-        ("Migraine", "A neurological condition characterized by severe headaches", 50),
-        ("Morning Sickness", "Nausea and vomiting that occurs during pregnancy", 40),
-    ],
-    "Bloating": [
-        ("Irritable Bowel Syndrome", "A common disorder that affects the large intestine", 70),
-        ("Gastroenteritis", "Inflammation of the lining of the stomach and intestines", 65),
-        ("Lactose Intolerance", "The inability to digest lactose", 60),
-        ("Constipation", "Difficult or infrequent bowel movements", 55),
-    ],
-    "Back pain": [
-        ("Muscle Strain", "Injury to a muscle or tendon", 75),
-        ("Herniated Disc", "A problem with one of the rubbery cushions between the bones of your spine", 60),
-        ("Sciatica", "Pain that radiates along the path of the sciatic nerve", 55),
-        ("Osteoarthritis", "The most common form of arthritis", 50),
-    ],
-    "Anxiety": [
-        ("Anxiety Disorder", "A mental health disorder characterized by feelings of worry or fear", 85),
-        ("Panic Disorder", "A type of anxiety disorder", 75),
-        ("Generalized Anxiety Disorder", "A mental health disorder characterized by excessive, persistent worry", 65),
-        ("Social Anxiety Disorder", "A chronic mental health condition involving overwhelming worry and self-consciousness about social situations", 60),
-    ],
-    "Depression": [
-        ("Major Depressive Disorder", "A mental health disorder characterized by persistently depressed mood", 85),
-        ("Bipolar Disorder", "A mental health condition that causes extreme mood swings", 60),
-        ("Seasonal Affective Disorder", "A type of depression related to changes in seasons", 55),
-        ("Dysthymia", "A mild but long-term form of depression", 50),
-    ],
-    "Weight loss": [
-        ("Hyperthyroidism", "A condition in which the thyroid gland produces too much thyroid hormone", 60),
-        ("Depression", "A mental health disorder characterized by persistently depressed mood", 50),
-        ("Diabetes", "A disease that occurs when your blood glucose is too high", 45),
-        ("Cancer", "A disease in which abnormal cells divide uncontrollably and destroy body tissue", 35),
+    "back pain": [
+        {"name": "Muscle Strain", "prob": 0.8, "urgency": 1, "description": "Overstretching or tearing of muscles or tendons in the back."},
+        {"name": "Herniated Disc", "prob": 0.5, "urgency": 3, "description": "A problem with one of the rubbery cushions (discs) between the individual bones (vertebrae) that stack up to make your spine."},
+        {"name": "Sciatica", "prob": 0.4, "urgency": 2, "description": "Pain that radiates along the path of the sciatic nerve, which branches from your lower back through your hips and buttocks and down each leg."},
     ],
 }
 
@@ -164,81 +97,65 @@ async def symptom_checker(request: SymptomRequest = Body(...)):
     """
     Check symptoms and return possible conditions
     """
-    try:
-        # Try to call the CMS or specialized symptom API
-        # Here we would normally make a request to a medically validated symptom checker API
-        
-        # For development, use our mock data
-        possible_conditions = []
-        
-        # Process each symptom and collect possible conditions
-        all_matches = []
-        for symptom in request.symptoms:
-            if symptom in mock_symptom_mappings:
-                all_matches.extend(mock_symptom_mappings[symptom])
-        
-        # Count occurrences and calculate probabilities
-        condition_counts = {}
-        for condition_name, description, probability in all_matches:
-            if condition_name not in condition_counts:
-                condition_counts[condition_name] = {
-                    "name": condition_name,
-                    "description": description,
-                    "count": 0,
-                    "total_probability": 0
-                }
-            condition_counts[condition_name]["count"] += 1
-            condition_counts[condition_name]["total_probability"] += probability
-        
-        # Calculate final probability and create response
-        for condition_data in condition_counts.values():
-            # Adjust probability based on number of matching symptoms and their individual probabilities
-            symptom_count_factor = min(condition_data["count"] / len(request.symptoms) * 1.5, 1.0)
-            avg_probability = condition_data["total_probability"] / condition_data["count"]
-            final_probability = int(avg_probability * symptom_count_factor)
-            
-            # Adjust based on age and gender (simplified)
-            if request.age > 60:
-                # Some conditions are more common in older individuals
-                if "Arthritis" in condition_data["name"] or "Heart" in condition_data["name"]:
-                    final_probability = min(final_probability + 10, 100)
-            
-            if request.gender == "female" and "Morning Sickness" in condition_data["name"]:
-                final_probability = min(final_probability + 20, 100)
-            
-            # Calculate urgency (1-5) based on probability and condition
-            urgency = 1
-            if final_probability > 80:
-                urgency = 4
-            elif final_probability > 60:
-                urgency = 3
-            elif final_probability > 40:
-                urgency = 2
-            
-            # Increase urgency for serious conditions
-            if "Heart Attack" in condition_data["name"] or "Appendicitis" in condition_data["name"]:
-                urgency = 5
-            
-            possible_conditions.append(
-                PossibleCondition(
-                    name=condition_data["name"],
-                    description=condition_data["description"],
-                    probability=final_probability,
-                    urgency=urgency
-                )
-            )
-        
-        # Sort by probability (descending)
-        possible_conditions.sort(key=lambda x: x.probability, reverse=True)
-        
-        # Take top conditions
-        top_conditions = possible_conditions[:5]
-        
-        return SymptomResponse(conditions=top_conditions)
+    logger.info(f"Symptom check request: age={request.age}, gender={request.gender}, symptoms={request.symptoms}")
     
-    except Exception as exc:
-        logger.error(f"Error checking symptoms: {exc}")
-        raise HTTPException(
-            status_code=500,
-            detail="An error occurred while processing your symptoms. Please try again."
-        )
+    # In a real implementation, this would call a medical API or use a trained model
+    # For demo purposes, we'll use our mock data and add some randomness
+    
+    conditions = []
+    
+    # Generate possible conditions based on reported symptoms
+    for symptom in request.symptoms:
+        symptom_lower = symptom.lower()
+        
+        # Find matching conditions for this symptom
+        matching_conditions = common_conditions.get(symptom_lower, [])
+        
+        # If no exact match, try to find partial matches
+        if not matching_conditions:
+            for key, value in common_conditions.items():
+                if symptom_lower in key or key in symptom_lower:
+                    matching_conditions = value
+                    break
+        
+        # If still no matches, add a generic response
+        if not matching_conditions:
+            # Skip adding generic responses to keep results relevant
+            continue
+        
+        # Add the conditions with slight randomization to probabilities
+        for condition in matching_conditions:
+            # Adjust probability based on age (simplified)
+            age_factor = 1.0
+            if request.age > 60:
+                age_factor = 1.2  # Increase probability for older people
+            elif request.age < 18:
+                age_factor = 0.8  # Decrease for younger people
+            
+            # Calculate final probability
+            probability = min(condition["prob"] * age_factor * random.uniform(0.9, 1.1), 0.95) * 100
+            
+            # Add to results if not already present or update if higher probability
+            existing = next((c for c in conditions if c.name == condition["name"]), None)
+            if existing:
+                existing.probability = max(existing.probability, probability)
+            else:
+                conditions.append(
+                    PossibleCondition(
+                        name=condition["name"],
+                        description=condition["description"],
+                        probability=probability,
+                        urgency=condition["urgency"]
+                    )
+                )
+    
+    # Sort by probability in descending order
+    conditions.sort(key=lambda c: c.probability, reverse=True)
+    
+    # Limit to top results
+    conditions = conditions[:5]
+    
+    # Create response
+    response = SymptomResponse(conditions=conditions)
+    
+    return response

@@ -3,6 +3,7 @@ from typing import List, Optional
 import httpx
 import os
 import logging
+from datetime import datetime
 
 from models import ConditionPreview, Condition, ErrorResponse
 
@@ -39,12 +40,30 @@ async def fetch_from_cms(endpoint: str, params=None):
 
 # Mock data for development (will be replaced with actual CMS API calls)
 mock_conditions = [
-    ConditionPreview(id=1, name="Bloating", slug="bloating", subtitle="Gas buildup in the digestive tract causing abdominal discomfort"),
-    ConditionPreview(id=2, name="Diabetes", slug="diabetes", subtitle="A chronic condition affecting how your body processes blood sugar"),
-    ConditionPreview(id=3, name="Hypertension", slug="hypertension", subtitle="High blood pressure that can lead to serious health problems"),
-    ConditionPreview(id=4, name="Migraine", slug="migraine", subtitle="Severe recurring headaches, often with additional symptoms"),
-    ConditionPreview(id=5, name="Anxiety", slug="anxiety", subtitle="Feelings of worry, nervousness, or unease about something with an uncertain outcome"),
-    ConditionPreview(id=6, name="Asthma", slug="asthma", subtitle="A condition in which airways narrow and swell and produce extra mucus"),
+    ConditionPreview(
+        id=1,
+        name="Type 2 Diabetes",
+        slug="type-2-diabetes",
+        subtitle="A chronic condition that affects how your body metabolizes sugar (glucose).",
+    ),
+    ConditionPreview(
+        id=2,
+        name="Hypertension",
+        slug="hypertension",
+        subtitle="High blood pressure is a common condition that affects the body's arteries.",
+    ),
+    ConditionPreview(
+        id=3,
+        name="Asthma",
+        slug="asthma",
+        subtitle="A condition in which your airways narrow and swell and may produce extra mucus.",
+    ),
+    ConditionPreview(
+        id=4,
+        name="Migraine",
+        slug="migraine",
+        subtitle="A headache of varying intensity, often accompanied by nausea and sensitivity to light and sound.",
+    ),
 ]
 
 @router.get("/conditions/index", response_model=List[ConditionPreview])
@@ -84,7 +103,7 @@ async def get_condition_paths():
         if exc.status_code == 503:
             # If CMS is unavailable, log warning and return a few paths
             logger.warning("CMS unavailable, returning limited condition paths")
-            return ["diabetes", "hypertension", "asthma"]
+            return ["type-2-diabetes", "hypertension", "asthma", "migraine"]
         raise
     except Exception as exc:
         # For development, return mock paths
@@ -120,22 +139,18 @@ async def get_condition(slug: str = Path(..., description="The slug of the condi
                         name=condition.name,
                         slug=condition.slug,
                         subtitle=condition.subtitle,
-                        overview="<p>This is an overview of the condition.</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>",
-                        symptoms="<p>Common symptoms include:</p><ul><li>Symptom 1</li><li>Symptom 2</li><li>Symptom 3</li></ul>",
-                        causes="<p>This condition can be caused by various factors including:</p><ul><li>Cause 1</li><li>Cause 2</li><li>Cause 3</li></ul>",
-                        diagnosis="<p>Diagnosis typically involves:</p><ul><li>Diagnostic method 1</li><li>Diagnostic method 2</li></ul>",
-                        treatments="<p>Treatment options include:</p><ul><li>Treatment 1</li><li>Treatment 2</li><li>Treatment 3</li></ul>",
-                        prevention="<p>To reduce your risk:</p><ul><li>Prevention tip 1</li><li>Prevention tip 2</li></ul>",
-                        complications="<p>Potential complications include:</p><ul><li>Complication 1</li><li>Complication 2</li></ul>",
-                        image="https://example.com/images/condition.jpg",
+                        overview="<p>This is an overview of the condition.</p>",
+                        symptoms="<p>Common symptoms include...</p>",
+                        causes="<p>This condition is usually caused by...</p>",
+                        diagnosis="<p>Diagnosis typically involves...</p>",
+                        treatments="<p>Treatment options include...</p>",
+                        prevention="<p>To reduce your risk, consider...</p>",
+                        complications="<p>If left untreated, complications may include...</p>",
+                        image="https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=600&q=80",
                         related_conditions=[
-                            {"name": "Related Condition 1", "slug": "related-1"},
-                            {"name": "Related Condition 2", "slug": "related-2"}
-                        ],
-                        also_known_as="Alternative name",
-                        specialties="Relevant medical specialties",
-                        prevalence="How common the condition is",
-                        risk_factors="Age, genetics, lifestyle factors"
+                            {"name": rc.name, "slug": rc.slug} 
+                            for rc in mock_conditions if rc.id != condition.id
+                        ][:2],
                     )
             
             raise HTTPException(status_code=404, detail=f"Condition with slug '{slug}' not found")
@@ -162,9 +177,9 @@ async def search_conditions(query: str):
         if os.getenv("ENV", "development") == "development":
             logger.info(f"Using mock data for condition search: {query}")
             return [
-                condition for condition in mock_conditions 
+                condition for condition in mock_conditions
                 if query.lower() in condition.name.lower() or 
-                   (condition.subtitle and query.lower() in condition.subtitle.lower())
+                  (condition.subtitle and query.lower() in condition.subtitle.lower())
             ]
         
         logger.error(f"Error searching conditions: {exc}")
