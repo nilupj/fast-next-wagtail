@@ -2,10 +2,7 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/search": "pages/search.js",
   "/": "pages/index.js",
-  "/conditions": "pages/conditions.js",
-  "/drugs-supplements": "pages/drugs-supplements.js",
   "/articles/[slug]": "pages/articles/[slug].js",
-  "/well-being": "pages/well-being.js"
+  "/search": "pages/search.js"
 }
