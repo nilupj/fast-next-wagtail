@@ -1,4 +1,5 @@
 from django.db import models
+from wagtail.snippets.models import register_snippet
 
 from modelcluster.fields import ParentalKey
 from modelcluster.contrib.taggit import ClusterTaggableManager
@@ -10,7 +11,7 @@ from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from wagtail.search import index
 from wagtail.api import APIField
 
-
+@register_snippet
 class ArticleAuthor(models.Model):
     name = models.CharField(max_length=255)
     credentials = models.CharField(max_length=255, blank=True)
@@ -37,7 +38,7 @@ class ArticleAuthor(models.Model):
         verbose_name = "Article Author"
         verbose_name_plural = "Article Authors"
 
-
+@register_snippet
 class ArticleCategory(models.Model):
     name = models.CharField(max_length=255)
     slug = models.SlugField(unique=True, max_length=80)
