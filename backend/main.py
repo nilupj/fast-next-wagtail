@@ -34,11 +34,14 @@ allowed_origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000,http://loc
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=allowed_origins,
+    allow_origins=["*"],  # In production, replace with specific domains
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Configure Socket.IO CORS
+socket_manager.mount_app(app, socketio_path="socket.io", cors_allowed_origins="*")
 
 # Include routers
 app.include_router(articles.router, prefix="/api", tags=["Articles"])

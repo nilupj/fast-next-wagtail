@@ -10,7 +10,10 @@ export default function Chat() {
   const socketRef = useRef();
 
   useEffect(() => {
-    socketRef.current = io('http://0.0.0.0:8000');
+    socketRef.current = io('https://0.0.0.0:8000', {
+      transports: ['websocket', 'polling'],
+      secure: true
+    });
     
     socketRef.current.on('message', (message) => {
       setMessages((prevMessages) => [...prevMessages, message]);
