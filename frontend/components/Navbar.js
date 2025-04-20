@@ -67,6 +67,16 @@ export default function Navbar() {
 
           {/* User actions */}
           <div className="hidden md:flex items-center space-x-4">
+            <button
+              className="text-sm text-white hover:text-white/80"
+              onClick={() => {
+                const newLang = localStorage.getItem('language') === 'hi' ? 'en' : 'hi';
+                localStorage.setItem('language', newLang);
+                window.location.reload();
+              }}
+            >
+              {localStorage.getItem('language') === 'hi' ? 'English' : 'हिंदी'}
+            </button>
             <Link href="/subscribe" className="text-sm text-white border border-white px-3 py-1 rounded hover:bg-white hover:text-primary transition-colors">
               Subscribe
             </Link>
@@ -134,6 +144,16 @@ export default function Navbar() {
               <SearchBar />
             </div>
             <div className="mt-3 px-2 space-y-1">
+              <button
+                className="block w-full text-left text-white py-2 px-3 rounded hover:bg-primary-light"
+                onClick={() => {
+                  const newLang = localStorage.getItem('language') === 'hi' ? 'en' : 'hi';
+                  localStorage.setItem('language', newLang);
+                  window.location.reload();
+                }}
+              >
+                {localStorage.getItem('language') === 'hi' ? 'English' : 'हिंदी'}
+              </button>
               <Link href="/subscribe" className="block text-white py-2 px-3 rounded hover:bg-primary-light">
                 Subscribe
               </Link>
