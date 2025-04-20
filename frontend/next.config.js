@@ -1,17 +1,16 @@
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['0.0.0.0', 'localhost', 'healthinfocms.com', 'images.unsplash.com'],
+    domains: ['0.0.0.0', 'localhost'],
     remotePatterns: [
       {
         protocol: 'http',
-        hostname: '**',
-      },
-      {
-        protocol: 'https',
-        hostname: '**',
-      },
+        hostname: '0.0.0.0',
+        port: '8001',
+        pathname: '/media/**',
+      }
     ],
   },
   async rewrites() {
@@ -20,6 +19,10 @@ const nextConfig = {
         source: '/api/:path*',
         destination: 'http://0.0.0.0:8001/api/:path*',
       },
+      {
+        source: '/media/:path*',
+        destination: 'http://0.0.0.0:8001/media/:path*',
+      }
     ];
   },
 }
