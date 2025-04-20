@@ -13,6 +13,43 @@ logger = logging.getLogger(__name__)
 # Set the CMS API URL from environment variable with a fallback
 CMS_API_URL = os.getenv("CMS_API_URL", "http://localhost:8001/api")
 
+@router.post("/symptom-checker")
+async def check_symptoms(request: dict):
+    try:
+        age = request.get('age')
+        gender = request.get('gender')
+        symptoms = request.get('symptoms', [])
+        
+        conditions = []
+        for symptom in symptoms:
+            symptom_lower = symptom.lower()
+            matching_conditions = common_conditions.get(symptom_lower, [])
+            
+            for condition in matching_conditions:
+                # Adjust probability based on age
+                age_factor = 1.0
+                if age > 60:
+                    age_factor = 1.2
+                elif age < 18:
+                    age_factor = 0.8
+                
+                probability = min(condition["prob"] * age_factor * random.uniform(0.9, 1.1), 0.95) * 100
+                
+                conditions.append({
+                    "name": condition["name"],
+                    "description": condition["description"],
+                    "probability": probability
+                })
+        
+        # Sort by probability and get top 5
+        conditions.sort(key=lambda x: x["probability"], reverse=True)
+        conditions = conditions[:5]
+        
+        return {"conditions": conditions}
+    except Exception as e:
+        logger.error(f"Error in symptom checker: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 # Utility function to make requests to the CMS API
 async def fetch_from_cms(endpoint: str, params=None):
     async with httpx.AsyncClient() as client:
