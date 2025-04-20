@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { NextSeo } from 'next-seo';
 import ArticleCard from '../../components/ArticleCard';
 import { fetchArticle, fetchArticlePaths, fetchRelatedArticles } from '../../utils/api';
+import ContentNav from '../../components/ContentNav'; // Added import statement
 
 export default function ArticleDetail({ article, relatedArticles }) {
   const router = useRouter();
@@ -57,7 +58,7 @@ export default function ArticleDetail({ article, relatedArticles }) {
     day: 'numeric',
     year: 'numeric',
   });
-  
+
   const formattedUpdatedDate = updated_date 
     ? new Date(updated_date).toLocaleDateString('en-US', {
         month: 'long',
@@ -85,7 +86,7 @@ export default function ArticleDetail({ article, relatedArticles }) {
           },
         }}
       />
-    
+
       <div className="container-custom py-8">
         {/* Breadcrumbs */}
         <nav className="text-sm text-neutral-500 mb-6">
@@ -113,7 +114,7 @@ export default function ArticleDetail({ article, relatedArticles }) {
             </li>
           </ol>
         </nav>
-        
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main content */}
           <div className="lg:col-span-2">
@@ -121,7 +122,7 @@ export default function ArticleDetail({ article, relatedArticles }) {
               <header className="p-6 pb-0">
                 <h1 className="text-3xl md:text-4xl font-bold text-neutral-800 mb-3">{title}</h1>
                 {subtitle && <p className="text-xl text-neutral-600 mb-4">{subtitle}</p>}
-                
+
                 <div className="flex flex-wrap items-center text-sm text-neutral-500 mb-6">
                   {author && (
                     <div className="flex items-center mr-6 mb-2">
@@ -139,7 +140,7 @@ export default function ArticleDetail({ article, relatedArticles }) {
                   )}
                 </div>
               </header>
-              
+
               {image && (
                 <div className="relative h-64 sm:h-80 md:h-96 w-full">
                   <Image 
@@ -150,10 +151,10 @@ export default function ArticleDetail({ article, relatedArticles }) {
                   />
                 </div>
               )}
-              
+
               <div className="p-6">
                 <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: content }} />
-                
+
                 {/* Tags */}
                 {tags && tags.length > 0 && (
                   <div className="mt-8 pt-6 border-t border-neutral-200">
@@ -171,7 +172,7 @@ export default function ArticleDetail({ article, relatedArticles }) {
                     </div>
                   </div>
                 )}
-                
+
                 {/* Author bio */}
                 {author && author.bio && (
                   <div className="mt-8 pt-6 border-t border-neutral-200">
@@ -196,7 +197,7 @@ export default function ArticleDetail({ article, relatedArticles }) {
                     </div>
                   </div>
                 )}
-                
+
                 {/* Medical disclaimer */}
                 <div className="mt-8 p-4 bg-blue-50 border border-blue-200 rounded-md">
                   <p className="text-blue-700 text-sm">
@@ -208,7 +209,7 @@ export default function ArticleDetail({ article, relatedArticles }) {
               </div>
             </article>
           </div>
-          
+
           {/* Sidebar */}
           <div>
             {/* Related articles */}
@@ -232,7 +233,7 @@ export default function ArticleDetail({ article, relatedArticles }) {
                 </div>
               </div>
             )}
-            
+
             {/* Popular topics */}
             <div className="bg-white rounded-lg shadow-md p-6 mb-6">
               <h3 className="text-lg font-semibold text-primary mb-4">Popular Topics</h3>
@@ -287,7 +288,7 @@ export default function ArticleDetail({ article, relatedArticles }) {
                 </Link>
               </div>
             </div>
-            
+
             {/* Newsletter signup */}
             <div className="bg-primary-light rounded-lg shadow-md p-6 text-white">
               <h3 className="text-lg font-semibold mb-2">Stay Informed</h3>
@@ -311,7 +312,7 @@ export default function ArticleDetail({ article, relatedArticles }) {
             </div>
           </div>
         </div>
-        
+
         {/* More from HealthInfo */}
         <div className="mt-12">
           <h2 className="section-title">More From HealthInfo</h2>
@@ -359,7 +360,7 @@ export default function ArticleDetail({ article, relatedArticles }) {
 export async function getStaticPaths() {
   try {
     const paths = await fetchArticlePaths();
-    
+
     return {
       paths: paths.map(slug => ({ params: { slug } })),
       fallback: true, // Show a loading state while generating pages on-demand
@@ -376,13 +377,13 @@ export async function getStaticPaths() {
 export async function getStaticProps({ params }) {
   try {
     const article = await fetchArticle(params.slug);
-    
+
     if (!article) {
       return {
         notFound: true,
       };
     }
-    
+
     // Fetch related articles
     const relatedArticles = await fetchRelatedArticles(params.slug);
 
