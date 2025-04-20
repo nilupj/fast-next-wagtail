@@ -29,15 +29,10 @@ self.__BUILD_MANIFEST = {
       "static/chunks/main.js",
       "static/chunks/pages/articles/[slug].js"
     ],
-    "/conditions/[slug]": [
+    "/symptom-checker": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/conditions/[slug].js"
-    ],
-    "/well-being": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/well-being.js"
+      "static/chunks/pages/symptom-checker.js"
     ]
   },
   "ampFirstPages": []
