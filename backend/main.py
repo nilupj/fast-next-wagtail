@@ -3,6 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 import os
 import logging
+from fastapi_socketio import SocketManager
+from typing import Dict, Any
 
 from routers import articles, conditions, symptoms
 from models import ErrorResponse
@@ -20,6 +22,12 @@ app = FastAPI(
     description="API for the HealthInfo medical information website",
     version="1.0.0",
 )
+
+socket_manager = SocketManager(app=app)
+
+@socket_manager.on('message')
+async def handle_message(sid: str, message: Dict[str, Any]):
+    await socket_manager.emit('message', message)
 
 # Add CORS middleware
 allowed_origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000,http://localhost:5000").split(",")

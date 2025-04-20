@@ -2,6 +2,7 @@ import Head from 'next/head';
 import Script from 'next/script';
 import Navbar from './Navbar';
 import Footer from './Footer';
+import Chat from './Chat'; // Added import for Chat component
 import { useEffect } from 'react';
 
 export default function Layout({ children, title = 'Health Info - Trusted Medical Information & Resources' }) {
@@ -26,6 +27,7 @@ export default function Layout({ children, title = 'Health Info - Trusted Medica
           {children}
         </main>
         <Footer />
+        <Chat /> {/* Added Chat component */}
       </div>
       {/* Using Next.js Script component for proper handling of external scripts */}
       <Script 
