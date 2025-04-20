@@ -12,8 +12,9 @@ INSTALLED_APPS = [
     'home',
     'articles',
     'conditions',
+    'drugs', #Added drugs app
     'search',
-    
+
     'wagtail.contrib.forms',
     'wagtail.contrib.redirects',
     'wagtail.contrib.settings',
@@ -27,13 +28,13 @@ INSTALLED_APPS = [
     'wagtail.admin',
     'wagtail',
     'wagtail.api.v2',
-    
+
     'modelcluster',
     'taggit',
     'rest_framework',
     'corsheaders',  # CORS support
     'api',  # Custom API app
-    
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -52,7 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    
+
     'wagtail.contrib.redirects.middleware.RedirectMiddleware',
 ]
 
