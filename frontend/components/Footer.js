@@ -1,39 +1,47 @@
 import Link from 'next/link';
 import NotificationSubscribe from './NotificationSubscribe';
+import translations from '../utils/translations';
+import { useState, useEffect } from 'react';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
+  const [t, setT] = useState(translations.en);
+
+  useEffect(() => {
+    const savedLang = localStorage.getItem('language') || 'en';
+    setT(translations[savedLang]);
+  }, []);
 
   return (
     <footer className="bg-neutral-100 pt-12 pb-6">
       <div className="container-custom">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           <div>
-            <h3 className="text-lg font-semibold text-primary mb-4">About HealthInfo</h3>
+            <h3 className="text-lg font-semibold text-primary mb-4">{t.footer.about.title}</h3>
             <ul className="space-y-2">
               <li>
                 <Link href="/about" className="text-neutral-600 hover:text-primary transition-colors">
-                  About Us
+                  {t.footer.about.aboutUs}
                 </Link>
               </li>
               <li>
                 <Link href="/editorial-policy" className="text-neutral-600 hover:text-primary transition-colors">
-                  Editorial Policy
+                  {t.footer.about.editorial}
                 </Link>
               </li>
               <li>
                 <Link href="/privacy" className="text-neutral-600 hover:text-primary transition-colors">
-                  Privacy Policy
+                  {t.footer.about.privacy}
                 </Link>
               </li>
               <li>
                 <Link href="/terms" className="text-neutral-600 hover:text-primary transition-colors">
-                  Terms of Use
+                  {t.footer.about.terms}
                 </Link>
               </li>
               <li>
                 <Link href="/contact" className="text-neutral-600 hover:text-primary transition-colors">
-                  Contact Us
+                  {t.footer.about.contact}
                 </Link>
               </li>
             </ul>

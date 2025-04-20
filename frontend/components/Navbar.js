@@ -1,8 +1,25 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import SearchBar from './SearchBar';
+import translations from '../utils/translations';
 
 export default function Navbar() {
+  const [language, setLanguage] = useState('en');
+  const [t, setT] = useState(translations.en);
+
+  useEffect(() => {
+    const savedLang = localStorage.getItem('language') || 'en';
+    setLanguage(savedLang);
+    setT(translations[savedLang]);
+  }, []);
+
+  const toggleLanguage = () => {
+    const newLang = language === 'hi' ? 'en' : 'hi';
+    localStorage.setItem('language', newLang);
+    setLanguage(newLang);
+    setT(translations[newLang]);
+    window.location.reload();
+  };
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [language, setLanguage] = useState('en');
 
@@ -35,22 +52,22 @@ export default function Navbar() {
           <div className="hidden md:block">
             <div className="ml-10 flex items-center space-x-4">
               <Link href="/conditions" className="nav-link">
-                Conditions
+                {t.nav.conditions}
               </Link>
               <Link href="/drugs-supplements" className="nav-link">
-                Drugs & Supplements
+                {t.nav.drugsAndSupplements}
               </Link>
               <Link href="/well-being" className="nav-link">
-                Well-Being
+                {t.nav.wellBeing}
               </Link>
               <Link href="/tools" className="nav-link">
-                Tools
+                {t.nav.tools}
               </Link>
               <Link href="/symptom-checker" className="nav-link">
-                Symptom Checker
+                {t.nav.symptomChecker}
               </Link>
               <Link href="/doctors" className="nav-link">
-                Find a Doctor
+                {t.nav.findDoctor}
               </Link>
               <div className="relative group">
                 <button className="nav-link flex items-center">
