@@ -23,7 +23,7 @@ app = FastAPI(
     version="1.0.0",
 )
 
-socket_manager = SocketManager(app=app)
+socket_manager = SocketManager(app=app, cors_allowed_origins="*")
 
 @socket_manager.on('message')
 async def handle_message(sid: str, message: Dict[str, Any]):
@@ -41,7 +41,8 @@ app.add_middleware(
 )
 
 # Configure Socket.IO CORS
-socket_manager.mount_app(app, socketio_path="socket.io", cors_allowed_origins="*")
+socket_manager = SocketManager(app=app, cors_allowed_origins="*")
+
 
 # Include routers
 app.include_router(articles.router, prefix="/api", tags=["Articles"])
