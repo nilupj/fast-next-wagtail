@@ -13,6 +13,13 @@ const api = axios.create({
   },
 });
 
+// Add language interceptor
+api.interceptors.request.use((config) => {
+  const lang = localStorage.getItem('language') || 'en';
+  config.params = { ...config.params, lang };
+  return config;
+});
+
 // Top stories
 export const fetchTopStories = async () => {
   try {
