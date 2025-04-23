@@ -3,5 +3,7 @@
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
   "/": "pages/index.js",
-  "/articles/[slug]": "pages/articles/[slug].js"
+  "/articles/[slug]": "pages/articles/[slug].js",
+  "/conditions": "pages/conditions.js",
+  "/conditions/[slug]": "pages/conditions/[slug].js"
 }
