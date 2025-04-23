@@ -207,17 +207,19 @@ def condition_detail(request, slug):
     try:
         condition = ConditionPage.objects.live().get(slug=slug)
 
+        lang = request.GET.get('lang', 'en')
+        
         condition_data = {
             'id': condition.id,
             'name': condition.title,
             'slug': condition.slug,
-            'subtitle': condition.subtitle,
-            'overview': condition.overview,
-            'symptoms': condition.symptoms,
-            'causes': condition.causes,
-            'diagnosis': condition.diagnosis,
-            'treatments': condition.treatments,
-            'prevention': condition.prevention,
+            'subtitle': condition.subtitle_hi if lang == 'hi' else condition.subtitle,
+            'overview': condition.overview_hi if lang == 'hi' else condition.overview,
+            'symptoms': condition.symptoms_hi if lang == 'hi' else condition.symptoms,
+            'causes': condition.causes_hi if lang == 'hi' else condition.causes,
+            'diagnosis': condition.diagnosis_hi if lang == 'hi' else condition.diagnosis,
+            'treatments': condition.treatments_hi if lang == 'hi' else condition.treatments,
+            'prevention': condition.prevention_hi if lang == 'hi' else condition.prevention,
             'complications': condition.complications,
             'also_known_as': condition.also_known_as,
             'specialties': condition.specialties,

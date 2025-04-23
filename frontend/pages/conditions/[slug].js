@@ -274,9 +274,9 @@ export async function getStaticPaths() {
   }
 }
 
-export async function getStaticProps({ params }) {
+export async function getStaticProps({ params, locale }) {
   try {
-    const condition = await fetchCondition(params.slug);
+    const condition = await fetchCondition(params.slug, locale || 'en');
     
     if (!condition) {
       return {

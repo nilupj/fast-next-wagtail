@@ -67,9 +67,11 @@ export const fetchConditionPaths = async () => {
 };
 
 // Single condition details
-export const fetchCondition = async (slug) => {
+export const fetchCondition = async (slug, lang = 'en') => {
   try {
-    const response = await api.get(`/api/conditions/${slug}`);
+    const response = await api.get(`/api/conditions/${slug}`, {
+      params: { lang }
+    });
     return response.data;
   } catch (error) {
     console.error(`Error fetching condition ${slug}:`, error);
