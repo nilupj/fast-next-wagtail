@@ -6,7 +6,7 @@ channel = "stable-24_05"
 packages = ["libxcrypt"]
 
 [workflows]
-runButton = "Start All Services"
+runButton = "Frontend and Backend"
 
 [[workflows.workflow]]
 name = "Project"
@@ -109,6 +109,10 @@ args = "cd backend && python main.py"
 name = "Frontend and Backend"
 author = 41806736
 mode = "parallel"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd cms && python manage.py migrate && python manage.py runserver 0.0.0.0:8001"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
