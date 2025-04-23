@@ -6,7 +6,7 @@ const api = axios.create({
   baseURL: API_URL,
   paramsSerializer: {
     encode: (param) => encodeURIComponent(param)
-  }
+  },
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
