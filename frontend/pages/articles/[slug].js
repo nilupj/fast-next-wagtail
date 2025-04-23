@@ -375,7 +375,7 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }) {
-  const lang = localStorage.getItem('language') || 'en'; // Get language from localStorage
+  const lang = 'en'; // Language is now hardcoded.  Consider passing it as a query param.
   try {
     const article = await fetchArticle(params.slug, lang); // Pass language to fetchArticle
 
