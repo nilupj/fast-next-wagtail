@@ -18,4 +18,5 @@ dependencies = [
     "sqlalchemy>=2.0.40",
     "uvicorn>=0.34.1",
     "wagtail>=6.4.1",
+    "django-modeltranslation>=0.19.14",
 ]

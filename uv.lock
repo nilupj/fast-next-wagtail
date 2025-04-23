@@ -400,6 +400,18 @@ wheels = [
 ]
 
 [[package]]
+name = "django-modeltranslation"
+version = "0.19.14"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "django" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/54/53/1aa5ca46c29c8c97b23737ccd0693144b79a4097034ab813cc4cdebb7f8b/django_modeltranslation-0.19.14.tar.gz", hash = "sha256:1ba875b51296f41105587e6c1c6b161c32c7c81b7cbab23111ffdb8310471db8", size = 90904 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/f9/0c/1d3c8d562138e48c1f691b86efbc74afae63d79fc19e9f844dcd6723ca73/django_modeltranslation-0.19.14-py3-none-any.whl", hash = "sha256:2b7d6fe0b26b5050f1fd38960162df84ea6a9eaf7b690f428b55eb0e87720c57", size = 54009 },
+]
+
+[[package]]
 name = "django-permissionedforms"
 version = "0.1"
 source = { registry = "https://pypi.org/simple" }
@@ -1208,6 +1220,7 @@ dependencies = [
     { name = "alembic" },
     { name = "django" },
     { name = "django-cors-headers" },
+    { name = "django-modeltranslation" },
     { name = "fastapi" },
     { name = "fastapi-socketio" },
     { name = "httpx" },
@@ -1226,6 +1239,7 @@ requires-dist = [
     { name = "alembic", specifier = ">=1.15.2" },
     { name = "django", specifier = ">=5.2" },
     { name = "django-cors-headers", specifier = ">=4.7.0" },
+    { name = "django-modeltranslation", specifier = ">=0.19.14" },
     { name = "fastapi", specifier = ">=0.115.12" },
     { name = "fastapi-socketio", specifier = ">=0.0.10" },
     { name = "httpx", specifier = ">=0.28.1" },

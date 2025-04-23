@@ -105,8 +105,25 @@ args = "cd frontend && npm run dev"
 task = "shell.exec"
 args = "cd backend && python main.py"
 
+[[workflows.workflow]]
+name = "Frontend and Backend"
+author = 41806736
+mode = "parallel"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd frontend && npm run dev"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd backend && python main.py"
+
 [deployment]
 run = ["sh", "-c", "node index.js"]
+
+[[ports]]
+localPort = 3000
+externalPort = 3001
 
 [[ports]]
 localPort = 5000
