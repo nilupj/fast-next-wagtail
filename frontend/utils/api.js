@@ -13,10 +13,12 @@ const api = axios.create({
   },
 });
 
-// Add language interceptor
+// Add language interceptor with isServer check
 api.interceptors.request.use((config) => {
-  const lang = localStorage.getItem('language') || 'en';
-  config.params = { ...config.params, lang };
+  if (typeof window !== 'undefined') {
+    const lang = localStorage.getItem('language') || 'en';
+    config.params = { ...config.params, lang };
+  }
   return config;
 });
 
