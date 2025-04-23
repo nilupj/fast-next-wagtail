@@ -91,11 +91,13 @@ export const fetchArticlePaths = async () => {
 };
 
 // Single article details
-export const fetchArticle = async (slug) => {
+export const fetchArticle = async (slug, lang = 'en') => {
   try {
     // Ensure the slug is properly encoded
     const encodedSlug = encodeURIComponent(slug);
-    const response = await api.get(`/api/articles/${encodedSlug}`);
+    const response = await api.get(`/api/articles/${encodedSlug}`, {
+      params: { lang }
+    });
     return response.data;
   } catch (error) {
     console.error(`Error fetching article ${slug}:`, error);

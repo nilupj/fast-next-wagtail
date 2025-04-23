@@ -375,8 +375,9 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }) {
+  const lang = localStorage.getItem('language') || 'en'; // Get language from localStorage
   try {
-    const article = await fetchArticle(params.slug);
+    const article = await fetchArticle(params.slug, lang); // Pass language to fetchArticle
 
     if (!article) {
       return {
@@ -384,8 +385,8 @@ export async function getStaticProps({ params }) {
       };
     }
 
-    // Fetch related articles
-    const relatedArticles = await fetchRelatedArticles(params.slug);
+    // Fetch related articles (consider passing lang here too if related articles are language-dependent)
+    const relatedArticles = await fetchRelatedArticles(params.slug, lang);
 
     return {
       props: {

@@ -115,9 +115,17 @@ def article_detail(request, slug):
         # Decode the URL-encoded slug
         decoded_slug = unquote(slug.strip('/'))
         article = ArticlePage.objects.live().get(slug=decoded_slug)
+        
+        # Get language from query params
+        lang = request.GET.get('lang', 'en')
 
         article_data = {
             'id': article.id,
+            'title': article.title,
+            'slug': article.slug,
+            'subtitle': article.subtitle_hi if lang == 'hi' else article.subtitle,
+            'summary': article.summary_hi if lang == 'hi' else article.summary,
+            'body': article.body_hi if lang == 'hi' else article.body,
             'title': article.title,
             'slug': article.slug,
             'subtitle': article.subtitle,
