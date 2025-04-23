@@ -4,6 +4,9 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://0.0.0.0:8001';
 
 const api = axios.create({
   baseURL: API_URL,
+  paramsSerializer: {
+    encode: (param) => encodeURIComponent(param)
+  }
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',

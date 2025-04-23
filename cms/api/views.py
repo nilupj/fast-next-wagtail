@@ -112,8 +112,13 @@ from urllib.parse import unquote
 def article_detail(request, slug):
     """Get a single article by its slug"""
     try:
+        # First try with decoded slug
         decoded_slug = unquote(slug)
-        article = ArticlePage.objects.live().get(slug=decoded_slug)
+        try:
+            article = ArticlePage.objects.live().get(slug=decoded_slug)
+        except ArticlePage.DoesNotExist:
+            # Try with original slug if decoded doesn't work
+            article = ArticlePage.objects.live().get(slug=slug)
 
         article_data = {
             'id': article.id,
