@@ -107,10 +107,13 @@ def articles_paths(request):
     return JsonResponse(list(articles), safe=False)
 
 
+from urllib.parse import unquote
+
 def article_detail(request, slug):
     """Get a single article by its slug"""
     try:
-        article = ArticlePage.objects.live().get(slug=slug)
+        decoded_slug = unquote(slug)
+        article = ArticlePage.objects.live().get(slug=decoded_slug)
 
         article_data = {
             'id': article.id,
