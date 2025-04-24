@@ -116,25 +116,27 @@ def article_detail(request, slug):
         decoded_slug = unquote(slug.strip('/'))
         lang = request.GET.get('lang', 'en')
 
-        # Try to find the article by the decoded slug
+        # Try to find the article by either English or Hindi slug
+        article = None
         try:
             article = ArticlePage.objects.live().get(slug=decoded_slug)
         except ArticlePage.DoesNotExist:
-            # If not found, try finding it by the Hindi slug
-            article = ArticlePage.objects.live().get(slug_hi=decoded_slug)
+            try:
+                # Try finding by Hindi title as slug
+                article = ArticlePage.objects.live().get(slug_hi=decoded_slug)
+            except ArticlePage.DoesNotExist:
+                pass
+
+        if not article:
+            return JsonResponse({'message': 'Article not found'}, status=404)
 
         article_data = {
             'id': article.id,
             'title': article.title,
-            'slug': article.slug,
+            'slug': article.slug_hi if lang == 'hi' else article.slug,
             'subtitle': article.subtitle_hi if lang == 'hi' else article.subtitle,
             'summary': article.summary_hi if lang == 'hi' else article.summary,
             'body': article.body_hi if lang == 'hi' else article.body,
-            'title': article.title,
-            'slug': article.slug,
-            'subtitle': article.subtitle,
-            'summary': article.summary,
-            'content': article.body,
             'image': article.image.get_rendition('fill-800x500').url if article.image else None,
             'author': {
                 'name': article.author.name,

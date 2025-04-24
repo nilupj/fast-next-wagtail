@@ -97,7 +97,8 @@ export const fetchArticle = async (slug) => {
     // Ensure the slug is properly encoded
     const encodedSlug = encodeURIComponent(slug);
     const lang = typeof window !== 'undefined' ? localStorage.getItem('language') || 'en' : 'en';
-    const response = await api.get(`/api/articles/${encodedSlug}`, {
+    const path = `/api/articles/${encodedSlug}`;
+    const response = await api.get(path, {
       params: { lang }
     });
     return response.data;
