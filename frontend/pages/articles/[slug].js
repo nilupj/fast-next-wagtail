@@ -374,10 +374,9 @@ export async function getStaticPaths() {
   }
 }
 
-export async function getStaticProps({ params }) {
-  const lang = 'en'; // Language is now hardcoded.  Consider passing it as a query param.
+export async function getStaticProps({ params, locale }) {
   try {
-    const article = await fetchArticle(params.slug, lang); // Pass language to fetchArticle
+    const article = await fetchArticle(params.slug);
 
     if (!article) {
       return {

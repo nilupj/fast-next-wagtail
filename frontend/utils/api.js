@@ -91,10 +91,11 @@ export const fetchArticlePaths = async () => {
 };
 
 // Single article details
-export const fetchArticle = async (slug, lang = 'en') => {
+export const fetchArticle = async (slug) => {
   try {
     // Ensure the slug is properly encoded
     const encodedSlug = encodeURIComponent(slug);
+    const lang = typeof window !== 'undefined' ? localStorage.getItem('language') || 'en' : 'en';
     const response = await api.get(`/api/articles/${encodedSlug}`, {
       params: { lang }
     });

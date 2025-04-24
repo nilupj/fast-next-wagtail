@@ -20,10 +20,7 @@ export default function Navbar() {
     localStorage.setItem('language', newLang);
     setLanguage(newLang);
     setT(translations[newLang]);
-    // Add lang parameter to current URL
-    const url = new URL(window.location.href);
-    url.searchParams.set('lang', newLang);
-    window.location.href = url.toString();
+    window.location.reload(); // Reload the page to fetch new content
   };
 
   const toggleMobileMenu = () => {
