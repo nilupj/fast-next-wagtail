@@ -114,10 +114,14 @@ def article_detail(request, slug):
     try:
         # Decode the URL-encoded slug
         decoded_slug = unquote(slug.strip('/'))
-        article = ArticlePage.objects.live().get(slug=decoded_slug)
-        
-        # Get language from query params
         lang = request.GET.get('lang', 'en')
+
+        # Try to find the article by the decoded slug
+        try:
+            article = ArticlePage.objects.live().get(slug=decoded_slug)
+        except ArticlePage.DoesNotExist:
+            # If not found, try finding it by the Hindi slug
+            article = ArticlePage.objects.live().get(slug_hi=decoded_slug)
 
         article_data = {
             'id': article.id,
