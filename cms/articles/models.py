@@ -96,6 +96,7 @@ class ArticlePageTag(TaggedItemBase):
 class ArticlePage(Page):
     subtitle = models.CharField(max_length=255, blank=True)
     subtitle_hi = models.CharField(max_length=255, blank=True, verbose_name="Subtitle (Hindi)")
+    slug_hi = models.SlugField(max_length=255, blank=True, verbose_name="Slug (Hindi)")
     summary = models.TextField(blank=True)
     summary_hi = models.TextField(blank=True, verbose_name="Summary (Hindi)")
     body = RichTextField()
