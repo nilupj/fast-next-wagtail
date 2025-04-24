@@ -92,14 +92,12 @@ export const fetchArticlePaths = async () => {
 };
 
 // Single article details
-export const fetchArticle = async (slug) => {
+export const fetchArticle = async (slug, lang) => {
   try {
-    // Ensure the slug is properly encoded
     const encodedSlug = encodeURIComponent(slug);
-    const lang = typeof window !== 'undefined' ? localStorage.getItem('language') || 'en' : 'en';
-    const path = lang === 'hi' ? `/api/articles/hi/${encodedSlug}` : `/api/articles/${encodedSlug}`;
-    const response = await api.get(path, {
-      params: { lang }
+    const currentLang = lang || (typeof window !== 'undefined' ? localStorage.getItem('language') || 'en' : 'en');
+    const response = await api.get(`/api/articles/${encodedSlug}`, {
+      params: { lang: currentLang }
     });
     return response.data;
   } catch (error) {

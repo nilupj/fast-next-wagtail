@@ -112,20 +112,18 @@ from urllib.parse import unquote
 def article_detail(request, slug):
     """Get a single article by its slug"""
     try:
-        # Decode the URL-encoded slug
         decoded_slug = unquote(slug.strip('/'))
         lang = request.GET.get('lang', 'en')
 
-        # Try to find the article by either English or Hindi slug
-        article = None
-        try:
-            article = ArticlePage.objects.live().get(slug=decoded_slug)
-        except ArticlePage.DoesNotExist:
-            try:
-                # Try finding by Hindi title as slug
-                article = ArticlePage.objects.live().get(slug_hi=decoded_slug)
-            except ArticlePage.DoesNotExist:
-                pass
+        # Try to find the article using the appropriate slug field based on language
+        if lang == 'hi':
+            article = ArticlePage.objects.live().filter(
+                Q(slug_hi=decoded_slug) | Q(slug=decoded_slug)
+            ).first()
+        else:
+            article = ArticlePage.objects.live().filter(
+                Q(slug=decoded_slug) | Q(slug_hi=decoded_slug)
+            ).first()
 
         if not article:
             return JsonResponse({'message': 'Article not found'}, status=404)

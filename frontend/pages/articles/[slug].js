@@ -376,7 +376,7 @@ export async function getStaticPaths() {
 
 export async function getStaticProps({ params, locale }) {
   try {
-    const article = await fetchArticle(params.slug);
+    const article = await fetchArticle(params.slug, locale);
 
     if (!article) {
       return {
@@ -385,7 +385,7 @@ export async function getStaticProps({ params, locale }) {
     }
 
     // Fetch related articles (consider passing lang here too if related articles are language-dependent)
-    const relatedArticles = await fetchRelatedArticles(params.slug, lang);
+    const relatedArticles = await fetchRelatedArticles(params.slug);
 
     return {
       props: {
