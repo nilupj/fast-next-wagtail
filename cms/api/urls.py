@@ -1,5 +1,4 @@
 from django.urls import path
-
 from . import views
 
 urlpatterns = [
@@ -9,11 +8,13 @@ urlpatterns = [
     path('articles/paths', views.articles_paths, name='articles_paths'),
     path('articles/<slug:slug>', views.article_detail, name='article_detail'),
     path('articles/<slug:slug>/related', views.article_related, name='article_related'),
+    path('articles/hi/<slug:slug>', views.article_detail, name='article_detail_hi'), #Added Hindi slug for articles
 
     # Conditions
     path('conditions/index', views.conditions_index, name='conditions_index'),
     path('conditions/paths', views.conditions_paths, name='conditions_paths'),
     path('conditions/<slug:slug>', views.condition_detail, name='condition_detail'),
+    path('conditions/hi/<slug:slug>', views.condition_detail, name='condition_detail_hi'), #Added Hindi slug for conditions
 
     # Search
     path('search/articles', views.search_articles, name='search_articles'),

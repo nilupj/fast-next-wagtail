@@ -69,7 +69,8 @@ export const fetchConditionPaths = async () => {
 // Single condition details
 export const fetchCondition = async (slug, lang = 'en') => {
   try {
-    const response = await api.get(`/api/conditions/${slug}`, {
+    const path = lang === 'hi' ? `/api/conditions/hi/${slug}` : `/api/conditions/${slug}`;
+    const response = await api.get(path, {
       params: { lang }
     });
     return response.data;
@@ -96,7 +97,8 @@ export const fetchArticle = async (slug) => {
     // Ensure the slug is properly encoded
     const encodedSlug = encodeURIComponent(slug);
     const lang = typeof window !== 'undefined' ? localStorage.getItem('language') || 'en' : 'en';
-    const response = await api.get(`/api/articles/${encodedSlug}`, {
+    const path = lang === 'hi' ? `/api/articles/hi/${encodedSlug}` : `/api/articles/${encodedSlug}`;
+    const response = await api.get(path, {
       params: { lang }
     });
     return response.data;
