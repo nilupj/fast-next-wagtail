@@ -9,8 +9,17 @@ from wagtail.documents.api.v2.views import DocumentsAPIViewSet
 from articles.models import ArticlePage
 from conditions.models import ConditionPage
 
+class CustomPagesAPIViewSet(PagesAPIViewSet):
+    def get_queryset(self):
+        return super().get_queryset().public()
+
+    known_query_parameters = PagesAPIViewSet.known_query_parameters.union([
+        'fields',
+        'lang',
+    ])
+
 api_router = WagtailAPIRouter('wagtailapi')
-api_router.register_endpoint('pages', PagesAPIViewSet)
+api_router.register_endpoint('pages', CustomPagesAPIViewSet)
 api_router.register_endpoint('images', ImagesAPIViewSet)
 api_router.register_endpoint('documents', DocumentsAPIViewSet)
 
