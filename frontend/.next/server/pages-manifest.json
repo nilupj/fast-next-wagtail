@@ -4,6 +4,6 @@
   "/_document": "pages/_document.js",
   "/articles/[slug]": "pages/articles/[slug].js",
   "/": "pages/index.js",
-  "/well-being": "pages/well-being.js",
-  "/conditions": "pages/conditions.js"
+  "/conditions": "pages/conditions.js",
+  "/well-being": "pages/well-being.js"
 }
