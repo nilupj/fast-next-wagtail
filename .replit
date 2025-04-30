@@ -6,7 +6,7 @@ channel = "stable-24_05"
 packages = ["libxcrypt"]
 
 [workflows]
-runButton = "Start All Services"
+runButton = "Run CMS"
 
 [[workflows.workflow]]
 name = "Project"
