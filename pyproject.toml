@@ -19,4 +19,5 @@ dependencies = [
     "uvicorn>=0.34.1",
     "wagtail>=6.4.1",
     "django-modeltranslation>=0.19.14",
+    "wagtail-localize>=1.11.3",
 ]
