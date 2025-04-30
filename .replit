@@ -6,7 +6,7 @@ channel = "stable-24_05"
 packages = ["libxcrypt"]
 
 [workflows]
-runButton = "Start All Services"
+runButton = "Dev Services"
 
 [[workflows.workflow]]
 name = "Project"
@@ -113,6 +113,19 @@ args = "cd frontend && npm run dev"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "cd backend && python main.py"
+
+[[workflows.workflow]]
+name = "Dev Services"
+author = 42115102
+mode = "parallel"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd cms && python manage.py migrate && python manage.py runserver 0.0.0.0:8001"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd frontend && npm install && npm run dev"
 
 [deployment]
 run = ["sh", "-c", "node index.js"]
