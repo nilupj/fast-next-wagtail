@@ -18,7 +18,7 @@ urlpatterns = [
     path('search/', search_views.search, name='search'),
     
     # API URLs
-    path('wagtailapi/v2/', api.api_router.urls),
+    path('api/v2/', api.api_router.urls),
     # Use our custom API endpoints
     path('api/', include('api.urls')),
     

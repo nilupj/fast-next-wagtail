@@ -21,5 +21,4 @@ dependencies = [
     "django-modeltranslation>=0.19.14",
     "wagtail-localize>=1.11.3",
     "django-rosetta>=0.10.2",
-    "dj-database-url>=2.3.0",
 ]

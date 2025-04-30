@@ -53,14 +53,7 @@ export const fetchHealthTopics = async (lang = 'en') => {
 
 export const fetchArticle = async (slug, lang = 'en') => {
   try {
-    const response = await api.get(`/wagtailapi/v2/pages/`, { 
-      params: { 
-        type: 'articles.ArticlePage',
-        fields: '*',
-        slug: slug,
-        lang: lang
-      }
-    });
+    const response = await api.get(`/api/v2/pages/?type=articles.ArticlePage&fields=*&slug=${slug}`, { params: { lang } });
     if (response.data.items && response.data.items.length > 0) {
       return response.data.items[0];
     }
