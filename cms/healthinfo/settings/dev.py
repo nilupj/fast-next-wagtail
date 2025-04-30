@@ -14,33 +14,15 @@ CORS_ALLOW_CREDENTIALS = True
 # Database
 # https://docs.djangoproject.com/en/stable/ref/settings/#databases
 import os
-from urllib.parse import urlparse
+import dj_database_url
 
-# Use DATABASE_URL from environment
-DATABASE_URL = os.environ.get('DATABASE_URL')
-
-if DATABASE_URL:
-    # Parse the DATABASE_URL
-    url = urlparse(DATABASE_URL)
-    
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': url.path[1:],
-            'USER': url.username,
-            'PASSWORD': url.password,
-            'HOST': url.hostname,
-            'PORT': url.port or '5432',
-        }
-    }
-else:
-    # Fallback to SQLite if DATABASE_URL is not set
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        }
-    }
+DATABASES = {
+    'default': dj_database_url.config(
+        default=os.environ.get('DATABASE_URL', 'sqlite:///db.sqlite3'),
+        conn_max_age=600,
+        conn_health_checks=True,
+    )
+}
 
 # Email settings
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
