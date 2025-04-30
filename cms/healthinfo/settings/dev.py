@@ -18,7 +18,7 @@ import dj_database_url
 
 DATABASES = {
     'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL', 'sqlite:///db.sqlite3'),
+        default=os.environ.get('DATABASE_URL', 'postgresql://neondb_owner:npg_ajyx3ZVSs9Fm@ep-billowing-shape-a6scej6m.us-west-2.aws.neon.tech/neondb?sslmode=require'),
         conn_max_age=600,
         conn_health_checks=True,
     )
