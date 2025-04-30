@@ -7,7 +7,9 @@ DEBUG = True
 SECRET_KEY = 'django-insecure-dev-key-change-in-production'
 
 # SECURITY WARNING: define the correct hosts in production!
-ALLOWED_HOSTS = ['*'] 
+ALLOWED_HOSTS = ['*']
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True 
 
 # Database
 # https://docs.djangoproject.com/en/stable/ref/settings/#databases
