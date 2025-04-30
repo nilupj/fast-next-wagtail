@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import SearchBar from './SearchBar';
@@ -37,9 +38,6 @@ export default function Navbar() {
               </Link>
               <Link href="/well-being" className="nav-link">
                 {t.nav.wellBeing}
-              </Link>
-              <Link href="/appointments" className="nav-link"> {/* Added Appointments Link */}
-                {t.nav.appointments} {/* Assuming t.nav.appointments exists, otherwise add it to translations */}
               </Link>
               <Link href="/tools" className="nav-link">
                 {t.nav.tools}
@@ -119,9 +117,6 @@ export default function Navbar() {
             <Link href="/well-being" className="block nav-link py-2 px-3 rounded hover:bg-primary-light">
               {t.nav.wellBeing}
             </Link>
-            <Link href="/appointments" className="block nav-link py-2 px-3 rounded hover:bg-primary-light"> {/* Added Appointments Link for mobile */}
-              {t.nav.appointments} {/* Assuming t.nav.appointments exists, otherwise add it to translations */}
-            </Link>
             <Link href="/tools" className="block nav-link py-2 px-3 rounded hover:bg-primary-light">
               {t.nav.tools}
             </Link>
@@ -146,7 +141,7 @@ export default function Navbar() {
               <SearchBar />
             </div>
             <div className="mt-3 px-2 space-y-1">
-
+              
               <Link href="/subscribe" className="block text-white py-2 px-3 rounded hover:bg-primary-light">
                 {t.nav.subscribe}
               </Link>
