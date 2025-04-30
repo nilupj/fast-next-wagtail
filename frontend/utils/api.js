@@ -1,12 +1,35 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:8001',
+  baseURL: 'http://0.0.0.0:8001',
   headers: {
     'Content-Type': 'application/json',
   },
   timeout: 10000,
 });
+
+// Wagtail API endpoints
+export const fetchWagtailPages = async (type) => {
+  try {
+    const response = await api.get(`/api/v2/pages/?type=${type}`);
+    return response.data.items;
+  } catch (error) {
+    console.error('Error fetching Wagtail pages:', error);
+    return [];
+  }
+};
+
+export const fetchWagtailArticles = async () => {
+  return fetchWagtailPages('articles.ArticlePage');
+};
+
+export const fetchWagtailConditions = async () => {
+  return fetchWagtailPages('conditions.ConditionPage');
+};
+
+export const fetchWagtailDrugs = async () => {
+  return fetchWagtailPages('drugs.DrugPage');
+};
 
 export const fetchTopStories = async (lang = 'en') => {
   try {
