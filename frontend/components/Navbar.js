@@ -6,22 +6,11 @@ import translations from '../utils/translations';
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [language, setLanguage] = useState('en');
   const [t, setT] = useState(translations.en);
 
   useEffect(() => {
-    const savedLang = localStorage.getItem('language') || 'en';
-    setLanguage(savedLang);
-    setT(translations[savedLang]);
+    setT(translations.en);
   }, []);
-
-  const toggleLanguage = () => {
-    const newLang = language === 'hi' ? 'en' : 'hi';
-    localStorage.setItem('language', newLang);
-    setLanguage(newLang);
-    setT(translations[newLang]);
-    window.location.reload(); // Reload the page to fetch new content
-  };
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
@@ -85,12 +74,6 @@ export default function Navbar() {
 
           {/* User actions */}
           <div className="hidden md:flex items-center space-x-4">
-            <button
-              className="text-sm text-white hover:text-white/80"
-              onClick={toggleLanguage}
-            >
-              {language === 'hi' ? 'English' : 'हिंदी'}
-            </button>
             <Link href="/subscribe" className="text-sm text-white border border-white px-3 py-1 rounded hover:bg-white hover:text-primary transition-colors">
               {t.nav.subscribe}
             </Link>
@@ -158,12 +141,7 @@ export default function Navbar() {
               <SearchBar />
             </div>
             <div className="mt-3 px-2 space-y-1">
-              <button
-                className="block w-full text-left text-white py-2 px-3 rounded hover:bg-primary-light"
-                onClick={toggleLanguage}
-              >
-                {language === 'hi' ? 'English' : 'हिंदी'}
-              </button>
+              
               <Link href="/subscribe" className="block text-white py-2 px-3 rounded hover:bg-primary-light">
                 {t.nav.subscribe}
               </Link>
