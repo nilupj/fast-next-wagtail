@@ -1,39 +1,31 @@
 import axios from 'axios';
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://0.0.0.0:8001';
+
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8001',
+  baseURL: API_URL,
+  paramsSerializer: {
+    encode: (param) => encodeURIComponent(param)
+  },
+  timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
   },
-  timeout: 10000,
 });
 
-// Wagtail API endpoints
-export const fetchWagtailPages = async (type) => {
-  try {
-    const response = await api.get(`/api/v2/pages/?type=${type}`);
-    return response.data.items;
-  } catch (error) {
-    console.error('Error fetching Wagtail pages:', error);
-    return [];
+// Add language interceptor with isServer check
+api.interceptors.request.use((config) => {
+  if (typeof window !== 'undefined') {
+    const lang = localStorage.getItem('language') || 'en';
+    config.params = { ...config.params, lang };
   }
-};
+  return config;
+});
 
-export const fetchWagtailArticles = async () => {
-  return fetchWagtailPages('articles.ArticlePage');
-};
-
-export const fetchWagtailConditions = async () => {
-  return fetchWagtailPages('conditions.ConditionPage');
-};
-
-export const fetchWagtailDrugs = async () => {
-  return fetchWagtailPages('drugs.DrugPage');
-};
-
-export const fetchTopStories = async (lang = 'en') => {
+// Top stories
+export const fetchTopStories = async () => {
   try {
-    const response = await api.get('/api/articles/top-stories', { params: { lang } });
+    const response = await api.get('/api/articles/top-stories');
     return response.data;
   } catch (error) {
     console.error('Error fetching top stories:', error);
@@ -41,9 +33,10 @@ export const fetchTopStories = async (lang = 'en') => {
   }
 };
 
-export const fetchHealthTopics = async (lang = 'en') => {
+// Health topics
+export const fetchHealthTopics = async () => {
   try {
-    const response = await api.get('/api/articles/health-topics', { params: { lang } });
+    const response = await api.get('/api/articles/health-topics');
     return response.data;
   } catch (error) {
     console.error('Error fetching health topics:', error);
@@ -51,58 +44,121 @@ export const fetchHealthTopics = async (lang = 'en') => {
   }
 };
 
-export const fetchArticle = async (slug, lang = 'en') => {
-  try {
-    const response = await api.get(`/api/v2/pages/?type=articles.ArticlePage&fields=*&slug=${slug}&locale=${lang}`);
-    if (response.data.items && response.data.items.length > 0) {
-      const article = response.data.items[0];
-      return {
-        id: article.id,
-        title: article.title,
-        subtitle: article.subtitle,
-        summary: article.summary,
-        content: article.body,
-        image: article.image?.meta?.download_url || article.image,
-        author: article.author,
-        category: article.category?.name || article.category || '',
-        tags: article.tags || [],
-        first_published_at: article.first_published_at,
-        last_published_at: article.last_published_at
-      };
-    }
-    return null;
-  } catch (error) {
-    console.error('Error fetching article:', error);
-    return null;
-  }
-};
-
-export const fetchConditions = async () => {
+// Conditions index (A-Z)
+export const fetchConditionsIndex = async () => {
   try {
     const response = await api.get('/api/conditions/index');
     return response.data;
   } catch (error) {
-    console.error('Error fetching conditions:', error);
+    console.error('Error fetching conditions index:', error);
     return [];
   }
 };
 
-export const fetchCondition = async (slug) => {
+// Condition paths for static generation
+export const fetchConditionPaths = async () => {
   try {
-    const response = await api.get(`/api/conditions/${slug}`);
+    const response = await api.get('/api/conditions/paths');
     return response.data;
   } catch (error) {
-    console.error('Error fetching condition:', error);
+    console.error('Error fetching condition paths:', error);
+    return [];
+  }
+};
+
+// Single condition details
+export const fetchCondition = async (slug, lang = 'en') => {
+  try {
+    const path = lang === 'hi' ? `/api/conditions/hi/${slug}` : `/api/conditions/${slug}`;
+    const response = await api.get(path, {
+      params: { lang }
+    });
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching condition ${slug}:`, error);
     return null;
   }
 };
 
+// Article paths for static generation
+export const fetchArticlePaths = async () => {
+  try {
+    const response = await api.get('/api/articles/paths');
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching article paths:', error);
+    return [];
+  }
+};
+
+// Single article details
+export const fetchArticle = async (slug, lang) => {
+  try {
+    const encodedSlug = encodeURIComponent(slug);
+    const currentLang = lang || (typeof window !== 'undefined' ? localStorage.getItem('language') || 'en' : 'en');
+    const response = await api.get(`/api/articles/${encodedSlug}`, {
+      params: { lang: currentLang }
+    });
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching article ${slug}:`, error);
+    return null;
+  }
+};
+
+// Related articles
+export const fetchRelatedArticles = async (slug) => {
+  try {
+    const response = await api.get(`/api/articles/${slug}/related`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching related articles for ${slug}:`, error);
+    return [];
+  }
+};
+
+// Drugs index (A-Z)
+export const fetchDrugsIndex = async () => {
+  try {
+    const response = await api.get('/api/drugs/index');
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching drugs index:', error);
+    return [];
+  }
+};
+
+// Well-being articles
+export const fetchWellBeingArticles = async () => {
+  try {
+    const response = await api.get('/api/well-being');
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching well-being articles:', error);
+    return { featured: [], articles: [] };
+  }
+};
+
+// Search
 export const searchContent = async (query) => {
   try {
-    const response = await api.get(`/api/search`, { params: { q: query } });
+    const response = await api.get(`/api/search?q=${encodeURIComponent(query)}`);
     return response.data;
   } catch (error) {
     console.error('Error searching content:', error);
     return { articles: [], conditions: [], drugs: [] };
   }
 };
+
+// Symptom checker
+export const checkSymptoms = async (data) => {
+  try {
+    const response = await api.post('/api/symptom-checker/', data);
+    return response.data;
+  } catch (error) {
+    console.error('Error checking symptoms:', error);
+    throw error;
+  }
+};
+
+export default api;

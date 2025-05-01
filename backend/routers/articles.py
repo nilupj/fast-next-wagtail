@@ -98,7 +98,7 @@ async def get_top_stories():
         if os.getenv("ENV", "development") == "development":
             logger.info("Using mock data for top stories")
             return mock_articles
-
+        
         logger.error(f"Error fetching top stories: {exc}")
         return []
 
@@ -122,7 +122,7 @@ async def get_health_topics():
         if os.getenv("ENV", "development") == "development":
             logger.info("Using mock data for health topics")
             return mock_articles[:2]
-
+        
         logger.error(f"Error fetching health topics: {exc}")
         return []
 
@@ -146,7 +146,7 @@ async def get_article_paths():
         if os.getenv("ENV", "development") == "development":
             logger.info("Using mock data for article paths")
             return [article.slug for article in mock_articles]
-
+        
         logger.error(f"Error fetching article paths: {exc}")
         return []
 
@@ -185,7 +185,7 @@ async def get_article(slug: str = Path(..., description="The slug of the article
                         updated_date=None,
                         tags=["Health", "Wellness"],
                     )
-
+            
             # If not found in mock data, return 404
             raise HTTPException(status_code=404, detail=f"Article with slug '{slug}' not found")
         raise
@@ -213,9 +213,9 @@ async def get_article(slug: str = Path(..., description="The slug of the article
                         updated_date=None,
                         tags=["Health", "Wellness"],
                     )
-
+            
             raise HTTPException(status_code=404, detail=f"Article with slug '{slug}' not found")
-
+        
         logger.error(f"Error fetching article {slug}: {exc}")
         raise HTTPException(status_code=500, detail=f"Failed to retrieve article: {str(exc)}")
 
@@ -244,7 +244,7 @@ async def get_related_articles(slug: str = Path(..., description="The slug of th
             logger.info(f"Using mock data for related articles to {slug}")
             # Exclude the current article
             return [article for article in mock_articles if article.slug != slug][:3]
-
+        
         logger.error(f"Error fetching related articles for {slug}: {exc}")
         return []
 
@@ -274,7 +274,7 @@ async def get_well_being_articles():
                 "featured": mock_articles[:3],
                 "articles": mock_articles
             }
-
+        
         logger.error(f"Error fetching well-being articles: {exc}")
         return {"featured": [], "articles": []}
 
@@ -305,6 +305,6 @@ async def search_articles(query: str):
                 if query.lower() in article.title.lower() or 
                    (article.summary and query.lower() in article.summary.lower())
             ]
-
+        
         logger.error(f"Error searching articles: {exc}")
         return []

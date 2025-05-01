@@ -45,14 +45,12 @@ export default function ArticleDetail({ article, relatedArticles }) {
     subtitle,
     image,
     author,
-    first_published_at: published_date,
-    last_published_at: updated_date,
-    body,
-    tags = [],
-    category = '',
-  } = article || {};
-
-  const content = body || article?.content;
+    published_date,
+    updated_date,
+    content,
+    tags,
+    category,
+  } = article;
 
   // Format dates
   const formattedPublishedDate = new Date(published_date).toLocaleDateString('en-US', {
@@ -155,13 +153,7 @@ export default function ArticleDetail({ article, relatedArticles }) {
               )}
 
               <div className="p-6">
-                <div className="prose max-w-none">
-                  {content ? (
-                    <div dangerouslySetInnerHTML={{ __html: content }} />
-                  ) : (
-                    <p>Content not available</p>
-                  )}
-                </div>
+                <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: content }} />
 
                 {/* Tags */}
                 {tags && tags.length > 0 && (

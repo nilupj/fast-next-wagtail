@@ -72,29 +72,7 @@ def article_detail(request, slug):
     lang = request.GET.get('lang', 'en')
     try:
         article = ArticlePage.objects.live().get(slug=slug)
-        content = {
-            'id': article.id,
-            'title': article.title,
-            'slug': article.slug,
-            'subtitle': article.subtitle_hi if lang == 'hi' else article.subtitle,
-            'summary': article.summary_hi if lang == 'hi' else article.summary,
-            'content': article.body_hi if lang == 'hi' else article.body,
-            'image': article.image.get_rendition('fill-800x500').url if article.image else None,
-            'published_date': article.first_published_at,
-            'updated_date': article.last_published_at,
-            'category': {
-                'name': article.category.name,
-                'slug': article.category.slug
-            } if article.category else None,
-            'tags': [tag.name for tag in article.tags.all()],
-            'author': {
-                'name': article.author.name,
-                'credentials': article.author.credentials,
-                'bio': article.author.bio,
-                'image': article.author.image.get_rendition('fill-100x100').url if article.author and article.author.image else None
-            } if article.author else None
-        }
-        return JsonResponse(content)
+        return JsonResponse(get_translated_content(article, lang))
     except ArticlePage.DoesNotExist:
         raise Http404("Article not found")
 
