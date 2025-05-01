@@ -1,4 +1,3 @@
-
 from django.urls import path
 from django.http import JsonResponse, Http404
 from wagtail.models import Page
@@ -22,7 +21,7 @@ def get_translated_content(page, lang='en'):
         'slug': page.slug,
         'url': page.url,
     }
-    
+
     # Add translated fields based on model type
     if isinstance(page, ArticlePage):
         data.update({

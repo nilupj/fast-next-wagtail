@@ -47,10 +47,12 @@ export default function ArticleDetail({ article, relatedArticles }) {
     author,
     published_date,
     updated_date,
-    content,
+    body,
     tags,
     category,
   } = article;
+
+  const content = body;
 
   // Format dates
   const formattedPublishedDate = new Date(published_date).toLocaleDateString('en-US', {
