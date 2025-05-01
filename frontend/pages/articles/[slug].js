@@ -47,7 +47,7 @@ export default function ArticleDetail({ article, relatedArticles }) {
     author,
     first_published_at: published_date,
     last_published_at: updated_date,
-    body: content,
+    content,
     tags,
     category,
   } = article;
