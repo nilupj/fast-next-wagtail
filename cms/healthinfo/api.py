@@ -101,13 +101,25 @@ def get_drugs_index(request):
     return JsonResponse([get_translated_content(drug, lang) for drug in drugs], safe=False)
 
 
+def get_drugs_index(request):
+    """Retrieve a complete index of all drugs"""
+    lang = request.GET.get('lang', 'en')
+    drugs = DrugPage.objects.live().order_by('title')
+    return JsonResponse([{
+        'id': drug.id,
+        'name': drug.title,
+        'slug': drug.slug,
+        'type': drug.drug_class,
+        'generic_name': drug.generic_name,
+        'brand_names': drug.brand_names
+    } for drug in drugs], safe=False)
+
 urlpatterns = [
     path('articles/index', articles_top_stories),
     path('articles/paths', articles_paths),
-    path('drugs/index', get_drugs_index),
+    path('drugs/index/', get_drugs_index),  # Updated with trailing slash
     path('articles/<slug>/', article_detail),
     path('articles/<slug>/related', article_related),
     path('conditions/index', conditions_index),
     path('articles/health_topics', articles_health_topics),
-
 ]
