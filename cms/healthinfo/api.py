@@ -7,6 +7,9 @@ from wagtail.images.api.v2.views import ImagesAPIViewSet
 from wagtail.documents.api.v2.views import DocumentsAPIViewSet
 from articles.models import ArticlePage
 from conditions.models import ConditionPage
+# Hypothetical model, replace with your actual model
+from drugs.models import DrugPage
+
 
 api_router = WagtailAPIRouter('wagtailapi')
 api_router.register_endpoint('pages', PagesAPIViewSet)
@@ -90,3 +93,21 @@ def conditions_index(request):
     lang = request.GET.get('lang', 'en')
     conditions = ConditionPage.objects.live().order_by('title')
     return JsonResponse([get_translated_content(condition, lang) for condition in conditions], safe=False)
+
+def get_drugs_index(request):
+    """Retrieve a complete index of all drugs"""
+    lang = request.GET.get('lang', 'en')
+    drugs = DrugPage.objects.live().order_by('title') # Hypothetical implementation
+    return JsonResponse([get_translated_content(drug, lang) for drug in drugs], safe=False)
+
+
+urlpatterns = [
+    path('articles/index', articles_top_stories),
+    path('articles/paths', articles_paths),
+    path('drugs/index', get_drugs_index),
+    path('articles/<slug>/', article_detail),
+    path('articles/<slug>/related', article_related),
+    path('conditions/index', conditions_index),
+    path('articles/health_topics', articles_health_topics),
+
+]
