@@ -1,27 +1,9 @@
-
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import SearchBar from './SearchBar';
-import translations from '../utils/translations';
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [language, setLanguage] = useState('en');
-  const [t, setT] = useState(translations.en);
-
-  useEffect(() => {
-    const savedLang = localStorage.getItem('language') || 'en';
-    setLanguage(savedLang);
-    setT(translations[savedLang]);
-  }, []);
-
-  const toggleLanguage = () => {
-    const newLang = language === 'hi' ? 'en' : 'hi';
-    localStorage.setItem('language', newLang);
-    setLanguage(newLang);
-    setT(translations[newLang]);
-    window.location.reload(); // Reload the page to fetch new content
-  };
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
@@ -42,26 +24,26 @@ export default function Navbar() {
           <div className="hidden md:block">
             <div className="ml-10 flex items-center space-x-4">
               <Link href="/conditions" className="nav-link">
-                {t.nav.conditions}
+                Conditions
               </Link>
               <Link href="/drugs-supplements" className="nav-link">
-                {t.nav.drugsAndSupplements}
+                Drugs & Supplements
               </Link>
               <Link href="/well-being" className="nav-link">
-                {t.nav.wellBeing}
+                Well-Being
               </Link>
               <Link href="/tools" className="nav-link">
-                {t.nav.tools}
+                Tools
               </Link>
               <Link href="/symptom-checker" className="nav-link">
-                {t.nav.symptomChecker}
+                Symptom Checker
               </Link>
               <Link href="/doctors" className="nav-link">
-                {t.nav.findDoctor}
+                Find a Doctor
               </Link>
               <div className="relative group">
                 <button className="nav-link flex items-center">
-                  {t.nav.more}
+                  More
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
@@ -69,13 +51,13 @@ export default function Navbar() {
                 <div className="absolute z-10 hidden group-hover:block mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
                   <div className="py-1" role="menu" aria-orientation="vertical">
                     <Link href="/health-news" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
-                      {t.nav.healthNews}
+                      Health News
                     </Link>
                     <Link href="/videos" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
-                      {t.nav.videos}
+                      Videos
                     </Link>
                     <Link href="/quizzes" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
-                      {t.nav.quizzes}
+                      Quizzes
                     </Link>
                   </div>
                 </div>
@@ -85,17 +67,11 @@ export default function Navbar() {
 
           {/* User actions */}
           <div className="hidden md:flex items-center space-x-4">
-            <button
-              className="text-sm text-white hover:text-white/80"
-              onClick={toggleLanguage}
-            >
-              {language === 'hi' ? 'English' : 'हिंदी'}
-            </button>
             <Link href="/subscribe" className="text-sm text-white border border-white px-3 py-1 rounded hover:bg-white hover:text-primary transition-colors">
-              {t.nav.subscribe}
+              Subscribe
             </Link>
             <Link href="/login" className="text-sm text-white hover:text-white/80">
-              {t.nav.login}
+              Log In
             </Link>
             <SearchBar />
           </div>
@@ -126,31 +102,31 @@ export default function Navbar() {
         <div className="md:hidden">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
             <Link href="/conditions" className="block nav-link py-2 px-3 rounded hover:bg-primary-light">
-              {t.nav.conditions}
+              Conditions
             </Link>
             <Link href="/drugs-supplements" className="block nav-link py-2 px-3 rounded hover:bg-primary-light">
-              {t.nav.drugsAndSupplements}
+              Drugs & Supplements
             </Link>
             <Link href="/well-being" className="block nav-link py-2 px-3 rounded hover:bg-primary-light">
-              {t.nav.wellBeing}
+              Well-Being
             </Link>
             <Link href="/tools" className="block nav-link py-2 px-3 rounded hover:bg-primary-light">
-              {t.nav.tools}
+              Tools
             </Link>
             <Link href="/symptom-checker" className="block nav-link py-2 px-3 rounded hover:bg-primary-light">
-              {t.nav.symptomChecker}
+              Symptom Checker
             </Link>
             <Link href="/doctors" className="block nav-link py-2 px-3 rounded hover:bg-primary-light">
-              {t.nav.findDoctor}
+              Find a Doctor
             </Link>
             <Link href="/health-news" className="block nav-link py-2 px-3 rounded hover:bg-primary-light">
-              {t.nav.healthNews}
+              Health News
             </Link>
             <Link href="/videos" className="block nav-link py-2 px-3 rounded hover:bg-primary-light">
-              {t.nav.videos}
+              Videos
             </Link>
             <Link href="/quizzes" className="block nav-link py-2 px-3 rounded hover:bg-primary-light">
-              {t.nav.quizzes}
+              Quizzes
             </Link>
           </div>
           <div className="pt-4 pb-3 border-t border-primary-light">
@@ -158,17 +134,11 @@ export default function Navbar() {
               <SearchBar />
             </div>
             <div className="mt-3 px-2 space-y-1">
-              <button
-                className="block w-full text-left text-white py-2 px-3 rounded hover:bg-primary-light"
-                onClick={toggleLanguage}
-              >
-                {language === 'hi' ? 'English' : 'हिंदी'}
-              </button>
               <Link href="/subscribe" className="block text-white py-2 px-3 rounded hover:bg-primary-light">
-                {t.nav.subscribe}
+                Subscribe
               </Link>
               <Link href="/login" className="block text-white py-2 px-3 rounded hover:bg-primary-light">
-                {t.nav.login}
+                Log In
               </Link>
             </div>
           </div>
