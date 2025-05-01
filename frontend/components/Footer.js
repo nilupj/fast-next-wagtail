@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import NotificationSubscribe from './NotificationSubscribe';
+
 import translations from '../utils/translations';
 import { useState, useEffect } from 'react';
 
@@ -146,7 +146,7 @@ export default function Footer() {
               </form>
             </div>
           </div>
-          <NotificationSubscribe/>
+          
         </div>
 
         <div className="mt-8 pt-8 border-t border-neutral-200">
