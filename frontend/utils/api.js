@@ -55,7 +55,20 @@ export const fetchArticle = async (slug, lang = 'en') => {
   try {
     const response = await api.get(`/api/v2/pages/?type=articles.ArticlePage&fields=*&slug=${slug}&locale=${lang}`);
     if (response.data.items && response.data.items.length > 0) {
-      return response.data.items[0];
+      const article = response.data.items[0];
+      return {
+        id: article.id,
+        title: article.title,
+        subtitle: article.subtitle,
+        summary: article.summary,
+        content: article.body,
+        image: article.image?.meta?.download_url,
+        author: article.author,
+        category: article.category,
+        tags: article.tags,
+        first_published_at: article.first_published_at,
+        last_published_at: article.last_published_at
+      };
     }
     return null;
   } catch (error) {

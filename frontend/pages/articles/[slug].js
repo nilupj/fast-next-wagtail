@@ -48,9 +48,9 @@ export default function ArticleDetail({ article, relatedArticles }) {
     first_published_at: published_date,
     last_published_at: updated_date,
     content,
-    tags,
+    tags = [],
     category,
-  } = article;
+  } = article || {};
 
   // Format dates
   const formattedPublishedDate = new Date(published_date).toLocaleDateString('en-US', {
