@@ -49,7 +49,7 @@ export default function ArticleDetail({ article, relatedArticles }) {
     last_published_at: updated_date,
     content,
     tags = [],
-    category,
+    category = '',
   } = article || {};
 
   // Format dates
