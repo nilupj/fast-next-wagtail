@@ -153,7 +153,13 @@ export default function ArticleDetail({ article, relatedArticles }) {
               )}
 
               <div className="p-6">
-                <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: content }} />
+                <div className="prose max-w-none">
+                  {content ? (
+                    <div dangerouslySetInnerHTML={{ __html: content }} />
+                  ) : (
+                    <p>Content not available</p>
+                  )}
+                </div>
 
                 {/* Tags */}
                 {tags && tags.length > 0 && (

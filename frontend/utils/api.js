@@ -61,11 +61,11 @@ export const fetchArticle = async (slug, lang = 'en') => {
         title: article.title,
         subtitle: article.subtitle,
         summary: article.summary,
-        content: article.body,
-        image: article.image?.meta?.download_url,
+        content: article.body || article.content,
+        image: article.image?.meta?.download_url || article.image,
         author: article.author,
         category: article.category,
-        tags: article.tags,
+        tags: article.tags || [],
         first_published_at: article.first_published_at,
         last_published_at: article.last_published_at
       };
