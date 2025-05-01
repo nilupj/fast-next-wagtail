@@ -61,7 +61,7 @@ export const fetchArticle = async (slug, lang = 'en') => {
         title: article.title,
         subtitle: article.subtitle,
         summary: article.summary,
-        content: article.body || article.content,
+        content: article.body,
         image: article.image?.meta?.download_url || article.image,
         author: article.author,
         category: article.category?.name || article.category || '',
