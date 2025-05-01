@@ -73,7 +73,7 @@ async def get_conditions_index():
     """
     try:
         # Try to fetch from CMS API
-        conditions = await fetch_from_cms("conditions/index")
+        conditions = await fetch_from_cms("api/conditions-index")
         return conditions
     except HTTPException as exc:
         if exc.status_code == 503:
