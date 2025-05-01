@@ -14,9 +14,6 @@ INSTALLED_APPS = [
     'conditions',
     'drugs', #Added drugs app
     'search',
-    'modeltranslation',
-
-
     'wagtail.contrib.forms',
     'wagtail.contrib.redirects',
     'wagtail.contrib.settings',
@@ -30,9 +27,6 @@ INSTALLED_APPS = [
     'wagtail.admin',
     'wagtail',
     'wagtail.api.v2',
-    'wagtail_localize',
-    'wagtail_localize.locales',
-    'rosetta',  # Add Rosetta
     'modelcluster',
     'taggit',
     'rest_framework',
