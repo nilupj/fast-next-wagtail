@@ -20,7 +20,7 @@ DATABASE_URL = os.environ.get('DATABASE_URL')
 if DATABASE_URL:
     # Parse the DATABASE_URL
     url = urlparse(DATABASE_URL)
-    
+
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
@@ -37,6 +37,7 @@ else:
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+            "ATOMIC_REQUESTS": True,
         }
     }
 
