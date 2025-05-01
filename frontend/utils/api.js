@@ -53,11 +53,8 @@ export const fetchHealthTopics = async (lang = 'en') => {
 
 export const fetchArticle = async (slug, lang = 'en') => {
   try {
-    const response = await api.get(`/api/v2/pages/?type=articles.ArticlePage&fields=*&slug=${slug}`, { params: { lang } });
-    if (response.data.items && response.data.items.length > 0) {
-      return response.data.items[0];
-    }
-    return null;
+    const response = await api.get(`/api/articles/${slug}`, { params: { lang } });
+    return response.data;
   } catch (error) {
     console.error('Error fetching article:', error);
     return null;
