@@ -11,7 +11,6 @@ export default function VideoConsultation({ onSubmit }) {
     time: '',
     reason: ''
   });
-  const [isCallActive, setIsCallActive] = useState(false);
   const [localStream, setLocalStream] = useState(null);
   const [remoteStream, setRemoteStream] = useState(null);
   const localVideoRef = useRef();
