@@ -1,8 +1,9 @@
+
 import { useState, useEffect, useRef } from 'react';
 import DailyIframe from '@daily-co/daily-js';
 
 export default function VideoConsultation({ roomUrl, username, onSubmit }) {
-  const dailyRef = useRef(null);
+  const frameRef = useRef(null);
   const [callFrame, setCallFrame] = useState(null);
   const [isCallActive, setIsCallActive] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
@@ -14,40 +15,44 @@ export default function VideoConsultation({ roomUrl, username, onSubmit }) {
     time: '',
     reason: ''
   });
+
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmit(formData);
   };
 
   useEffect(() => {
-    if (!roomUrl) return;
+    if (!roomUrl || frameRef.current) return;
 
-    // Only create a new frame if one doesn't exist
-    if (!dailyRef.current) {
-      dailyRef.current = DailyIframe.createFrame({
-        iframeStyle: {
-          width: '100%',
-          height: '100%',
-          border: '0',
-          borderRadius: '12px',
-        },
-        showLeaveButton: true,
-        showFullscreenButton: true,
-      });
+    const initDaily = async () => {
+      try {
+        frameRef.current = DailyIframe.createFrame({
+          iframeStyle: {
+            width: '100%',
+            height: '100%',
+            border: '0',
+            borderRadius: '12px',
+          },
+          showLeaveButton: true,
+          showFullscreenButton: true,
+        });
 
-      dailyRef.current.on('joined-meeting', () => setIsCallActive(true));
-      dailyRef.current.on('left-meeting', () => setIsCallActive(false));
+        frameRef.current.on('joined-meeting', () => setIsCallActive(true));
+        frameRef.current.on('left-meeting', () => setIsCallActive(false));
 
-      setCallFrame(dailyRef.current);
-    }
+        setCallFrame(frameRef.current);
+        await frameRef.current.join({ url: roomUrl, userName: username });
+      } catch (error) {
+        console.error('Error initializing DailyIframe:', error);
+      }
+    };
 
-    // Join meeting
-    dailyRef.current.join({ url: roomUrl, userName: username });
+    initDaily();
 
     return () => {
-      if (dailyRef.current) {
-        dailyRef.current.destroy();
-        dailyRef.current = null;
+      if (frameRef.current) {
+        frameRef.current.destroy();
+        frameRef.current = null;
         setCallFrame(null);
         setIsCallActive(false);
       }
