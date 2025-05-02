@@ -6,7 +6,7 @@ channel = "stable-24_05"
 packages = ["libxcrypt"]
 
 [workflows]
-runButton = "Run Backend"
+runButton = "Start All Services"
 
 [[workflows.workflow]]
 name = "Project"
