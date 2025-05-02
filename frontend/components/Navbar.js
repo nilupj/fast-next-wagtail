@@ -35,9 +35,7 @@ export default function Navbar() {
               <Link href="/tools" className="nav-link">
                 Tools
               </Link>
-              <Link href="/symptom-checker" className="nav-link">
-                Symptom Checker
-              </Link>
+              
               <Link href="/doctors" className="nav-link">
                 Find a Doctor
               </Link>
