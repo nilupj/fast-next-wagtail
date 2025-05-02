@@ -79,6 +79,11 @@ class DrugBase(BaseModel):
     slug: str
     type: Optional[str] = None  # e.g., "Medication", "Supplement", "Vitamin"
 
+class DrugPreview(DrugBase):
+    id: int
+    description: Optional[str] = None
+    image: Optional[HttpUrl] = None
+
 class Drug(DrugBase):
     id: int
     description: str
