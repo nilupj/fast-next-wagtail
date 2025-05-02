@@ -20,7 +20,10 @@ export default function VideoConsultationPage() {
       ) : (
         <PaymentForm 
           amount={499} 
-          onSuccess={() => setShowPayment(false)} 
+          onSuccess={(link) => {
+            setConsultationLink(link);
+            setShowPayment(false);
+          }} 
           consultationData={consultationData} 
         />
       )}

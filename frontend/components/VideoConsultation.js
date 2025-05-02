@@ -3,7 +3,6 @@ import { useState, useEffect, useRef } from 'react';
 import io from 'socket.io-client';
 
 export default function VideoConsultation({ onSubmit }) {
-  const [isCallActive, setIsCallActive] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -11,6 +10,8 @@ export default function VideoConsultation({ onSubmit }) {
     time: '',
     reason: ''
   });
+  const [isCallActive, setIsCallActive] = useState(false);
+  const [consultationLink, setConsultationLink] = useState('');
   const [localStream, setLocalStream] = useState(null);
   const [remoteStream, setRemoteStream] = useState(null);
   const localVideoRef = useRef();
@@ -164,6 +165,12 @@ export default function VideoConsultation({ onSubmit }) {
                 Proceed to Payment
               </button>
             </form>
+            {consultationLink && (
+              <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-md">
+                <h3 className="text-lg font-medium text-green-800 mb-2">Your Consultation Link</h3>
+                <p className="text-green-700 break-all">{consultationLink}</p>
+              </div>
+            )}
           </div>
         </div>
       ) : (
