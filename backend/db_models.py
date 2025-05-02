@@ -131,3 +131,17 @@ class Drug(Base):
     
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+
+
+class VideoConsultation(Base):
+    __tablename__ = "video_consultations"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, nullable=False)
+    email = Column(String, nullable=False)
+    date = Column(DateTime(timezone=True), nullable=False)
+    time = Column(String, nullable=False)
+    reason = Column(Text, nullable=False)
+    payment_status = Column(String, default="pending")
+    consultation_link = Column(String, nullable=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
