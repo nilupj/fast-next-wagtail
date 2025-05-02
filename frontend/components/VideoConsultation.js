@@ -38,7 +38,7 @@ export default function VideoConsultation({ onSubmit }) {
   const initializeCall = async () => {
     try {
       // Initialize WebSocket connection
-      socketRef.current = io('http://0.0.0.0:8000');
+      socketRef.current = io('https://' + window.location.hostname);
       
       // Get local media stream
       const stream = await navigator.mediaDevices.getUserMedia({
