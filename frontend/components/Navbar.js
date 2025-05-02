@@ -41,6 +41,9 @@ export default function Navbar() {
               <Link href="/doctors" className="nav-link">
                 Find a Doctor
               </Link>
+              <Link href="/video-consultation" className="nav-link">
+                Video Consultation
+              </Link>
               <div className="relative group">
                 <button className="nav-link flex items-center">
                   More
@@ -72,13 +75,13 @@ export default function Navbar() {
                 try {
                   const registration = await navigator.serviceWorker.register('/service-worker.js');
                   const permission = await Notification.requestPermission();
-                  
+
                   if (permission === 'granted') {
                     const subscription = await registration.pushManager.subscribe({
                       userVisibleOnly: true,
                       applicationServerKey: process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY
                     });
-                    
+
                     await fetch('/api/notifications/subscribe', {
                       method: 'POST',
                       headers: { 'Content-Type': 'application/json' },
@@ -142,6 +145,9 @@ export default function Navbar() {
             </Link>
             <Link href="/doctors" className="block nav-link py-2 px-3 rounded hover:bg-primary-light">
               Find a Doctor
+            </Link>
+            <Link href="/video-consultation" className="block nav-link py-2 px-3 rounded hover:bg-primary-light">
+              Video Consultation
             </Link>
             <Link href="/health-news" className="block nav-link py-2 px-3 rounded hover:bg-primary-light">
               Health News
