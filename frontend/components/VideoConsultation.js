@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import DailyIframe from '@daily-co/daily-js';
 
 export default function VideoConsultation({ roomUrl, username, onSubmit }) {
+  const dailyRef = useRef(null);
   const [callFrame, setCallFrame] = useState(null);
   const [isCallActive, setIsCallActive] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
@@ -21,26 +22,35 @@ export default function VideoConsultation({ roomUrl, username, onSubmit }) {
   useEffect(() => {
     if (!roomUrl) return;
 
-    const daily = DailyIframe.createFrame({
-      iframeStyle: {
-        width: '100%',
-        height: '100%',
-        border: '0',
-        borderRadius: '12px',
-      },
-      showLeaveButton: true,
-      showFullscreenButton: true,
-    });
+    // Only create a new frame if one doesn't exist
+    if (!dailyRef.current) {
+      dailyRef.current = DailyIframe.createFrame({
+        iframeStyle: {
+          width: '100%',
+          height: '100%',
+          border: '0',
+          borderRadius: '12px',
+        },
+        showLeaveButton: true,
+        showFullscreenButton: true,
+      });
 
-    daily.join({ url: roomUrl, userName: username });
+      dailyRef.current.on('joined-meeting', () => setIsCallActive(true));
+      dailyRef.current.on('left-meeting', () => setIsCallActive(false));
 
-    daily.on('joined-meeting', () => setIsCallActive(true));
-    daily.on('left-meeting', () => setIsCallActive(false));
+      setCallFrame(dailyRef.current);
+    }
 
-    setCallFrame(daily);
+    // Join meeting
+    dailyRef.current.join({ url: roomUrl, userName: username });
 
     return () => {
-      daily.destroy();
+      if (dailyRef.current) {
+        dailyRef.current.destroy();
+        dailyRef.current = null;
+        setCallFrame(null);
+        setIsCallActive(false);
+      }
     };
   }, [roomUrl, username]);
 
