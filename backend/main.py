@@ -6,7 +6,7 @@ import logging
 from fastapi_socketio import SocketManager
 from typing import Dict, Any
 
-from routers import articles, conditions, symptoms
+from routers import articles, conditions, symptoms, drugs
 from models import ErrorResponse
 
 # Configure logging
@@ -48,6 +48,7 @@ socket_manager = SocketManager(app=app, cors_allowed_origins="*")
 app.include_router(articles.router, prefix="/api", tags=["Articles"])
 app.include_router(conditions.router, prefix="/api", tags=["Conditions"])
 app.include_router(symptoms.router, prefix="/api", tags=["Symptoms"])
+app.include_router(drugs.router, prefix="/api", tags=["Drugs"])
 
 # Exception handler for unhandled errors
 @app.exception_handler(Exception)

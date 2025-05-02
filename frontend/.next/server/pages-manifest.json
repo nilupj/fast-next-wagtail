@@ -3,7 +3,7 @@
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
   "/": "pages/index.js",
-  "/video-consultation": "pages/video-consultation.js",
   "/articles/[slug]": "pages/articles/[slug].js",
-  "/symptom-checker": "pages/symptom-checker.js"
+  "/symptom-checker": "pages/symptom-checker.js",
+  "/drugs-supplements": "pages/drugs-supplements.js"
 }
