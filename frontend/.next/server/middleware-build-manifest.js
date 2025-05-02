@@ -24,6 +24,21 @@ self.__BUILD_MANIFEST = {
       "static/chunks/main.js",
       "static/chunks/pages/_error.js"
     ],
+    "/articles/[slug]": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/articles/[slug].js"
+    ],
+    "/conditions": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/conditions.js"
+    ],
+    "/drugs-supplements": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/drugs-supplements.js"
+    ],
     "/video-consultation": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",

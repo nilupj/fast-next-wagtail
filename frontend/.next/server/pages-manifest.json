@@ -3,5 +3,8 @@
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
   "/": "pages/index.js",
+  "/conditions": "pages/conditions.js",
+  "/drugs-supplements": "pages/drugs-supplements.js",
+  "/articles/[slug]": "pages/articles/[slug].js",
   "/video-consultation": "pages/video-consultation.js"
 }
