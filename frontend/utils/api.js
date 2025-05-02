@@ -173,3 +173,27 @@ export const checkSymptoms = async (data) => {
 };
 
 export default api;
+export async function searchDrugs(query) {
+  try {
+    const response = await fetch(`${CMS_API_URL}/drugs/search/?q=${encodeURIComponent(query)}`);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error searching drugs:', error);
+    return [];
+  }
+}
+
+export async function getDrugBySlug(slug) {
+  try {
+    const response = await fetch(`${CMS_API_URL}/drugs/${slug}/`);
+    if (!response.ok) {
+      throw new Error('Drug not found');
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching drug details:', error);
+    throw error;
+  }
+}
