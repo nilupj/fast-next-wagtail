@@ -4,7 +4,6 @@ import FeaturedArticle from '../components/FeaturedArticle';
 import ArticleCard from '../components/ArticleCard';
 import { fetchTopStories, fetchHealthTopics } from '../utils/api';
 
-// Fallback data for development until backend is ready
 const fallbackTopStories = [
   {
     id: 1,
@@ -88,16 +87,13 @@ const fallbackHealthTopics = [
 ];
 
 export default function Home({ initialTopStories, healthTopics }) {
-  // Use provided data or fallback to development data
   const [topStories, setTopStories] = useState(
     initialTopStories && initialTopStories.length > 0 ? initialTopStories : fallbackTopStories
   );
 
-  // Use provided health topics or fallback
   const displayHealthTopics = healthTopics && healthTopics.length > 0 ? healthTopics : fallbackHealthTopics;
 
   useEffect(() => {
-    // If no data was provided and we're not using fallback, try fetching client-side
     if (!initialTopStories || initialTopStories.length === 0) {
       const fetchData = async () => {
         try {
@@ -107,7 +103,6 @@ export default function Home({ initialTopStories, healthTopics }) {
           }
         } catch (error) {
           console.error('Error fetching top stories:', error);
-          // Keep using fallback data if fetch fails
         }
       };
 
@@ -117,7 +112,6 @@ export default function Home({ initialTopStories, healthTopics }) {
 
   return (
     <div className="container-custom py-8">
-      {/* Top stories section */}
       <div className="mb-12">
         <h2 className="section-title">TODAY'S TOP STORIES</h2>
 
@@ -144,7 +138,6 @@ export default function Home({ initialTopStories, healthTopics }) {
         )}
       </div>
 
-      {/* Health topics section */}
       <div className="mb-12">
         <div className="flex justify-between items-center mb-6">
           <h2 className="section-title mb-0">LIVING HEALTHY</h2>
@@ -170,14 +163,6 @@ export default function Home({ initialTopStories, healthTopics }) {
         )}
       </div>
 
-      
-              <span className="text-sm font-medium">{tool.name}</span>
-            </Link>
-          ))}
-        </div>
-      </div>
-
-      {/* Trending Topics */}
       <div className="mb-12">
         <h2 className="section-title mb-6">TRENDING TOPICS</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -206,7 +191,6 @@ export default function Home({ initialTopStories, healthTopics }) {
         </div>
       </div>
 
-      {/* Popular health categories */}
       <div>
         <h2 className="section-title">EXPLORE HEALTH CATEGORIES</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -217,8 +201,8 @@ export default function Home({ initialTopStories, healthTopics }) {
             { name: 'Mental Health', icon: 'brain', url: '/conditions/mental-health' },
             { name: 'Skin Conditions', icon: 'sun', url: '/conditions/skin-conditions' },
             { name: 'Digestive Health', icon: 'stomach', url: '/conditions/digestive-health' },
-            { name: 'Women\'s Health', icon: 'female', url: '/conditions/womens-health' },
-            { name: 'Men\'s Health', icon: 'male', url: '/conditions/mens-health' },
+            { name: "Women's Health", icon: 'female', url: '/conditions/womens-health' },
+            { name: "Men's Health", icon: 'male', url: '/conditions/mens-health' },
           ].map((category) => (
             <Link
               key={category.name}
@@ -239,7 +223,6 @@ export default function Home({ initialTopStories, healthTopics }) {
   );
 }
 
-// Server-side data fetching
 export async function getStaticProps() {
   try {
     const [topStories, healthTopics] = await Promise.all([
@@ -252,7 +235,6 @@ export async function getStaticProps() {
         initialTopStories: topStories,
         healthTopics,
       },
-      // Revalidate every hour
       revalidate: 3600,
     };
   } catch (error) {
@@ -262,7 +244,7 @@ export async function getStaticProps() {
         initialTopStories: [],
         healthTopics: [],
       },
-      revalidate: 60, // Try again more quickly if there was an error
+      revalidate: 60,
     };
   }
 }
