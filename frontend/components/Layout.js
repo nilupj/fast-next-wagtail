@@ -1,3 +1,4 @@
+
 import Head from 'next/head';
 import Script from 'next/script';
 import Navbar from './Navbar';
@@ -27,7 +28,6 @@ export default function Layout({ children, title = 'Health Info - Trusted Medica
         </main>
         <Footer />
       </div>
-      {/* Using Next.js Script component for proper handling of external scripts */}
       <Script 
         src="https://unpkg.com/feather-icons" 
         strategy="afterInteractive" 
