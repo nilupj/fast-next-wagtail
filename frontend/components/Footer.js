@@ -65,11 +65,6 @@ export default function Footer() {
                   Symptom Checker
                 </Link>
               </li>
-              <li>
-                <Link href="/doctors" className="text-neutral-600 hover:text-primary transition-colors">
-                  Find a Doctor
-                </Link>
-              </li>
             </ul>
           </div>
 

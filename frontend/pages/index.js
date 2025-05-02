@@ -170,32 +170,7 @@ export default function Home({ initialTopStories, healthTopics }) {
         )}
       </div>
 
-      {/* Tools & Calculators */}
-      <div className="mb-12">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="section-title mb-0">TOOLS & CALCULATORS</h2>
-          <Link href="/tools" className="text-primary hover:text-primary-dark font-medium text-sm transition-colors">
-            View All Tools
-          </Link>
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-          {[
-            { name: 'BMI Calculator', icon: 'scale', url: '/tools/bmi-calculator' },
-            { name: 'Calorie Calculator', icon: 'fire', url: '/tools/calorie-calculator' },
-            { name: 'Water Intake', icon: 'droplet', url: '/tools/water-intake-calculator' },
-            { name: 'Sleep Calculator', icon: 'moon', url: '/tools/sleep-calculator' },
-            { name: 'Stress Assessment', icon: 'activity', url: '/tools/stress-assessment' },
-          ].map((tool) => (
-            <Link
-              key={tool.name}
-              href={tool.url}
-              className="flex flex-col items-center p-4 bg-white rounded-lg shadow hover:shadow-md transition-shadow text-center"
-            >
-              <div className="rounded-full bg-primary/10 p-3 mb-3">
-                <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                </svg>
-              </div>
+      
               <span className="text-sm font-medium">{tool.name}</span>
             </Link>
           ))}

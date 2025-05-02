@@ -32,13 +32,6 @@ export default function Navbar() {
               <Link href="/well-being" className="nav-link">
                 Well-Being
               </Link>
-              <Link href="/tools" className="nav-link">
-                Tools
-              </Link>
-              
-              <Link href="/doctors" className="nav-link">
-                Find a Doctor
-              </Link>
               <Link href="/video-consultation" className="nav-link">
                 Video Consultation
               </Link>
@@ -135,14 +128,8 @@ export default function Navbar() {
             <Link href="/well-being" className="block nav-link py-2 px-3 rounded hover:bg-primary-light">
               Well-Being
             </Link>
-            <Link href="/tools" className="block nav-link py-2 px-3 rounded hover:bg-primary-light">
-              Tools
-            </Link>
             <Link href="/symptom-checker" className="block nav-link py-2 px-3 rounded hover:bg-primary-light">
               Symptom Checker
-            </Link>
-            <Link href="/doctors" className="block nav-link py-2 px-3 rounded hover:bg-primary-light">
-              Find a Doctor
             </Link>
             <Link href="/video-consultation" className="block nav-link py-2 px-3 rounded hover:bg-primary-light">
               Video Consultation
