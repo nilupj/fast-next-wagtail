@@ -202,6 +202,7 @@ export async function getStaticProps() {
     return {
       props: {
         drugsByLetter,
+        error: null
       },
       revalidate: 3600,
     };
@@ -210,6 +211,7 @@ export async function getStaticProps() {
     return {
       props: {
         drugsByLetter: {},
+        error: 'Failed to load drugs data. Please try again later.'
       },
       revalidate: 60,
     };

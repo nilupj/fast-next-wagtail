@@ -106,6 +106,17 @@ def drugs_index(request):
         'brand_names': drug.brand_names
     } for drug in drugs], safe=False)
 
+def drugs_index(request):
+    """Get all drugs for the index page"""
+    drugs = DrugPage.objects.live().order_by('title')
+    data = [{
+        'id': drug.id,
+        'name': drug.title,
+        'slug': drug.slug,
+        'type': drug.drug_class,
+    } for drug in drugs]
+    return JsonResponse(data, safe=False)
+
 def drug_detail(request, slug):
     """Retrieve details for a specific drug"""
     try:
