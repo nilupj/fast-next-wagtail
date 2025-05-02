@@ -1,8 +1,11 @@
+import { useState, useEffect } from 'react';
+import DailyIframe from '@daily-co/daily-js';
 
-import { useState, useEffect, useRef } from 'react';
-import io from 'socket.io-client';
-
-export default function VideoConsultation({ onSubmit }) {
+export default function VideoConsultation({ roomUrl, username, onSubmit }) {
+  const [callFrame, setCallFrame] = useState(null);
+  const [isCallActive, setIsCallActive] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+  const [isCameraOff, setIsCameraOff] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -10,75 +13,55 @@ export default function VideoConsultation({ onSubmit }) {
     time: '',
     reason: ''
   });
-  const [isCallActive, setIsCallActive] = useState(false);
-  const [consultationLink, setConsultationLink] = useState('');
-  const [localStream, setLocalStream] = useState(null);
-  const [remoteStream, setRemoteStream] = useState(null);
-  const localVideoRef = useRef();
-  const remoteVideoRef = useRef();
-  const peerConnection = useRef();
-  const socketRef = useRef();
-
-  useEffect(() => {
-    if (isCallActive) {
-      initializeCall();
-    }
-    return () => {
-      if (localStream) {
-        localStream.getTracks().forEach(track => track.stop());
-      }
-      if (peerConnection.current) {
-        peerConnection.current.close();
-      }
-      if (socketRef.current) {
-        socketRef.current.disconnect();
-      }
-    };
-  }, [isCallActive]);
-
-  const initializeCall = async () => {
-    try {
-      // Initialize WebSocket connection
-      socketRef.current = io('https://' + window.location.hostname);
-      
-      // Get local media stream
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: true
-      });
-      setLocalStream(stream);
-      if (localVideoRef.current) {
-        localVideoRef.current.srcObject = stream;
-      }
-
-      // Initialize WebRTC peer connection
-      const configuration = {
-        iceServers: [
-          { urls: 'stun:stun.l.google.com:19302' }
-        ]
-      };
-      peerConnection.current = new RTCPeerConnection(configuration);
-
-      // Add local stream tracks to peer connection
-      stream.getTracks().forEach(track => {
-        peerConnection.current.addTrack(track, stream);
-      });
-
-      // Handle incoming remote stream
-      peerConnection.current.ontrack = (event) => {
-        setRemoteStream(event.streams[0]);
-        if (remoteVideoRef.current) {
-          remoteVideoRef.current.srcObject = event.streams[0];
-        }
-      };
-    } catch (error) {
-      console.error('Error initializing call:', error);
-    }
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmit(formData);
+  };
+
+  useEffect(() => {
+    if (!roomUrl) return;
+
+    const daily = DailyIframe.createFrame({
+      iframeStyle: {
+        width: '100%',
+        height: '100%',
+        border: '0',
+        borderRadius: '12px',
+      },
+      showLeaveButton: true,
+      showFullscreenButton: true,
+    });
+
+    daily.join({ url: roomUrl, userName: username });
+
+    daily.on('joined-meeting', () => setIsCallActive(true));
+    daily.on('left-meeting', () => setIsCallActive(false));
+
+    setCallFrame(daily);
+
+    return () => {
+      daily.destroy();
+    };
+  }, [roomUrl, username]);
+
+  const toggleAudio = () => {
+    if (callFrame) {
+      callFrame.setLocalAudio(!isMuted);
+      setIsMuted(!isMuted);
+    }
+  };
+
+  const toggleVideo = () => {
+    if (callFrame) {
+      callFrame.setLocalVideo(!isCameraOff);
+      setIsCameraOff(!isCameraOff);
+    }
+  };
+
+  const leaveCall = () => {
+    if (callFrame) {
+      callFrame.leave();
+    }
   };
 
   return (
@@ -165,47 +148,48 @@ export default function VideoConsultation({ onSubmit }) {
                 Proceed to Payment
               </button>
             </form>
-            {consultationLink && (
-              <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-md">
-                <h3 className="text-lg font-medium text-green-800 mb-2">Your Consultation Link</h3>
-                <p className="text-green-700 break-all">{consultationLink}</p>
-              </div>
-            )}
           </div>
         </div>
       ) : (
-        <div className="max-w-4xl mx-auto">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="relative">
-              <video
-                ref={localVideoRef}
-                autoPlay
-                playsInline
-                muted
-                className="w-full rounded-lg"
-              />
-              <p className="absolute bottom-2 left-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded">You</p>
+        <div className="relative w-full h-[600px] bg-gray-100 rounded-lg overflow-hidden">
+          <div className="h-full">
+            <div id="video-container" className="w-full h-[calc(100%-80px)]"></div>
+            <div className="absolute bottom-0 left-0 right-0 h-20 bg-white/90 backdrop-blur flex items-center justify-center space-x-4 px-4">
+              <button
+                onClick={toggleAudio}
+                className={`p-3 rounded-full ${isMuted ? 'bg-red-500' : 'bg-gray-700'} text-white`}
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  {isMuted ? (
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                  ) : (
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                  )}
+                </svg>
+              </button>
+
+              <button
+                onClick={toggleVideo}
+                className={`p-3 rounded-full ${isCameraOff ? 'bg-red-500' : 'bg-gray-700'} text-white`}
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  {isCameraOff ? (
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  ) : (
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  )}
+                </svg>
+              </button>
+
+              <button
+                onClick={leaveCall}
+                className="p-3 rounded-full bg-red-500 text-white"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 8l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+                </svg>
+              </button>
             </div>
-            <div className="relative">
-              <video
-                ref={remoteVideoRef}
-                autoPlay
-                playsInline
-                className="w-full rounded-lg"
-              />
-              <p className="absolute bottom-2 left-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded">Doctor</p>
-            </div>
-          </div>
-          <div className="mt-4 flex justify-center space-x-4">
-            <button className="bg-red-500 text-white px-4 py-2 rounded-md" onClick={() => setIsCallActive(false)}>
-              End Call
-            </button>
-            <button className="bg-gray-500 text-white px-4 py-2 rounded-md">
-              Mute
-            </button>
-            <button className="bg-gray-500 text-white px-4 py-2 rounded-md">
-              Turn Off Camera
-            </button>
           </div>
         </div>
       )}
