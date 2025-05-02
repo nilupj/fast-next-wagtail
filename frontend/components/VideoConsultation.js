@@ -1,5 +1,6 @@
 
 import { useState } from 'react';
+import PaymentForm from './PaymentForm';
 
 export default function VideoConsultation() {
   const [name, setName] = useState('');
@@ -7,16 +8,35 @@ export default function VideoConsultation() {
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
   const [reason, setReason] = useState('');
+  const [showPayment, setShowPayment] = useState(false);
+  const consultationFee = 499;
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // TODO: Implement consultation booking logic
-    alert('Consultation request submitted! We will contact you shortly.');
+    setShowPayment(true);
   };
+
+  const handlePaymentSuccess = () => {
+    alert('Consultation booked successfully! We will send you the video consultation link via email.');
+    setShowPayment(false);
+    // Reset form
+    setName('');
+    setEmail('');
+    setDate('');
+    setTime('');
+    setReason('');
+  };
+
+  if (showPayment) {
+    return <PaymentForm amount={consultationFee} onSuccess={handlePaymentSuccess} />;
+  }
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md">
       <h2 className="text-2xl font-bold text-primary mb-6">Book Video Consultation</h2>
+      <div className="mb-4">
+        <p className="text-lg">Consultation Fee: ₹{consultationFee}</p>
+      </div>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
@@ -77,7 +97,7 @@ export default function VideoConsultation() {
           type="submit"
           className="w-full bg-primary text-white py-2 px-4 rounded-md hover:bg-primary-dark transition-colors"
         >
-          Book Consultation
+          Proceed to Payment
         </button>
       </form>
     </div>
