@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import io from 'socket.io-client';
 
 export default function VideoConsultation({ onSubmit }) {
+  const [isCallActive, setIsCallActive] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',

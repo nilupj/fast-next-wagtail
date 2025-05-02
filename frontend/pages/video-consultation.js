@@ -18,7 +18,11 @@ export default function VideoConsultationPage() {
       {!showPayment ? (
         <VideoConsultation onSubmit={handleConsultationSubmit} />
       ) : (
-        <PaymentForm consultationData={consultationData} />
+        <PaymentForm 
+          amount={499} 
+          onSuccess={() => setShowPayment(false)} 
+          consultationData={consultationData} 
+        />
       )}
     </Layout>
   );
