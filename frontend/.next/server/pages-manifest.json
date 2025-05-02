@@ -2,7 +2,8 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/video-consultation": "pages/video-consultation.js",
   "/": "pages/index.js",
-  "/well-being": "pages/well-being.js"
+  "/video-consultation": "pages/video-consultation.js",
+  "/articles/[slug]": "pages/articles/[slug].js",
+  "/symptom-checker": "pages/symptom-checker.js"
 }
