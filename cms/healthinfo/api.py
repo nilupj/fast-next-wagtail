@@ -96,7 +96,6 @@ def conditions_index(request):
 
 def drugs_index(request):
     """Retrieve a complete index of all drugs"""
-    from drugs.models import DrugPage
     drugs = DrugPage.objects.live().order_by('title')
     return JsonResponse([{
         'id': drug.id,
@@ -107,14 +106,39 @@ def drugs_index(request):
         'brand_names': drug.brand_names
     } for drug in drugs], safe=False)
 
+def drug_detail(request, slug):
+    """Retrieve details for a specific drug"""
+    try:
+        drug = DrugPage.objects.live().get(slug=slug)
+        data = {
+            'id': drug.id,
+            'title': drug.title,
+            'slug': drug.slug,
+            'generic_name': drug.generic_name,
+            'brand_names': drug.brand_names,
+            'drug_class': drug.drug_class,
+            'overview': str(drug.overview),
+            'uses': str(drug.uses),
+            'dosage': str(drug.dosage),
+            'side_effects': str(drug.side_effects),
+            'warnings': str(drug.warnings),
+            'interactions': str(drug.interactions),
+            'storage': str(drug.storage),
+            'pregnancy_category': drug.pregnancy_category,
+        }
+        return JsonResponse(data)
+    except DrugPage.DoesNotExist:
+        return JsonResponse({'error': 'Drug not found'}, status=404)
+
 
 
 urlpatterns = [
     path('articles/index', articles_top_stories),
     path('articles/paths', articles_paths),
+    path('drugs/index/', drugs_index),
+    path('drugs/<slug>/', drug_detail),
     path('articles/<slug>/', article_detail),
     path('articles/<slug>/related', article_related),
     path('conditions/index', conditions_index),
-    path('drugs/index/', drugs_index),
     path('articles/health_topics', articles_health_topics),
 ]
