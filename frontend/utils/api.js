@@ -120,8 +120,12 @@ export const fetchRelatedArticles = async (slug) => {
 // Drugs index (A-Z)
 export const fetchDrugsIndex = async () => {
   try {
-    const response = await api.get('/api/drugs/index/'); // Corrected endpoint
-    return response.data;
+    const response = await api.get('/api/drugs/index/', {
+      params: {
+        lang: typeof window !== 'undefined' ? localStorage.getItem('language') || 'en' : 'en'
+      }
+    });
+    return response.data || [];
   } catch (error) {
     console.error('Error fetching drugs index:', error);
     return [];

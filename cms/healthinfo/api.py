@@ -89,21 +89,14 @@ def article_related(request, slug):
         return JsonResponse([], safe=False)
 
 def conditions_index(request):
-    """Retrieve a complete index of all health conditions"""
+    """Retrieve a complete index of all conditions"""
     lang = request.GET.get('lang', 'en')
     conditions = ConditionPage.objects.live().order_by('title')
     return JsonResponse([get_translated_content(condition, lang) for condition in conditions], safe=False)
 
-def get_drugs_index(request):
+def drugs_index(request):
     """Retrieve a complete index of all drugs"""
-    lang = request.GET.get('lang', 'en')
-    drugs = DrugPage.objects.live().order_by('title') # Hypothetical implementation
-    return JsonResponse([get_translated_content(drug, lang) for drug in drugs], safe=False)
-
-
-def get_drugs_index(request):
-    """Retrieve a complete index of all drugs"""
-    lang = request.GET.get('lang', 'en')
+    from drugs.models import DrugPage
     drugs = DrugPage.objects.live().order_by('title')
     return JsonResponse([{
         'id': drug.id,
@@ -114,12 +107,14 @@ def get_drugs_index(request):
         'brand_names': drug.brand_names
     } for drug in drugs], safe=False)
 
+
+
 urlpatterns = [
     path('articles/index', articles_top_stories),
     path('articles/paths', articles_paths),
-    path('drugs/index/', get_drugs_index),  # Updated with trailing slash
     path('articles/<slug>/', article_detail),
     path('articles/<slug>/related', article_related),
     path('conditions/index', conditions_index),
+    path('drugs/index/', drugs_index),
     path('articles/health_topics', articles_health_topics),
 ]
