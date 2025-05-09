@@ -28,16 +28,6 @@ self.__BUILD_MANIFEST = {
       "static/chunks/webpack.js",
       "static/chunks/main.js",
       "static/chunks/pages/articles/[slug].js"
-    ],
-    "/conditions": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/conditions.js"
-    ],
-    "/drugs-supplements": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/drugs-supplements.js"
     ]
   },
   "ampFirstPages": []
