@@ -49,6 +49,11 @@ export default function Layout({ children, title = 'Health Info - Trusted Medica
               includedLanguages: 'en,hi,bn,te,ta,mr,gu,kn,ml,pa,ur',
               layout: google.translate.TranslateElement.InlineLayout.SIMPLE
             }, 'google_translate_element');
+            new google.translate.TranslateElement({
+              pageLanguage: 'en',
+              includedLanguages: 'en,hi,bn,te,ta,mr,gu,kn,ml,pa,ur',
+              layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+            }, 'google_translate_element_mobile');
           }
         `}
       </Script>

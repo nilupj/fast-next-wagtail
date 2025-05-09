@@ -32,7 +32,7 @@ export default function Navbar() {
               <Link href="/well-being" className="nav-link">
                 Well-Being
               </Link>
-              
+
               <div className="relative group">
                 <button className="nav-link flex items-center">
                   More
@@ -127,7 +127,7 @@ export default function Navbar() {
             <Link href="/symptom-checker" className="block nav-link py-2 px-3 rounded hover:bg-primary-light">
               Symptom Checker
             </Link>
-            
+
             <Link href="/health-news" className="block nav-link py-2 px-3 rounded hover:bg-primary-light">
               Health News
             </Link>
@@ -143,6 +143,9 @@ export default function Navbar() {
               <SearchBar />
             </div>
             <div className="mt-3 px-2 space-y-1">
+              <div className="translate-wrapper mb-2">
+                <div id="google_translate_element_mobile"></div>
+              </div>
               <Link href="/subscribe" className="block text-white py-2 px-3 rounded hover:bg-primary-light">
                 Subscribe
               </Link>
