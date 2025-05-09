@@ -32,7 +32,7 @@ export default function Navbar() {
               <Link href="/well-being" className="nav-link">
                 Well-Being
               </Link>
-              
+
               <div className="relative group">
                 <button className="nav-link flex items-center">
                   More
@@ -85,7 +85,7 @@ export default function Navbar() {
               Enable Notifications
             </button>
             <Link href="/login" className="text-sm text-white hover:text-white/80">
-              Log In
+              Sign In
             </Link>
             <SearchBar />
           </div>
@@ -127,7 +127,7 @@ export default function Navbar() {
             <Link href="/symptom-checker" className="block nav-link py-2 px-3 rounded hover:bg-primary-light">
               Symptom Checker
             </Link>
-            
+
             <Link href="/health-news" className="block nav-link py-2 px-3 rounded hover:bg-primary-light">
               Health News
             </Link>
@@ -147,7 +147,7 @@ export default function Navbar() {
                 Subscribe
               </Link>
               <Link href="/login" className="block text-white py-2 px-3 rounded hover:bg-primary-light">
-                Log In
+                Sign In
               </Link>
             </div>
           </div>
