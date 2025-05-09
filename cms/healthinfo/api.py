@@ -111,9 +111,11 @@ def drugs_index(request):
     drugs = DrugPage.objects.live().order_by('title')
     data = [{
         'id': drug.id,
-        'name': drug.title,
+        'title': drug.title,
         'slug': drug.slug,
-        'type': drug.drug_class,
+        'drug_class': drug.drug_class,
+        'generic_name': drug.generic_name,
+        'brand_names': drug.brand_names
     } for drug in drugs]
     return JsonResponse(data, safe=False)
 

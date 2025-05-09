@@ -9,6 +9,10 @@ export default function DrugsSupplements({ drugsByLetter }) {
   const [searchResults, setSearchResults] = useState([]);
 
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+  
+  useEffect(() => {
+    console.log('Drugs data:', drugsByLetter);
+  }, [drugsByLetter]);
 
   const handleSearch = async (e) => {
     e.preventDefault();
