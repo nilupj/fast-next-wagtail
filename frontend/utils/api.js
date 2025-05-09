@@ -184,16 +184,12 @@ export async function searchDrugs(query) {
   }
 }
 
-export async function getDrugBySlug(slug) {
+export const getDrugBySlug = async (slug) => {
   try {
-    const response = await fetch(`${CMS_API_URL}/drugs/${slug}/`);
-    if (!response.ok) {
-      throw new Error('Drug not found');
-    }
-    const data = await response.json();
-    return data;
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/drugs/${slug}`);
+    return response.data;
   } catch (error) {
-    console.error('Error fetching drug details:', error);
-    throw error;
+    console.error("Error fetching drug:", error);
+    throw new Error(error.response?.data?.detail || "Failed to fetch drug information");
   }
-}
+};

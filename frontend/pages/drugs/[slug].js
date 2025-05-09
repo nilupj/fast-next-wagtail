@@ -10,20 +10,38 @@ export default function DrugPage() {
   const { slug } = router.query;
   const [drug, setDrug] = useState(null);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (slug) {
       getDrugBySlug(slug)
-        .then(data => setDrug(data))
-        .catch(err => setError(err.message));
+        .then(data => {
+          setDrug(data);
+          setLoading(false);
+        })
+        .catch(err => {
+          console.error("Error fetching drug:", err);
+          setError(err.message);
+          setLoading(false);
+        });
     }
   }, [slug]);
+
+  if (loading) {
+    return (
+      <Layout>
+        <div className="container mx-auto px-4 py-8">
+          <p>Loading...</p>
+        </div>
+      </Layout>
+    );
+  }
 
   if (error) {
     return (
       <Layout>
         <div className="container mx-auto px-4 py-8">
-          <p className="text-red-600">{error}</p>
+          <p className="text-red-600">Error: {error}</p>
         </div>
       </Layout>
     );
@@ -33,7 +51,7 @@ export default function DrugPage() {
     return (
       <Layout>
         <div className="container mx-auto px-4 py-8">
-          <p>Loading...</p>
+          <p>Drug not found</p>
         </div>
       </Layout>
     );
