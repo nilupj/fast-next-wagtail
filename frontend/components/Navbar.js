@@ -32,9 +32,7 @@ export default function Navbar() {
               <Link href="/well-being" className="nav-link">
                 Well-Being
               </Link>
-              <Link href="/video-consultation" className="nav-link">
-                Video Consultation
-              </Link>
+              
               <div className="relative group">
                 <button className="nav-link flex items-center">
                   More
@@ -128,9 +126,7 @@ export default function Navbar() {
             <Link href="/symptom-checker" className="block nav-link py-2 px-3 rounded hover:bg-primary-light">
               Symptom Checker
             </Link>
-            <Link href="/video-consultation" className="block nav-link py-2 px-3 rounded hover:bg-primary-light">
-              Video Consultation
-            </Link>
+            
             <Link href="/health-news" className="block nav-link py-2 px-3 rounded hover:bg-primary-light">
               Health News
             </Link>
