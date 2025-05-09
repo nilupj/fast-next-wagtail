@@ -46,4 +46,23 @@
   .card {
     @apply bg-white rounded-lg shadow-md overflow-hidden transition-shadow duration-300 hover:shadow-lg;
   }
+
+  /* Google Translate Widget Styles */
+  .goog-te-gadget {
+    @apply text-white font-sans;
+  }
+
+  .goog-te-gadget .goog-te-combo {
+    @apply bg-transparent text-white border border-white rounded px-2 py-1 text-sm hover:bg-white hover:text-primary transition-colors cursor-pointer;
+  }
+
+  .goog-te-gadget-simple {
+    @apply bg-transparent !important;
+    border: none !important;
+  }
+
+  .goog-te-gadget-simple span {
+    @apply text-white !important;
+    border: none !important;
+  }
 }

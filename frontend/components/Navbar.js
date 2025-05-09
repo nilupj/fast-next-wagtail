@@ -56,6 +56,7 @@ export default function Navbar() {
 
           {/* User actions */}
           <div className="hidden md:flex items-center space-x-4">
+            <div id="google_translate_element" className="flex items-center"></div>
             <button
               onClick={async () => {
                 try {
