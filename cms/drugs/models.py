@@ -32,6 +32,15 @@ class DrugIndexPage(Page):
     content_panels = Page.content_panels + [
         FieldPanel('intro')
     ]
+    
+    search_fields = Page.search_fields + [
+        index.SearchField('intro'),
+    ]
+
+    def get_context(self, request):
+        context = super().get_context(request)
+        context['drugs'] = DrugPage.objects.child_of(self).live().order_by('title')
+        return context
 
     def get_context(self, request):
         context = super().get_context(request)

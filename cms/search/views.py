@@ -10,8 +10,9 @@ def search(request):
 
     # Search
     if search_query:
-        search_results = Page.objects.live().search(search_query)
-        # Skip Query.get and add_hit in newer Wagtail versions
+        search_results = Page.objects.live().specific().search(search_query)
+        for result in search_results:
+            result.specific  # This ensures we get the specific page type
     else:
         search_results = Page.objects.none()
 

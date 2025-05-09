@@ -258,7 +258,7 @@ def search_articles(request):
     if not query:
         return JsonResponse([], safe=False)
 
-    articles = ArticlePage.objects.live().search(query)
+    articles = ArticlePage.objects.live().specific().search(query)
 
     response = []
     for article in articles:
