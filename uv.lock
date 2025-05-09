@@ -945,6 +945,15 @@ wheels = [
 ]
 
 [[package]]
+name = "polib"
+version = "1.2.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/10/9a/79b1067d27e38ddf84fe7da6ec516f1743f31f752c6122193e7bce38bdbf/polib-1.2.0.tar.gz", hash = "sha256:f3ef94aefed6e183e342a8a269ae1fc4742ba193186ad76f175938621dbfc26b", size = 161658 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/6b/99/45bb1f9926efe370c6dbe324741c749658e44cb060124f28dad201202274/polib-1.2.0-py2.py3-none-any.whl", hash = "sha256:1c77ee1b81feb31df9bca258cbc58db1bbb32d10214b173882452c73af06d62d", size = 20634 },
+]
+
+[[package]]
 name = "propcache"
 version = "0.3.1"
 source = { registry = "https://pypi.org/simple" }
@@ -1232,6 +1241,7 @@ dependencies = [
     { name = "sqlalchemy" },
     { name = "uvicorn" },
     { name = "wagtail" },
+    { name = "wagtail-localize" },
 ]
 
 [package.metadata]
@@ -1251,6 +1261,7 @@ requires-dist = [
     { name = "sqlalchemy", specifier = ">=2.0.40" },
     { name = "uvicorn", specifier = ">=0.34.1" },
     { name = "wagtail", specifier = ">=6.4.1" },
+    { name = "wagtail-localize", specifier = ">=1.12.1" },
 ]
 
 [[package]]
@@ -1452,6 +1463,21 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/4f/0f/4ad523cf1c2aee06e32e279b1b98d3a4e5577ee952acbc486034d6f191f2/wagtail-6.4.1.tar.gz", hash = "sha256:cec3e6d4920a6d178fa1eb6f4af80b370fdd5570ed924b979104e157f10ca097", size = 6630337 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/9c/44/e2383decf738b3d5491084f6ae758f0115d3bdeddb6f059f8724078c4950/wagtail-6.4.1-py3-none-any.whl", hash = "sha256:85206f86b04876d5596190e042d30de0430fdb5cdd71b6005748c8a0d45066ec", size = 9110827 },
+]
+
+[[package]]
+name = "wagtail-localize"
+version = "1.12.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "django" },
+    { name = "polib" },
+    { name = "typing-extensions" },
+    { name = "wagtail" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/27/0d/1dc9e44df18c8b5c4404cdb74c1d83884053b4610f5083e8319977f7fc9e/wagtail_localize-1.12.1.tar.gz", hash = "sha256:84cc5d5685e6246b5454be0e6bd6acc013a8815874b6a085a6c10cfb86654437", size = 286200 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/84/ad/90914b5a30991612c3d03e5e8308e5907818e0d605a6cb98a8ad212b1c33/wagtail_localize-1.12.1-py3-none-any.whl", hash = "sha256:24b65974f09b4fb14e4e53a1d14b763c027e172bbe5b2300d02f30b5de0a30e6", size = 511235 },
 ]
 
 [[package]]
