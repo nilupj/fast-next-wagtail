@@ -47,9 +47,6 @@ export default function Navbar() {
                     <Link href="/health-news" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
                       Health News
                     </Link>
-                    <Link href="/videos" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
-                      Videos
-                    </Link>
                     <Link href="/quizzes" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
                       Quizzes
                     </Link>
