@@ -164,22 +164,6 @@ export default function Home({ initialTopStories, healthTopics }) {
             ))}
           </div>
         )}
-
-        {displayHealthTopics && displayHealthTopics.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {displayHealthTopics.map((topic) => (
-              <ArticleCard key={topic.id} article={topic} />
-            ))}
-          </div>
-        ) : (
-          <div className="py-16 text-center">
-            <div className="animate-pulse">
-              <div className="mx-auto w-16 h-16 mb-4 rounded-full bg-neutral-200"></div>
-              <div className="mx-auto w-48 h-4 mb-4 rounded bg-neutral-200"></div>
-              <div className="mx-auto w-36 h-3 rounded bg-neutral-200"></div>
-            </div>
-          </div>
-        )}
       </div>
 
       <div className="mb-12">
