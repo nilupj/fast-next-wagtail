@@ -18,8 +18,13 @@ export default function Search() {
   });
 
   useEffect(() => {
-    if (!query) {
+    if (!query || query.trim().length === 0) {
       setLoading(false);
+      setResults({
+        articles: [],
+        conditions: [],
+        drugs: []
+      });
       return;
     }
 
@@ -29,16 +34,28 @@ export default function Search() {
 
       try {
         const data = await searchContent(query);
+        if (data.error) {
+          throw new Error(data.error);
+        }
         setResults(data);
       } catch (err) {
         setError('Error fetching search results. Please try again.');
         console.error('Search error:', err);
+        setResults({
+          articles: [],
+          conditions: [],
+          drugs: []
+        });
       } finally {
         setLoading(false);
       }
     };
 
-    fetchResults();
+    const debounce = setTimeout(() => {
+      fetchResults();
+    }, 300);
+
+    return () => clearTimeout(debounce);
   }, [query]);
 
   const totalResults = 

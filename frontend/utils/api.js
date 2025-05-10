@@ -158,17 +158,21 @@ export const fetchWellBeingArticles = async () => {
 
 // Search
 export const searchContent = async (query) => {
+  if (!query || query.trim().length === 0) {
+    return { articles: [], conditions: [], drugs: [] };
+  }
+
   try {
     const response = await api.get(`/api/search/`, {
       params: {
-        q: query,
-        lang: localStorage.getItem('locale') || 'en'
+        q: query.trim(),
+        lang: typeof window !== 'undefined' ? localStorage.getItem('locale') || 'en' : 'en'
       }
     });
     return response.data;
   } catch (error) {
     console.error('Error searching content:', error);
-    return { articles: [], conditions: [], drugs: [] };
+    throw error;
   }
 };
 
