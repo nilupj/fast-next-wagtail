@@ -1,11 +1,23 @@
-
 import Head from 'next/head';
 import Script from 'next/script';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 import Navbar from './Navbar';
 import Footer from './Footer';
-import { useEffect } from 'react';
 
 export default function Layout({ children, title = 'Health Info - Trusted Medical Information & Resources' }) {
+  const router = useRouter();
+  const { locale } = router;
+
+  useEffect(() => {
+    localStorage.setItem('locale', locale);
+  }, [locale]);
+
+  const changeLanguage = (e) => {
+    const locale = e.target.value;
+    router.push(router.pathname, router.asPath, { locale });
+  };
+
   useEffect(() => {
     // Load feather icons if it exists
     if (typeof window !== 'undefined' && window.feather) {
@@ -23,6 +35,16 @@ export default function Layout({ children, title = 'Health Info - Trusted Medica
       </Head>
       <div className="flex flex-col min-h-screen">
         <Navbar />
+        <div className="fixed top-4 right-4 z-50">
+          <select 
+            onChange={changeLanguage} 
+            defaultValue={locale}
+            className="bg-white border border-gray-300 rounded px-2 py-1"
+          >
+            <option value="en">English</option>
+            <option value="hi">हिंदी</option>
+          </select>
+        </div>
         <main className="flex-grow">
           {children}
         </main>

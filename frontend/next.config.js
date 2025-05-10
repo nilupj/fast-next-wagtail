@@ -2,6 +2,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  i18n: {
+    locales: ['en', 'hi'],
+    defaultLocale: 'en',
+  },
   images: {
     domains: ['0.0.0.0', 'localhost', 'example.com', 'images.unsplash.com'],
     remotePatterns: [
