@@ -300,9 +300,7 @@ def search_conditions(request):
 def well_being(request):
     """Get articles for the well-being section"""
     categories = ['Nutrition', 'Fitness', 'Mental Health', 'Sleep', 'Stress Management', 'Healthy Aging']
-    articles = ArticlePage.objects.live().filter(
-        category__name__in=categories
-    ).order_by('-first_published_at')
+    articles = ArticlePage.objects.live().order_by('-first_published_at')[:12]
 
     featured_articles = articles.filter(featured=True)[:3]
 

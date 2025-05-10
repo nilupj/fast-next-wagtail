@@ -141,10 +141,29 @@ export default function Home({ initialTopStories, healthTopics }) {
       <div className="mb-12">
         <div className="flex justify-between items-center mb-6">
           <h2 className="section-title mb-0">LIVING HEALTHY</h2>
-          <Link href="/health-topics" className="text-primary hover:text-primary-dark font-medium text-sm transition-colors">
+          <Link href="/well-being" className="text-primary hover:text-primary-dark font-medium text-sm transition-colors">
             View All
           </Link>
         </div>
+        {displayHealthTopics && displayHealthTopics.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {displayHealthTopics.map((topic) => (
+              <ArticleCard key={topic.id} article={topic} />
+            ))}
+          </div>
+        ) : (
+          <div className="animate-pulse grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {[1, 2, 3, 4].map((n) => (
+              <div key={n} className="bg-white rounded-lg shadow-md overflow-hidden">
+                <div className="h-48 bg-neutral-200"></div>
+                <div className="p-4">
+                  <div className="h-4 bg-neutral-200 rounded w-3/4 mb-2"></div>
+                  <div className="h-4 bg-neutral-200 rounded w-1/2"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
 
         {displayHealthTopics && displayHealthTopics.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
