@@ -4,15 +4,13 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://0.0.0.0:8001';
 
 const api = axios.create({
   baseURL: API_URL,
+  paramsSerializer: {
+    encode: (param) => encodeURIComponent(param)
+  },
+  timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
   },
-});
-
-api.interceptors.request.use((config) => {
-  const locale = typeof window !== 'undefined' ? window.localStorage.getItem('locale') || 'en' : 'en';
-  config.params = { ...config.params, lang: locale };
-  return config;
 });
 
 // Add language interceptor with isServer check
