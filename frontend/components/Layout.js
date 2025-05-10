@@ -22,6 +22,7 @@ export default function Layout({ children, title = 'Health Info - Trusted Medica
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="flex flex-col min-h-screen">
+        <Navbar />
         <main className="flex-grow">
           {children}
         </main>
