@@ -1,5 +1,4 @@
 
-from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.http import JsonResponse
 from wagtail.models import Page
 from articles.models import ArticlePage
@@ -22,8 +21,9 @@ def search(request):
         'id': article.id,
         'title': article.title,
         'slug': article.slug,
-        'summary': article.subtitle,
-        'category': article.categories.first().name if article.categories.exists() else None,
+        'summary': article.subtitle if hasattr(article, 'subtitle') else '',
+        'category': article.categories.first().name if hasattr(article, 'categories') and article.categories.exists() else None,
+        'image': article.image.get_rendition('fill-800x500').url if hasattr(article, 'image') and article.image else None,
         'created_at': article.first_published_at,
     } for article in article_results]
 
@@ -33,7 +33,7 @@ def search(request):
         'id': condition.id,
         'name': condition.title,
         'slug': condition.slug,
-        'subtitle': condition.subtitle,
+        'subtitle': condition.subtitle if hasattr(condition, 'subtitle') else '',
     } for condition in condition_results]
 
     # Search drugs
@@ -42,7 +42,7 @@ def search(request):
         'id': drug.id,
         'name': drug.title,
         'slug': drug.slug,
-        'type': drug.drug_type,
+        'type': drug.drug_type if hasattr(drug, 'drug_type') else '',
     } for drug in drug_results]
 
     return JsonResponse({
