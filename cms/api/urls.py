@@ -1,7 +1,9 @@
 from django.urls import path
 from . import views
+from search.views import search
 
 urlpatterns = [
+    path('search/', search, name='api_search'),
     # Articles
     path('articles/top-stories', views.articles_top_stories, name='articles_top_stories'),
     path('articles/health-topics', views.articles_health_topics, name='articles_health_topics'),

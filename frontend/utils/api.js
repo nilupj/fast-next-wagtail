@@ -159,7 +159,12 @@ export const fetchWellBeingArticles = async () => {
 // Search
 export const searchContent = async (query) => {
   try {
-    const response = await api.get(`/api/search?q=${encodeURIComponent(query)}`);
+    const response = await api.get(`/api/search/`, {
+      params: {
+        q: query,
+        lang: localStorage.getItem('locale') || 'en'
+      }
+    });
     return response.data;
   } catch (error) {
     console.error('Error searching content:', error);
