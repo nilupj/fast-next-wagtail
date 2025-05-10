@@ -103,13 +103,15 @@ class DrugPage(Page):
     )
 
     search_fields = Page.search_fields + [
-        index.SearchField('title'),
-        index.SearchField('generic_name'),
-        index.SearchField('brand_names'),
+        index.SearchField('title', boost=10),
+        index.SearchField('generic_name', boost=8),
+        index.SearchField('brand_names', boost=8),
+        index.SearchField('drug_class', boost=5),
         index.SearchField('overview'),
         index.SearchField('uses'),
         index.SearchField('dosage'),
         index.SearchField('side_effects'),
+        index.FilterField('drug_class'),
     ]
 
     content_panels = Page.content_panels + [

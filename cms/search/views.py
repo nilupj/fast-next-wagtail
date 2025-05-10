@@ -10,9 +10,15 @@ def search(request):
 
     # Search
     if search_query:
+        # Search across different page types
         search_results = Page.objects.live().specific().search(search_query)
         for result in search_results:
-            result.specific  # This ensures we get the specific page type
+            # Access specific fields for each page type
+            result = result.specific
+            # Add relevance score
+            result.search_score = result.get_search_score()
+        # Order by relevance
+        search_results = sorted(search_results, key=lambda x: x.search_score if hasattr(x, 'search_score') else 0, reverse=True)
     else:
         search_results = Page.objects.none()
 

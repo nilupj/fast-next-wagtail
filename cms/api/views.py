@@ -281,7 +281,8 @@ def search_conditions(request):
     if not query:
         return JsonResponse([], safe=False)
 
-    conditions = ConditionPage.objects.live().search(query)
+    conditions = ConditionPage.objects.live().specific().search(query)
+    conditions = [result.specific for result in conditions]
 
     response = []
     for condition in conditions:
