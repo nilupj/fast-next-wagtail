@@ -66,9 +66,14 @@ export default function DrugPage() {
       />
       
       <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-2">{drug.title}</h1>
-        {drug.generic_name && (
-          <p className="text-gray-600 mb-4">Generic name: {drug.generic_name}</p>
+        <h1 className="text-3xl font-bold mb-2">
+          {drug.generic_name ? `${drug.generic_name} ${drug.brand_names ? `(${drug.brand_names})` : ''}` : drug.title}
+        </h1>
+        {drug.generic_name && drug.brand_names && (
+          <p className="text-gray-600 mb-4">
+            Generic name: {drug.generic_name}<br/>
+            Brand names: {drug.brand_names}
+          </p>
         )}
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
