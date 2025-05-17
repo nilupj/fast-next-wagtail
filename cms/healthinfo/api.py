@@ -1,4 +1,3 @@
-
 from django.urls import path
 from django.http import JsonResponse, Http404
 from wagtail.models import Page
@@ -8,9 +7,24 @@ from wagtail.images.api.v2.views import ImagesAPIViewSet
 from wagtail.documents.api.v2.views import DocumentsAPIViewSet
 from articles.models import ArticlePage
 from conditions.models import ConditionPage, ConditionIndexPage
-from drugs.models import DrugPage
+from drugs.models import DrugPage, DrugIndexPage
+
 
 api_router = WagtailAPIRouter('wagtailapi')
+
+def drug_index(request):
+    """Retrieve a listing of all drugs"""
+    drugs = DrugPage.objects.live().order_by('title')
+    data = [{
+        'id': drug.id,
+        'title': drug.title,
+        'slug': drug.slug,
+        'generic_name': drug.generic_name,
+        'brand_names': drug.brand_names,
+        'drug_class': drug.drug_class
+    } for drug in drugs]
+
+    return JsonResponse(data, safe=False)
 api_router.register_endpoint('pages', PagesAPIViewSet)
 api_router.register_endpoint('images', ImagesAPIViewSet)
 api_router.register_endpoint('documents', DocumentsAPIViewSet)
@@ -113,7 +127,7 @@ def drugs_index(request):
         'generic_name': drug.generic_name,
         'brand_names': drug.brand_names
     } for drug in drugs]
-    
+
     return JsonResponse(data, safe=False)
 
 def drug_detail(request, slug):

@@ -1,6 +1,7 @@
 
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
+import Head from 'next/head';
 import Layout from '../../components/Layout';
 import { getDrugBySlug } from '../../utils/api';
 import { NextSeo } from 'next-seo';
