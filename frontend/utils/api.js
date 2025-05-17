@@ -200,7 +200,7 @@ export async function searchDrugs(query) {
 }
 
 export const getDrugs = async () => {
-  const response = await axios.get(`${API_URL}/api/drugs/index/`);
+  const response = await axios.get(`${API_URL}/api/drugs/index`);
   return response.data;
 };
 
