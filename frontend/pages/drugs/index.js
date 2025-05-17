@@ -160,9 +160,10 @@ function useDrugs() {
   const groupDrugsByFirstLetter = (drugList) => {
     const grouped = {};
     'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(letter => {
-      grouped[letter] = drugList.filter(drug => 
-        drug.title.toUpperCase().startsWith(letter)
-      );
+      grouped[letter] = drugList.filter(drug => {
+        const title = drug.generic_name || drug.title || '';
+        return title.toUpperCase().startsWith(letter);
+      });
     });
     return grouped;
   };
