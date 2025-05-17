@@ -3,9 +3,6 @@
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
   "/": "pages/index.js",
-  "/conditions": "pages/conditions.js",
   "/drugs-supplements": "pages/drugs-supplements.js",
-  "/articles/[slug]": "pages/articles/[slug].js",
-  "/well-being": "pages/well-being.js",
-  "/conditions/[slug]": "pages/conditions/[slug].js"
+  "/login": "pages/login.js"
 }
