@@ -45,7 +45,7 @@ async def get_drugs_index():
     Retrieve a complete index of all drugs and supplements
     """
     try:
-        drugs = await fetch_from_cms("drugs/index")
+        drugs = await fetch_from_cms("drugs/index/")
         return drugs
     except Exception as exc:
         logger.error(f"Error fetching drugs index: {exc}")

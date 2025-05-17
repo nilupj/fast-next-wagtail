@@ -11,6 +11,13 @@ export default function DrugListingPage() {
 
   const { drugs, loading, error } = useDrugs();
 
+// Log for debugging
+useEffect(() => {
+  if (drugs) {
+    console.log('Loaded drugs:', drugs);
+  }
+}, [drugs]);
+
   if (loading) {
     return (
       <Layout>
