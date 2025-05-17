@@ -9,13 +9,30 @@ export default function DrugListingPage() {
   const [activeTab, setActiveTab] = useState('A');
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
-  const { drugs, loading, error } = useDrugs();
+  const [drugs, setDrugs] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (drugs) {
-      console.log('Loaded drugs:', drugs);
-    }
-  }, [drugs]);
+    getDrugs()
+      .then(data => {
+        // Group drugs by first letter
+        const grouped = {};
+        'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(letter => {
+          grouped[letter] = data.filter(drug => {
+            const title = drug.generic_name || drug.title || '';
+            return title.toUpperCase().startsWith(letter);
+          });
+        });
+        setDrugs(grouped);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('Error loading drugs:', err);
+        setError(err.message);
+        setLoading(false);
+      });
+  }, []);
 
   const getDrugTitle = (drug) => {
     if (drug.generic_name && drug.brand_names) {

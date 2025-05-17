@@ -107,7 +107,7 @@ def drugs_index(request):
 
     data = [{
         'id': drug.id,
-        'title': drug.generic_name or drug.title,
+        'title': drug.title,
         'name': drug.generic_name or drug.title,
         'slug': drug.slug,
         'drug_class': drug.drug_class,
@@ -116,7 +116,6 @@ def drugs_index(request):
     } for drug in drugs]
     
     return JsonResponse(data, safe=False)
-    data = [{
         'id': drug.id,
         'title': drug.title,
         'slug': drug.slug,
