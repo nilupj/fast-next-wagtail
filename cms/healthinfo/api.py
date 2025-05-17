@@ -103,33 +103,19 @@ def conditions_index(request):
 
 def drugs_index(request):
     """Retrieve a complete index of all drugs"""
-    drugs = DrugPage.objects.live().order_by('generic_name', 'title')
-
-    return JsonResponse([{
-        'id': drug.id,
-        'title': drug.title,
-        'slug': drug.slug,
-        'drug_class': drug.drug_class,
-        'generic_name': drug.generic_name,
-        'brand_names': drug.brand_names
-    } for drug in drugs], safe=False)
-
-def drugs_index(request):
-    """Get all drugs for the index page"""
     drugs = DrugPage.objects.live().order_by('title')
+
     data = [{
         'id': drug.id,
-        'title': drug.title,
+        'title': drug.generic_name or drug.title,
+        'name': drug.generic_name or drug.title,
         'slug': drug.slug,
         'drug_class': drug.drug_class,
         'generic_name': drug.generic_name,
         'brand_names': drug.brand_names
-    } for drug in drugs if drug.live and not drug.expired]
+    } for drug in drugs]
+    
     return JsonResponse(data, safe=False)
-
-def drugs_index(request):
-    """Retrieve a list of all drugs"""
-    drugs = DrugPage.objects.live().order_by('title')
     data = [{
         'id': drug.id,
         'title': drug.title,

@@ -200,8 +200,17 @@ export async function searchDrugs(query) {
 }
 
 export const getDrugs = async () => {
-  const response = await axios.get(`${API_URL}/api/drugs/index`);
-  return response.data;
+  try {
+    const response = await axios.get(`${API_URL}/api/drugs/index`);
+    return response.data.map(drug => ({
+      ...drug,
+      name: drug.generic_name || drug.title,
+      title: drug.generic_name || drug.title
+    }));
+  } catch (error) {
+    console.error("Error fetching drugs:", error);
+    return [];
+  }
 };
 
 export const getDrugBySlug = async (slug) => {
