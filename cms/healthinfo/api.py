@@ -1,3 +1,4 @@
+
 from django.urls import path
 from django.http import JsonResponse, Http404
 from wagtail.models import Page
@@ -7,9 +8,7 @@ from wagtail.images.api.v2.views import ImagesAPIViewSet
 from wagtail.documents.api.v2.views import DocumentsAPIViewSet
 from articles.models import ArticlePage
 from conditions.models import ConditionPage, ConditionIndexPage
-# Hypothetical model, replace with your actual model
 from drugs.models import DrugPage
-
 
 api_router = WagtailAPIRouter('wagtailapi')
 api_router.register_endpoint('pages', PagesAPIViewSet)
@@ -116,14 +115,6 @@ def drugs_index(request):
     } for drug in drugs]
     
     return JsonResponse(data, safe=False)
-        'id': drug.id,
-        'title': drug.title,
-        'slug': drug.slug,
-        'generic_name': drug.generic_name,
-        'brand_names': drug.brand_names,
-        'drug_class': drug.drug_class
-    } for drug in drugs]
-    return JsonResponse(data, safe=False)
 
 def drug_detail(request, slug):
     """Retrieve details for a specific drug"""
@@ -148,8 +139,6 @@ def drug_detail(request, slug):
         return JsonResponse(data)
     except DrugPage.DoesNotExist:
         return JsonResponse({'error': 'Drug not found'}, status=404)
-
-
 
 urlpatterns = [
     path('articles/index', articles_top_stories),
