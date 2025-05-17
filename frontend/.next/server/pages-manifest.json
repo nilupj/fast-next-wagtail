@@ -4,5 +4,6 @@
   "/_document": "pages/_document.js",
   "/drugs-supplements": "pages/drugs-supplements.js",
   "/": "pages/index.js",
-  "/conditions": "pages/conditions.js"
+  "/conditions": "pages/conditions.js",
+  "/articles/[slug]": "pages/articles/[slug].js"
 }
