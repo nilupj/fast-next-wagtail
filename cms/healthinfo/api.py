@@ -161,7 +161,7 @@ def drug_detail(request, slug):
 urlpatterns = [
     path('articles/index', articles_top_stories),
     path('articles/paths', articles_paths),
-    path('drugs/index/', drugs_index),
+    path('drugs/index', drugs_index),
     path('drugs/<slug>/', drug_detail),
     path('articles/<slug>/', article_detail),
     path('articles/<slug>/related', article_related),
