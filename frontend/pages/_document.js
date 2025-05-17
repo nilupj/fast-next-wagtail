@@ -5,10 +5,7 @@ export default function Document() {
     <Html lang="en">
       <Head>
         {/* External stylesheets should be included in _document.js, not in page components */}
-        <link 
-          href="https://unpkg.com/feather-icons/dist/feather.min.css" 
-          rel="stylesheet" 
-        />
+        <script src="https://unpkg.com/feather-icons"></script>
         {/* Import fonts */}
         <link 
           href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@500;600;700&display=swap" 

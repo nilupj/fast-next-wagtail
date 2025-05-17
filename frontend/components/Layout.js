@@ -7,9 +7,13 @@ import { useEffect } from 'react';
 
 export default function Layout({ children, title = 'Health Info - Trusted Medical Information & Resources' }) {
   useEffect(() => {
-    // Load feather icons if it exists
+    // Initialize feather icons
     if (typeof window !== 'undefined' && window.feather) {
-      window.feather.replace();
+      window.feather.replace({
+        'stroke-width': 1.5,
+        width: 24,
+        height: 24
+      });
     }
   }, []);
 
