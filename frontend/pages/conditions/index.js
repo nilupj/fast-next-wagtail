@@ -1,12 +1,35 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { NextSeo } from 'next-seo';
 import { fetchConditionsIndex } from '../../utils/api';
 
-export default function ConditionsIndex({ conditionsByLetter }) {
+export default function ConditionsIndex() {
   const [activeTab, setActiveTab] = useState('A');
+  const [conditionsByLetter, setConditionsByLetter] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+
+  useEffect(() => {
+    fetch('/api/conditions/index')
+      .then(res => res.json())
+      .then(data => {
+        const groupedConditions = {};
+        'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(letter => {
+          groupedConditions[letter] = data.filter(condition =>
+            condition.name.toUpperCase().startsWith(letter)
+          );
+        });
+        setConditionsByLetter(groupedConditions);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('Error fetching conditions:', err);
+        setError(err.message);
+        setLoading(false);
+      });
+  }, []);
 
   return (
     <>
@@ -15,7 +38,7 @@ export default function ConditionsIndex({ conditionsByLetter }) {
         description="Browse all health conditions alphabetically. Find symptoms, treatments, and prevention for hundreds of medical conditions."
         canonical="https://healthinfo.com/conditions"
       />
-    
+
       <div className="container-custom py-8">
         <div className="mb-6">
           <h1 className="text-3xl font-bold text-primary mb-2">Health Conditions A-Z</h1>
@@ -23,7 +46,7 @@ export default function ConditionsIndex({ conditionsByLetter }) {
             Browse our comprehensive directory of health conditions and diseases, complete with detailed information on symptoms, causes, treatments, and prevention.
           </p>
         </div>
-        
+
         {/* Alphabet navigation */}
         <div className="mb-8 overflow-x-auto">
           <div className="flex space-x-1 min-w-max">
@@ -43,7 +66,7 @@ export default function ConditionsIndex({ conditionsByLetter }) {
           </div>
           <div className="h-1 bg-primary"></div>
         </div>
-        
+
         {/* Conditions list */}
         <div className="bg-white rounded-lg shadow-md p-6">
           {alphabet.map((letter) => (
@@ -52,7 +75,7 @@ export default function ConditionsIndex({ conditionsByLetter }) {
               className={`${activeTab === letter ? 'block' : 'hidden'}`}
             >
               <h2 className="text-2xl font-bold text-primary mb-4">{letter}</h2>
-              
+
               {conditionsByLetter[letter] && conditionsByLetter[letter].length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-2">
                   {conditionsByLetter[letter].map((condition) => (
@@ -71,7 +94,7 @@ export default function ConditionsIndex({ conditionsByLetter }) {
             </div>
           ))}
         </div>
-        
+
         {/* Common health concerns section */}
         <div className="mt-12">
           <h2 className="section-title">COMMON HEALTH CONCERNS</h2>
@@ -102,31 +125,32 @@ export default function ConditionsIndex({ conditionsByLetter }) {
   );
 }
 
-export async function getStaticProps() {
-  try {
-    const conditionsData = await fetchConditionsIndex();
-    
-    // Organize conditions by first letter
-    const conditionsByLetter = {};
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(letter => {
-      conditionsByLetter[letter] = conditionsData.filter(condition => 
-        condition.name.toUpperCase().startsWith(letter)
-      );
-    });
+// Remove getStaticProps
+// export async function getStaticProps() {
+//   try {
+//     const conditionsData = await fetchConditionsIndex();
 
-    return {
-      props: {
-        conditionsByLetter,
-      },
-      revalidate: 3600,
-    };
-  } catch (error) {
-    console.error('Error fetching conditions:', error);
-    return {
-      props: {
-        conditionsByLetter: {},
-      },
-      revalidate: 60,
-    };
-  }
-}
+//     // Organize conditions by first letter
+//     const conditionsByLetter = {};
+//     'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(letter => {
+//       conditionsByLetter[letter] = conditionsData.filter(condition =>
+//         condition.name.toUpperCase().startsWith(letter)
+//       );
+//     });
+
+//     return {
+//       props: {
+//         conditionsByLetter,
+//       },
+//       revalidate: 3600,
+//     };
+//   } catch (error) {
+//     console.error('Error fetching conditions:', error);
+//     return {
+//       props: {
+//         conditionsByLetter: {},
+//       },
+//       revalidate: 60,
+//     };
+//   }
+// }
