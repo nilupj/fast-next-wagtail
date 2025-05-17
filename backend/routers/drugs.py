@@ -46,7 +46,17 @@ async def get_drugs_index():
     """
     try:
         drugs = await fetch_from_cms("drugs/index/")
-        return drugs
+        if not drugs:
+            return []
+        # Ensure proper structure for each drug
+        return [{
+            'id': drug.get('id'),
+            'title': drug.get('title'),
+            'slug': drug.get('slug'),
+            'drug_class': drug.get('drug_class'),
+            'generic_name': drug.get('generic_name'),
+            'brand_names': drug.get('brand_names')
+        } for drug in drugs]
     except Exception as exc:
         logger.error(f"Error fetching drugs index: {exc}")
         return []

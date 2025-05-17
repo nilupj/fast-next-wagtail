@@ -11,12 +11,18 @@ export default function DrugListingPage() {
 
   const { drugs, loading, error } = useDrugs();
 
-// Log for debugging
-useEffect(() => {
-  if (drugs) {
-    console.log('Loaded drugs:', drugs);
-  }
-}, [drugs]);
+  useEffect(() => {
+    if (drugs) {
+      console.log('Loaded drugs:', drugs);
+    }
+  }, [drugs]);
+
+  const getDrugTitle = (drug) => {
+    if (drug.generic_name && drug.brand_names) {
+      return `${drug.generic_name} (${drug.brand_names})`;
+    }
+    return drug.title || drug.generic_name || drug.brand_names;
+  };
 
   if (loading) {
     return (
@@ -82,7 +88,7 @@ useEffect(() => {
                   href={`/drugs/${drug.slug}`}
                   className="p-4 border rounded-lg hover:shadow-md transition-shadow"
                 >
-                  <h3 className="font-medium text-primary">{drug.title}</h3>
+                  <h3 className="font-medium text-primary">{getDrugTitle(drug)}</h3>
                   {drug.drug_class && (
                     <p className="text-sm text-gray-600 mt-1">{drug.drug_class}</p>
                   )}
