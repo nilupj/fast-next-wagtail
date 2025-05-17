@@ -20,8 +20,10 @@ export default function DrugListingPage() {
         const grouped = {};
         'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(letter => {
           grouped[letter] = data.filter(drug => {
-            const title = drug.generic_name || drug.title || '';
-            return title.toUpperCase().startsWith(letter);
+            const genericName = (drug.generic_name || '').toUpperCase();
+            const brandNames = (drug.brand_names || '').toUpperCase();
+            const title = (drug.title || '').toUpperCase();
+            return genericName.startsWith(letter) || brandNames.split(',')[0].trim().startsWith(letter) || title.startsWith(letter);
           });
         });
         setDrugs(grouped);
@@ -37,8 +39,12 @@ export default function DrugListingPage() {
   const getDrugTitle = (drug) => {
     if (drug.generic_name && drug.brand_names) {
       return `${drug.generic_name} (${drug.brand_names})`;
+    } else if (drug.generic_name) {
+      return drug.generic_name;
+    } else if (drug.brand_names) {
+      return drug.brand_names;
     }
-    return drug.title || drug.generic_name || drug.brand_names;
+    return drug.title;
   };
 
   if (loading) {
