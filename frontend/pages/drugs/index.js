@@ -88,7 +88,9 @@ export default function DrugListingPage() {
                   href={`/drugs/${drug.slug}`}
                   className="p-4 border rounded-lg hover:shadow-md transition-shadow"
                 >
-                  <h3 className="font-medium text-primary">{getDrugTitle(drug)}</h3>
+                  <h3 className="font-medium text-primary">
+                    {drug.title || (drug.generic_name && `${drug.generic_name} ${drug.brand_names ? `(${drug.brand_names})` : ''}`)}
+                  </h3>
                   {drug.drug_class && (
                     <p className="text-sm text-gray-600 mt-1">{drug.drug_class}</p>
                   )}

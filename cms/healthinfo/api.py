@@ -116,7 +116,7 @@ def drugs_index(request):
         'drug_class': drug.drug_class,
         'generic_name': drug.generic_name,
         'brand_names': drug.brand_names
-    } for drug in drugs]
+    } for drug in drugs if drug.live and not drug.expired]
     return JsonResponse(data, safe=False)
 
 def drugs_index(request):
