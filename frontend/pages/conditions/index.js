@@ -13,12 +13,18 @@ export default function ConditionsIndex() {
 
   useEffect(() => {
     fetch('/api/conditions/index')
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) {
+          throw new Error('Failed to fetch conditions');
+        }
+        return res.json();
+      })
       .then(data => {
+        console.log('Fetched conditions:', data);
         const groupedConditions = {};
         'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(letter => {
           groupedConditions[letter] = data.filter(condition =>
-            condition.name.toUpperCase().startsWith(letter)
+            condition.name && condition.name.toUpperCase().startsWith(letter)
           );
         });
         setConditionsByLetter(groupedConditions);

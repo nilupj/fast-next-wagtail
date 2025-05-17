@@ -90,14 +90,16 @@ def article_related(request, slug):
 
 def conditions_index(request):
     """Retrieve a complete index of all health conditions"""
-    conditions = ConditionPage.objects.descendant_of(ConditionIndexPage.objects.live().first()).live().order_by('title')
-
-    return JsonResponse([{
+    conditions = ConditionPage.objects.live().order_by('title')
+    
+    data = [{
         'id': condition.id,
         'name': condition.title,
         'slug': condition.slug,
         'subtitle': condition.subtitle,
-    } for condition in conditions], safe=False)
+    } for condition in conditions]
+    
+    return JsonResponse(data, safe=False)
 
 def drugs_index(request):
     """Retrieve a complete index of all drugs"""
