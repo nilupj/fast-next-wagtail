@@ -110,6 +110,19 @@ export default function Home({ initialTopStories, healthTopics }) {
     }
   }, [initialTopStories]);
 
+  const QuizCard = ({ quiz }) => (
+    <div className="bg-white rounded-lg shadow-md overflow-hidden">
+      <img className="w-full h-48 object-cover" src={quiz.image} alt={quiz.title} />
+      <div className="p-4">
+        <h3 className="font-semibold text-lg mb-2">{quiz.title}</h3>
+        <p className="text-sm text-neutral-500">{quiz.description}</p>
+        <Link href={`/quiz/${quiz.slug}`} className="mt-4 inline-block text-primary hover:text-primary-dark font-medium text-sm transition-colors">
+          Take Quiz
+        </Link>
+      </div>
+    </div>
+  );
+
   return (
     <div className="container-custom py-8">
       <div className="mb-12">
@@ -163,8 +176,86 @@ export default function Home({ initialTopStories, healthTopics }) {
         )}
       </div>
 
+      {/* Latest Health News */}
       <div className="mb-12">
-        <h2 className="section-title mb-6">TRENDING TOPICS</h2>
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="section-title mb-0">LATEST HEALTH NEWS</h2>
+          <Link href="/health-news" className="text-primary hover:text-primary-dark font-medium text-sm transition-colors">
+            View All News
+          </Link>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <ArticleCard
+            article={{
+              id: 'news-1',
+              title: 'The Grief of Losing a Parent Is Complex',
+              slug: 'grief-losing-parent',
+              image: 'https://images.unsplash.com/photo-1499209974431-9dddcece7f88?auto=format&fit=crop&w=800&h=500',
+              summary: "Here's how to navigate this emotional, complicated situation.",
+              category: { name: 'Mental Health' }
+            }}
+          />
+          <ArticleCard
+            article={{
+              id: 'news-2',
+              title: 'How to Change Your Sleep Habits as You Age',
+              slug: 'sleep-habits-aging',
+              image: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=800&h=500',
+              summary: 'Rest up!',
+              category: { name: 'Sleep' }
+            }}
+          />
+          <ArticleCard
+            article={{
+              id: 'news-3',
+              title: 'Is Statin Use, Diet, or Exercise Best for Managing Cholesterol?',
+              slug: 'managing-cholesterol',
+              image: 'https://images.unsplash.com/photo-1576671081837-49000212a370?auto=format&fit=crop&w=800&h=500',
+              summary: 'The right balance of treatment options can have a significant impact.',
+              category: { name: 'Heart Health' }
+            }}
+          />
+        </div>
+      </div>
+
+      {/* Health Quizzes */}
+      <div className="mb-12">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="section-title mb-0">TEST YOUR HEALTH KNOWLEDGE</h2>
+          <Link href="/quizzes" className="text-primary hover:text-primary-dark font-medium text-sm transition-colors">
+            View All Quizzes
+          </Link>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <QuizCard
+            quiz={{
+              title: 'How Much Do You Know About Heart Health?',
+              slug: 'heart-health-quiz',
+              image: 'https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&w=800&h=500',
+              description: 'Test your knowledge about cardiovascular health and learn important facts about your heart.'
+            }}
+          />
+          <QuizCard
+            quiz={{
+              title: 'Mental Health Myths vs Facts',
+              slug: 'mental-health-quiz',
+              image: 'https://images.unsplash.com/photo-1547561091-3d985041d42f?auto=format&fit=crop&w=800&h=500',
+              description: 'Can you separate fact from fiction when it comes to mental health?'
+            }}
+          />
+          <QuizCard
+            quiz={{
+              title: 'Nutrition IQ Quiz',
+              slug: 'nutrition-quiz',
+              image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=800&h=500',
+              description: 'Challenge yourself with this comprehensive quiz about nutrition and healthy eating habits.'
+            }}
+          />
+        </div>
+      </div>
+
+      <div className="mb-12">
+        <h2 className="section-title">TRENDING TOPICS</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {[
             { title: 'COVID-19 Updates', count: '2.5K discussions' },
