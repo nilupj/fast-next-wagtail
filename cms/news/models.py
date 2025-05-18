@@ -102,3 +102,17 @@ class NewsPage(Page):
 
     class Meta:
         verbose_name = "News Page"
+def create_news_article(self, title, subtitle, summary, body, source, category=None, featured=False, image=None):
+    """Helper method to create a news article"""
+    article = NewsPage(
+        title=title,
+        subtitle=subtitle,
+        summary=summary,
+        body=body,
+        source=source,
+        category=category,
+        featured=featured,
+        image=image
+    )
+    self.add_child(instance=article)
+    return article
