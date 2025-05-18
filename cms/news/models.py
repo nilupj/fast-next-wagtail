@@ -9,10 +9,16 @@ from wagtail.api import APIField
 class NewsIndexPage(Page):
     """Landing page for health news."""
     intro = RichTextField(blank=True)
+    template = "news/news_index_page.html"
 
     content_panels = Page.content_panels + [
         FieldPanel('intro')
     ]
+
+    def get_context(self, request):
+        context = super().get_context(request)
+        context['news_items'] = NewsPage.objects.child_of(self).live().order_by('-publish_date')
+        return context
 
     class Meta:
         verbose_name = "News Index Page"
@@ -91,6 +97,8 @@ class NewsPage(Page):
         APIField('image'),
         APIField('view_count'),
     ]
+
+    template = "news/news_page.html"
 
     class Meta:
         verbose_name = "News Page"
