@@ -3,25 +3,25 @@ import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Layout from '../../components/Layout';
-import { getDrugBySlug } from '../../utils/api';
+import { fetchDrugDetails } from '../../utils/api';
 import { NextSeo } from 'next-seo';
 
 export default function DrugPage() {
   const router = useRouter();
   const { slug } = router.query;
   const [drug, setDrug] = useState(null);
-  const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     if (slug) {
-      getDrugBySlug(slug)
+      fetchDrugDetails(slug)
         .then(data => {
           setDrug(data);
           setLoading(false);
         })
         .catch(err => {
-          console.error("Error fetching drug:", err);
+          console.error('Error fetching drug:', err);
           setError(err.message);
           setLoading(false);
         });
@@ -31,8 +31,14 @@ export default function DrugPage() {
   if (loading) {
     return (
       <Layout>
-        <div className="container mx-auto px-4 py-8">
-          <p>Loading...</p>
+        <div className="container mx-auto px-4 py-8 animate-pulse">
+          <div className="h-8 bg-gray-200 rounded w-3/4 mb-4"></div>
+          <div className="h-4 bg-gray-200 rounded w-1/2 mb-8"></div>
+          <div className="space-y-4">
+            <div className="h-4 bg-gray-200 rounded"></div>
+            <div className="h-4 bg-gray-200 rounded"></div>
+            <div className="h-4 bg-gray-200 rounded w-5/6"></div>
+          </div>
         </div>
       </Layout>
     );
@@ -52,7 +58,7 @@ export default function DrugPage() {
     return (
       <Layout>
         <div className="container mx-auto px-4 py-8">
-          <p>Drug not found</p>
+          <p className="text-center text-gray-500">Drug not found</p>
         </div>
       </Layout>
     );
@@ -69,12 +75,6 @@ export default function DrugPage() {
         <h1 className="text-3xl font-bold mb-2">
           {drug.generic_name ? `${drug.generic_name} ${drug.brand_names ? `(${drug.brand_names})` : ''}` : drug.title}
         </h1>
-        {drug.generic_name && drug.brand_names && (
-          <p className="text-gray-600 mb-4">
-            Generic name: {drug.generic_name}<br/>
-            Brand names: {drug.brand_names}
-          </p>
-        )}
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="md:col-span-2">
@@ -114,25 +114,12 @@ export default function DrugPage() {
                   <p>{drug.brand_names}</p>
                 </div>
               )}
-              {drug.pregnancy_category && (
-                <div className="mb-4">
-                  <h3 className="font-medium text-gray-700">Pregnancy Category</h3>
-                  <p>{drug.pregnancy_category}</p>
-                </div>
-              )}
             </div>
 
             {drug.warnings && (
-              <div className="bg-red-50 rounded-lg shadow-md p-6 mb-6">
+              <div className="bg-red-50 rounded-lg shadow-md p-6">
                 <h2 className="text-xl font-semibold mb-4 text-red-700">Warnings</h2>
                 <div className="text-red-600" dangerouslySetInnerHTML={{ __html: drug.warnings }} />
-              </div>
-            )}
-
-            {drug.interactions && (
-              <div className="bg-white rounded-lg shadow-md p-6">
-                <h2 className="text-xl font-semibold mb-4">Drug Interactions</h2>
-                <div dangerouslySetInnerHTML={{ __html: drug.interactions }} />
               </div>
             )}
           </div>

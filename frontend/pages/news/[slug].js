@@ -1,14 +1,16 @@
 
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import Layout from '../../components/Layout';
 import { fetchNewsBySlug } from '../../utils/api';
+import { NextSeo } from 'next-seo';
 
 export default function NewsArticle() {
   const router = useRouter();
   const { slug } = router.query;
   const [article, setArticle] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     if (slug) {
@@ -17,8 +19,9 @@ export default function NewsArticle() {
           setArticle(data);
           setLoading(false);
         })
-        .catch(error => {
-          console.error('Error fetching article:', error);
+        .catch(err => {
+          console.error('Error fetching article:', err);
+          setError(err.message);
           setLoading(false);
         });
     }
@@ -41,6 +44,16 @@ export default function NewsArticle() {
     );
   }
 
+  if (error) {
+    return (
+      <Layout>
+        <div className="container mx-auto px-4 py-8">
+          <p className="text-red-600">Error: {error}</p>
+        </div>
+      </Layout>
+    );
+  }
+
   if (!article) {
     return (
       <Layout>
@@ -53,21 +66,28 @@ export default function NewsArticle() {
 
   return (
     <Layout>
+      <NextSeo
+        title={`${article.title} - Latest Health News - HealthInfo`}
+        description={article.summary}
+      />
+      
       <article className="container mx-auto px-4 py-8">
-        <h1 className="text-4xl font-bold mb-4">{article.title}</h1>
-        {article.subtitle && (
-          <p className="text-xl text-gray-600 mb-4">{article.subtitle}</p>
-        )}
-        <div className="text-gray-500 mb-8">
-          {new Date(article.publish_date).toLocaleDateString()}
-          {article.source && ` | Source: ${article.source}`}
-        </div>
+        <header className="mb-8">
+          <h1 className="text-4xl font-bold mb-4">{article.title}</h1>
+          {article.subtitle && (
+            <p className="text-xl text-gray-600 mb-4">{article.subtitle}</p>
+          )}
+          <div className="text-gray-500">
+            {new Date(article.publish_date).toLocaleDateString()}
+            {article.source && ` | Source: ${article.source}`}
+          </div>
+        </header>
         
         {article.image && (
           <img 
             src={article.image} 
             alt={article.title}
-            className="w-full rounded-lg mb-8 object-cover"
+            className="w-full rounded-lg mb-8 object-cover h-[400px]"
           />
         )}
         
