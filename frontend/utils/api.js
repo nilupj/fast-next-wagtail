@@ -199,19 +199,16 @@ export async function searchDrugs(query) {
   }
 }
 
+// Add your API endpoints here
 export const getDrugs = async () => {
   try {
-    const response = await axios.get(`${API_URL}/api/drugs/index`);
-    return response.data.map(drug => ({
-      ...drug,
-      name: drug.generic_name || drug.title,
-      title: drug.generic_name || drug.title
-    }));
+    const response = await axios.get('/api/drugs/index');
+    return response.data;
   } catch (error) {
-    console.error("Error fetching drugs:", error);
-    return [];
+    console.error('Error fetching drugs:', error);
+    throw error;
   }
-};
+}
 
 export const getDrugBySlug = async (slug) => {
   try {
