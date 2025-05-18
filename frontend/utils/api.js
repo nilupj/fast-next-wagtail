@@ -223,8 +223,9 @@ export const getDrugBySlug = async (slug) => {
 // News endpoints
 export const fetchLatestNews = async () => {
   try {
-    const response = await api.get('/api/news/latest');
-    return response.data;
+    const response = await fetch('http://0.0.0.0:8001/api/v2/pages/?type=news.NewsPage&fields=title,summary,publish_date,category,image,slug&order=-publish_date');
+    const data = await response.json();
+    return data.items || [];
   } catch (error) {
     console.error('Error fetching latest news:', error);
     return [];

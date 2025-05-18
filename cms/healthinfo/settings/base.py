@@ -10,12 +10,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 # Application definition
 INSTALLED_APPS = [
     'home',
+    'search',
     'articles',
     'conditions',
-    'drugs', #Added drugs app
-    'search',
-    'modeltranslation',
+    'drugs',
     'news',
+    'corsheaders',
 
 
     'wagtail.contrib.forms',

@@ -9,15 +9,18 @@ export default function NewsIndex() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchLatestNews()
-      .then(data => {
-        setNews(data);
+    const getNews = async () => {
+      try {
+        const response = await fetch('http://0.0.0.0:8001/api/v2/pages/?type=news.NewsPage&fields=title,summary,publish_date,category,image,slug&order=-publish_date');
+        const data = await response.json();
+        setNews(data.items || []);
         setLoading(false);
-      })
-      .catch(error => {
+      } catch (error) {
         console.error('Error loading news:', error);
         setLoading(false);
-      });
+      }
+    };
+    getNews();
   }, []);
 
   return (
