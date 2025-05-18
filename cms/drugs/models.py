@@ -74,6 +74,17 @@ class DrugAZPage(Page):
     class Meta:
         verbose_name = "Drug A-Z Page"
 
+class DrugListingPage(Page):
+    intro = RichTextField(blank=True)
+
+    content_panels = Page.content_panels + [
+        FieldPanel('intro')
+    ]
+
+    class Meta:
+        verbose_name = "Drug Listing Page"
+
+
 class DrugPage(Page):
     generic_name = models.CharField(max_length=255, blank=True)
     brand_names = models.CharField(max_length=255, blank=True)
