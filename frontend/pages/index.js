@@ -171,12 +171,13 @@ export default function Home({ initialTopStories, healthTopics }) {
         {topStories && topStories.length > 0 ? (
           <>
             <div className="relative mb-8 group touch-pan-y">
-              <div className="overflow-hidden">
+              <div className="overflow-hidden rounded-lg">
                 <div 
-                     className="flex transition-transform duration-500 ease-in-out will-change-transform" 
+                     className="flex h-full transition-transform duration-500 ease-in-out will-change-transform" 
                      style={{ 
                        transform: `translateX(-${currentSlide * 100}%)`,
-                       width: `${topStories.length * 100}%` 
+                       width: `${topStories.length * 100}%`,
+                       minHeight: '400px'
                      }}
                      onTouchStart={handleTouchStart}
                      onTouchMove={handleTouchMove}
