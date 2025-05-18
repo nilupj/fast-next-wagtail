@@ -9,17 +9,17 @@
         {% if page.subtitle %}
             <p class="text-xl text-gray-600 mb-4">{{ page.subtitle }}</p>
         {% endif %}
-        <div class="text-gray-500">
+        <div class="text-gray-500 mb-4">
             Published on {{ page.publish_date|date:"F j, Y" }}
             {% if page.source %}
-                <span class="ml-2">| Source: {{ page.source }}</span>
+                | Source: {{ page.source }}
             {% endif %}
         </div>
     </header>
 
     {% if page.image %}
         <div class="mb-8">
-            {% image page.image width-800 class="w-full rounded-lg" %}
+            {% image page.image fill-800x500 class="w-full rounded-lg" %}
         </div>
     {% endif %}
 
