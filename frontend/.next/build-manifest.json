@@ -37,15 +37,10 @@
       "static/chunks/main.js",
       "static/chunks/pages/conditions.js"
     ],
-    "/conditions/[slug]": [
+    "/drugs-supplements": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/conditions/[slug].js"
-    ],
-    "/login": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/login.js"
+      "static/chunks/pages/drugs-supplements.js"
     ]
   },
   "ampFirstPages": []
