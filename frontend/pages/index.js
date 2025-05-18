@@ -188,11 +188,11 @@ export default function Home({ initialTopStories, healthTopics }) {
           <ArticleCard
             article={{
               id: 'news-1',
-              title: 'The Grief of Losing a Parent Is Complex',
-              slug: 'grief-losing-parent',
-              image: 'https://images.unsplash.com/photo-1499209974431-9dddcece7f88?auto=format&fit=crop&w=800&h=500',
-              summary: "Here's how to navigate this emotional, complicated situation.",
-              category: { name: 'Mental Health' }
+              title: 'FDA OKs New Treatment for Hard-to-Treat Lung Cancer',
+              slug: 'fda-oks-new-treatment-for-hard-to-treat-lung-cancer',
+              image: '/media/images/0_wny3n8ot.2e16d0ba.fill-800x500.jpg',
+              summary: 'New breakthrough in lung cancer treatment approved by FDA.',
+              category: { name: 'Cancer Treatment' }
             }}
           />
           <ArticleCard
