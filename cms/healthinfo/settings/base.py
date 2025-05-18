@@ -15,6 +15,7 @@ INSTALLED_APPS = [
     'drugs', #Added drugs app
     'search',
     'modeltranslation',
+    'news',
 
 
     'wagtail.contrib.forms',
