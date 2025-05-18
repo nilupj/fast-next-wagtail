@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://0.0.0.0:8001';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://0.0.0.0:8000';
 
 const api = axios.create({
   baseURL: API_URL,
@@ -11,6 +11,7 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: false
 });
 
 // Add language interceptor with isServer check
