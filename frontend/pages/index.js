@@ -177,7 +177,7 @@ export default function Home({ initialTopStories, healthTopics }) {
                      style={{ 
                        transform: `translateX(-${currentSlide * 100}%)`,
                        width: `${topStories.length * 100}%`,
-                       minHeight: '400px'
+                       minHeight: '500px'
                      }}
                      onTouchStart={handleTouchStart}
                      onTouchMove={handleTouchMove}
