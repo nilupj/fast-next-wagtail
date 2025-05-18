@@ -219,3 +219,24 @@ export const getDrugBySlug = async (slug) => {
     throw new Error(error.response?.data?.detail || "Failed to fetch drug information");
   }
 };
+
+// News endpoints
+export const fetchLatestNews = async () => {
+  try {
+    const response = await api.get('/api/news/latest');
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching latest news:', error);
+    return [];
+  }
+};
+
+export const fetchNewsBySlug = async (slug) => {
+  try {
+    const response = await api.get(`/api/news/${slug}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching news article:', error);
+    return null;
+  }
+};
