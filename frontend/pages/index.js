@@ -87,9 +87,18 @@ const fallbackHealthTopics = [
 ];
 
 export default function Home({ initialTopStories, healthTopics }) {
+  const [currentSlide, setCurrentSlide] = useState(0);
   const [topStories, setTopStories] = useState(
     initialTopStories && initialTopStories.length > 0 ? initialTopStories : fallbackTopStories
   );
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % topStories.length);
+    }, 5000); // Change slide every 5 seconds
+
+    return () => clearInterval(timer);
+  }, [topStories.length]);
 
   const displayHealthTopics = healthTopics && healthTopics.length > 0 ? healthTopics : fallbackHealthTopics;
 
@@ -130,8 +139,50 @@ export default function Home({ initialTopStories, healthTopics }) {
 
         {topStories && topStories.length > 0 ? (
           <>
-            <div className="mb-8">
-              <FeaturedArticle article={topStories[0]} />
+            <div className="relative mb-8 group">
+              <div className="overflow-hidden">
+                <div className="flex transition-transform duration-500 ease-in-out" 
+                     style={{ 
+                       transform: `translateX(-${currentSlide * 100}%)`,
+                       width: `${topStories.length * 100}%` 
+                     }}>
+                  {topStories.map((article, index) => (
+                    <div key={article.id} className="w-full flex-shrink-0">
+                      <FeaturedArticle article={article} />
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              <button 
+                className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow opacity-0 group-hover:opacity-100 transition-opacity"
+                onClick={() => setCurrentSlide((prev) => (prev - 1 + topStories.length) % topStories.length)}
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              
+              <button 
+                className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow opacity-0 group-hover:opacity-100 transition-opacity"
+                onClick={() => setCurrentSlide((prev) => (prev + 1) % topStories.length)}
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
+                {topStories.map((_, index) => (
+                  <button
+                    key={index}
+                    className={`w-2 h-2 rounded-full transition-colors ${
+                      currentSlide === index ? 'bg-primary' : 'bg-white/60'
+                    }`}
+                    onClick={() => setCurrentSlide(index)}
+                  />
+                ))}
+              </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
