@@ -27,10 +27,15 @@
       "static/chunks/main.js",
       "static/chunks/pages/_error.js"
     ],
-    "/conditions/[slug]": [
+    "/articles/[slug]": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/conditions/[slug].js"
+      "static/chunks/pages/articles/[slug].js"
+    ],
+    "/conditions": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/conditions.js"
     ],
     "/drugs-supplements": [
       "static/chunks/webpack.js",
