@@ -19,14 +19,15 @@ export default function ArticleCard({ article }) {
 
   return (
     <div className="card h-full flex flex-col">
-      <div className="relative aspect-[16/9] w-full">
+      <div className="relative h-[200px]">
         {image ? (
           <Image
             src={image}
             alt={title}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            className="object-cover"
+            className="object-cover w-full h-full"
+            style={{ objectFit: 'cover' }}
           />
         ) : (
           <div className="absolute inset-0 bg-neutral-200 flex items-center justify-center">

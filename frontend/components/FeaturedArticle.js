@@ -19,7 +19,7 @@ export default function FeaturedArticle({ article }) {
 
   return (
     <div className="flex flex-col md:grid md:grid-cols-2 gap-4 md:gap-6 items-center bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow">
-      <div className="relative w-full aspect-[16/9] md:aspect-[4/3]">
+      <div className="relative w-full h-[300px] md:h-[400px]">
         {image ? (
           <Image
             src={image}
@@ -27,7 +27,8 @@ export default function FeaturedArticle({ article }) {
             fill
             sizes="(max-width: 768px) 100vw, 50vw"
             priority
-            className="object-cover"
+            className="object-cover w-full h-full"
+            style={{ objectFit: 'cover' }}
           />
         ) : (
           <div className="absolute inset-0 bg-neutral-200 flex items-center justify-center">
