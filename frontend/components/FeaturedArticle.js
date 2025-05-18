@@ -18,8 +18,8 @@ export default function FeaturedArticle({ article }) {
   }) : '';
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow">
-      <div className="relative aspect-[4/3] w-full md:h-full">
+    <div className="flex flex-col md:grid md:grid-cols-2 gap-4 md:gap-6 items-center bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow">
+      <div className="relative w-full aspect-[16/9] md:aspect-[4/3]">
         {image ? (
           <Image
             src={image}

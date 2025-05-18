@@ -92,6 +92,9 @@ export default function Home({ initialTopStories, healthTopics }) {
     initialTopStories && initialTopStories.length > 0 ? initialTopStories : fallbackTopStories
   );
 
+  const [touchStart, setTouchStart] = useState(null);
+  const [touchEnd, setTouchEnd] = useState(null);
+
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % topStories.length);
@@ -99,6 +102,34 @@ export default function Home({ initialTopStories, healthTopics }) {
 
     return () => clearInterval(timer);
   }, [topStories.length]);
+
+  const handleTouchStart = (e) => {
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchMove = (e) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    
+    const distance = touchStart - touchEnd;
+    const minSwipeDistance = 50;
+
+    if (Math.abs(distance) < minSwipeDistance) return;
+
+    if (distance > 0) {
+      // Swipe left
+      setCurrentSlide((prev) => (prev + 1) % topStories.length);
+    } else {
+      // Swipe right
+      setCurrentSlide((prev) => (prev - 1 + topStories.length) % topStories.length);
+    }
+
+    setTouchStart(null);
+    setTouchEnd(null);
+  };
 
   const displayHealthTopics = healthTopics && healthTopics.length > 0 ? healthTopics : fallbackHealthTopics;
 
@@ -139,13 +170,17 @@ export default function Home({ initialTopStories, healthTopics }) {
 
         {topStories && topStories.length > 0 ? (
           <>
-            <div className="relative mb-8 group">
+            <div className="relative mb-8 group touch-pan-y">
               <div className="overflow-hidden">
-                <div className="flex transition-transform duration-500 ease-in-out" 
+                <div 
+                     className="flex transition-transform duration-500 ease-in-out will-change-transform" 
                      style={{ 
                        transform: `translateX(-${currentSlide * 100}%)`,
                        width: `${topStories.length * 100}%` 
-                     }}>
+                     }}
+                     onTouchStart={handleTouchStart}
+                     onTouchMove={handleTouchMove}
+                     onTouchEnd={handleTouchEnd}>
                   {topStories.map((article, index) => (
                     <div key={article.id} className="w-full flex-shrink-0">
                       <FeaturedArticle article={article} />
