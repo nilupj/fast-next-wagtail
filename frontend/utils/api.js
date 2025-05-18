@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://0.0.0.0:8000';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://0.0.0.0:8001';
 
 const api = axios.create({
   baseURL: API_URL,
@@ -11,7 +11,6 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  withCredentials: false
 });
 
 // Add language interceptor with isServer check
@@ -224,9 +223,8 @@ export const getDrugBySlug = async (slug) => {
 // News endpoints
 export const fetchLatestNews = async () => {
   try {
-    const response = await fetch('http://0.0.0.0:8001/api/v2/pages/?type=news.NewsPage&fields=title,summary,publish_date,category,image,slug&order=-publish_date');
-    const data = await response.json();
-    return data.items || [];
+    const response = await api.get('/api/news/latest');
+    return response.data;
   } catch (error) {
     console.error('Error fetching latest news:', error);
     return [];

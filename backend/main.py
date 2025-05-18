@@ -17,14 +17,10 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-app = FastAPI()
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=False,
-    allow_methods=["*"],
-    allow_headers=["*"],
+app = FastAPI(
+    title="HealthInfo API",
+    description="API for the HealthInfo medical information website",
+    version="1.0.0",
 )
 
 socket_manager = SocketManager(app=app, cors_allowed_origins="*")
@@ -84,14 +80,14 @@ async def search(q: str = ""):
             "conditions": [],
             "drugs": []
         }
-
+    
     # For now, call individual search endpoints
     articles_results = await articles.search_articles(q)
     conditions_results = await conditions.search_conditions(q)
-
+    
     # Mock data for drugs until that endpoint is implemented
     drugs_results = []
-
+    
     return {
         "articles": articles_results,
         "conditions": conditions_results,
@@ -100,10 +96,10 @@ async def search(q: str = ""):
 
 if __name__ == "__main__":
     import uvicorn
-
+    
     port = int(os.getenv("PORT", 8000))
     host = os.getenv("HOST", "0.0.0.0")
-
+    
     uvicorn.run(
         "main:app",
         host=host,
