@@ -45,6 +45,12 @@ class NewsPage(Page):
     subtitle = models.CharField(max_length=255, blank=True)
     summary = models.TextField(blank=True)
     body = RichTextField()
+    slug = models.SlugField(unique=True, max_length=255, blank=True)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
     publish_date = models.DateTimeField(auto_now_add=True)
     featured = models.BooleanField(default=False)
     view_count = models.PositiveIntegerField(default=0)
