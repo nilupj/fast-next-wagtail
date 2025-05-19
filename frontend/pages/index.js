@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import FeaturedArticle from '../components/FeaturedArticle';
 import ArticleCard from '../components/ArticleCard';
-import { fetchTopStories, fetchHealthTopics } from '../utils/api';
+import { fetchTopStories, fetchHealthTopics, fetchLatestNews } from '../utils/api';
 
 const fallbackTopStories = [
   {
@@ -90,6 +90,20 @@ export default function Home({ initialTopStories, healthTopics }) {
   const [topStories, setTopStories] = useState(
     initialTopStories && initialTopStories.length > 0 ? initialTopStories : fallbackTopStories
   );
+  const [latestNews, setLatestNews] = useState([]);
+
+  useEffect(() => {
+    const fetchNews = async () => {
+      try {
+        const news = await fetchLatestNews();
+        setLatestNews(news);
+      } catch (error) {
+        console.error('Error fetching latest news:', error);
+        setLatestNews([]);
+      }
+    };
+    fetchNews();
+  }, []);
 
   const displayHealthTopics = healthTopics && healthTopics.length > 0 ? healthTopics : fallbackHealthTopics;
 
