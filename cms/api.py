@@ -1,27 +1,91 @@
 from django.urls import path
-
+from django.http import JsonResponse, Http404
+from wagtail.models import Page
 from wagtail.api.v2.views import PagesAPIViewSet
 from wagtail.api.v2.router import WagtailAPIRouter
 from wagtail.images.api.v2.views import ImagesAPIViewSet
 from wagtail.documents.api.v2.views import DocumentsAPIViewSet
+from articles.models import ArticlePage, ArticleCategory, ArticleAuthor
+from conditions.models import ConditionPage, ConditionCategory
+from drugs.models import DrugPage
+from news.models import NewsPage
 
-# Create the router
 api_router = WagtailAPIRouter('wagtailapi')
 
-# Register the endpoints
+def drug_index(request):
+    """Retrieve a listing of all drugs"""
+    drugs = DrugPage.objects.live().order_by('title')
+    data = [{
+        'id': drug.id,
+        'title': drug.title,
+        'slug': drug.slug,
+        'generic_name': drug.generic_name,
+        'brand_names': drug.brand_names,
+        'drug_class': drug.drug_class
+    } for drug in drugs]
+    return JsonResponse(data, safe=False)
+
+def drug_detail(request, slug):
+    """Retrieve details for a specific drug"""
+    try:
+        drug = DrugPage.objects.live().get(slug=slug)
+        data = {
+            'id': drug.id,
+            'title': drug.title,
+            'slug': drug.slug,
+            'generic_name': drug.generic_name,
+            'brand_names': drug.brand_names,
+            'drug_class': drug.drug_class,
+            'overview': str(drug.overview),
+            'uses': str(drug.uses),
+            'dosage': str(drug.dosage),
+            'side_effects': str(drug.side_effects),
+            'warnings': str(drug.warnings),
+            'interactions': str(drug.interactions),
+            'storage': str(drug.storage),
+            'pregnancy_category': drug.pregnancy_category,
+        }
+        return JsonResponse(data)
+    except DrugPage.DoesNotExist:
+        return JsonResponse({'error': 'Drug not found'}, status=404)
+
+def news_latest(request):
+    """Retrieve latest news articles"""
+    news = NewsPage.objects.live().order_by('-first_published_at')[:10]
+    data = [{
+        'id': article.id,
+        'title': article.title,
+        'slug': article.slug,
+        'subtitle': article.subtitle,
+        'image': article.image.get_rendition('fill-800x500').url if article.image else None,
+        'published_date': article.first_published_at,
+    } for article in news]
+    return JsonResponse(data, safe=False)
+
+def news_detail(request, slug):
+    """Retrieve a specific news article"""
+    try:
+        article = NewsPage.objects.live().get(slug=slug)
+        data = {
+            'id': article.id,
+            'title': article.title,
+            'slug': article.slug,
+            'subtitle': article.subtitle,
+            'content': str(article.body),
+            'image': article.image.get_rendition('fill-800x500').url if article.image else None,
+            'published_date': article.first_published_at,
+            'author': {
+                'name': article.author.name if article.author else None,
+                'bio': article.author.bio if article.author else None,
+            } if article.author else None,
+        }
+        return JsonResponse(data)
+    except NewsPage.DoesNotExist:
+        return JsonResponse({'error': 'News article not found'}, status=404)
+
 api_router.register_endpoint('pages', PagesAPIViewSet)
 api_router.register_endpoint('images', ImagesAPIViewSet)
 api_router.register_endpoint('documents', DocumentsAPIViewSet)
-
-from django.http import JsonResponse, Http404
-from django.urls import path, include
-from wagtail.models import Page
-from wagtail.search.models import Query
-
-from articles.models import ArticlePage, ArticleCategory, ArticleAuthor
-from conditions.models import ConditionPage, ConditionCategory
-
-# Custom API views for the FastAPI backend to consume
 
 def articles_top_stories(request):
     """Get top stories (featured articles)"""
@@ -203,7 +267,7 @@ def search_articles(request):
     articles = ArticlePage.objects.live().search(query)
     
     # Record the search query
-    Query.get(query).add_hit()
+    Page.objects.live().search(query)
     
     return JsonResponse([{
         'id': article.id,
@@ -226,7 +290,7 @@ def search_conditions(request):
     conditions = ConditionPage.objects.live().search(query)
     
     # Record the search query
-    Query.get(query).add_hit()
+    Page.objects.live().search(query)
     
     return JsonResponse([{
         'id': condition.id,
@@ -269,6 +333,10 @@ def well_being(request):
 
 # URLs for our custom API endpoints
 urlpatterns = [
+    path('drugs/index', drug_index, name='drugs_index'),
+    path('drugs/<slug:slug>', drug_detail, name='drug_detail'),
+    path('news/latest', news_latest, name='news_latest'),
+    path('news/<slug:slug>', news_detail, name='news_detail'),
     # Article endpoints
     path('articles/top-stories', articles_top_stories, name='articles_top_stories'),
     path('articles/health-topics', articles_health_topics, name='articles_health_topics'),
