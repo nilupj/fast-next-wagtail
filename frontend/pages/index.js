@@ -180,35 +180,27 @@ export default function Home({ initialTopStories, healthTopics }) {
       <div className="mb-12">
         <div className="flex justify-between items-center mb-6">
           <h2 className="section-title mb-0">LATEST HEALTH NEWS</h2>
-          <Link href="/health-news" className="text-primary hover:text-primary-dark font-medium text-sm transition-colors">
+          <Link href="/news" className="text-primary hover:text-primary-dark font-medium text-sm transition-colors">
             View All News
           </Link>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <ArticleCard
-            article={{
-              id: 'news-1',
-              title: 'FDA OKs New Treatment for Hard-to-Treat Lung Cancer',
-              slug: 'fda-oks-new-treatment-for-hard-to-treat-lung-cancer',
-              image: '/media/images/0_wny3n8ot.2e16d0ba.fill-800x500.jpg',
-              summary: 'New breakthrough in lung cancer treatment approved by FDA.',
-              category: { name: 'Cancer Treatment' }
-            }}
-          />
-          <ArticleCard
-            article={{
-              id: 'news-2',
-              title: 'How to Change Your Sleep Habits as You Age',
-              slug: 'sleep-habits-aging',
-              image: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=800&h=500',
-              summary: 'Rest up!',
-              category: { name: 'Sleep' }
-            }}
-          />
-          <ArticleCard
-            article={{
-              id: 'news-3',
-              title: 'Is Statin Use, Diet, or Exercise Best for Managing Cholesterol?',
+          {latestNews.map((article) => (
+            <ArticleCard 
+              key={article.id}
+              article={{
+                id: article.id,
+                title: article.title,
+                slug: article.slug,
+                image: article.image,
+                summary: article.subtitle || article.summary,
+                category: article.category ? { name: article.category.name } : null
+              }}
+            />
+          ))}
+          {latestNews.length === 0 && (
+            <p className="text-gray-500 col-span-3 text-center py-8">No news articles found</p>
+          )}
               slug: 'managing-cholesterol',
               image: 'https://images.unsplash.com/photo-1576671081837-49000212a370?auto=format&fit=crop&w=800&h=500',
               summary: 'The right balance of treatment options can have a significant impact.',

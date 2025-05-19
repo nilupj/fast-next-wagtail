@@ -128,7 +128,7 @@ export const fetchDrugsIndex = async () => {
       meta: drug.meta,
       generic_name: drug.generic_name,
       brand_names: drug.brand_names,
-      drug_class: drug.drug_class
+      drug_class: drug_class
     }));
   } catch (error) {
     console.error('Error fetching drugs index:', error);
@@ -240,5 +240,15 @@ export const fetchNewsBySlug = async (slug) => {
   } catch (error) {
     console.error('Error fetching news article:', error);
     return null;
+  }
+};
+
+export const getLatestNews = async () => {
+  try {
+    const response = await axios.get('/api/news/latest');
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching latest news:', error);
+    return [];
   }
 };
