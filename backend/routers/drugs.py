@@ -45,7 +45,7 @@ async def get_drugs_index():
     Retrieve a complete index of all drugs and supplements
     """
     try:
-        drugs = await fetch_from_cms("v2/pages/?type=drugs.DrugPage&fields=title,slug,drug_class,generic_name,brand_names")
+        drugs = await fetch_from_cms("v2/pages/?type=drugs.DrugPage&fields=*")
         if not drugs or 'items' not in drugs:
             return []
         # Ensure proper structure for each drug

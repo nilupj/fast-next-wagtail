@@ -138,12 +138,14 @@ export default function DrugsSupplements({ drugsByLetter }) {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-2">
                   {drugsByLetter[letter].map((drug) => (
                     <Link
-                      key={drug.slug}
-                      href={`/drugs/${drug.slug}`}
+                      key={drug.id}
+                      href={`/drugs/${drug.meta.slug}`}
                       className="py-2 text-primary hover:text-primary-light transition-colors border-b border-neutral-100"
                     >
-                      {drug.name}
-                      {drug.type && <span className="text-sm text-neutral-500 ml-2">({drug.type})</span>}
+                      {drug.generic_name || drug.title}
+                      {drug.brand_names && (
+                        <span className="text-sm text-neutral-500 ml-2">({drug.brand_names})</span>
+                      )}
                     </Link>
                   ))}
                 </div>
