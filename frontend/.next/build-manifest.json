@@ -28,15 +28,20 @@
       "static/chunks/main.js",
       "static/chunks/pages/_error.js"
     ],
-    "/quizzes": [
+    "/articles/[slug]": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/quizzes.js"
+      "static/chunks/pages/articles/[slug].js"
     ],
-    "/quizzes/[slug]": [
+    "/conditions": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/quizzes/[slug].js"
+      "static/chunks/pages/conditions.js"
+    ],
+    "/drugs-supplements": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/drugs-supplements.js"
     ]
   },
   "ampFirstPages": []
