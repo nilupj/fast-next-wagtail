@@ -45,8 +45,8 @@ async def get_drugs_index():
     Retrieve a complete index of all drugs and supplements
     """
     try:
-        drugs = await fetch_from_cms("drugs/index/")
-        if not drugs:
+        drugs = await fetch_from_cms("v2/pages/?type=drugs.DrugPage&fields=title,slug,drug_class,generic_name,brand_names")
+        if not drugs or 'items' not in drugs:
             return []
         # Ensure proper structure for each drug
         return [{
@@ -56,7 +56,7 @@ async def get_drugs_index():
             'drug_class': drug.get('drug_class'),
             'generic_name': drug.get('generic_name'),
             'brand_names': drug.get('brand_names')
-        } for drug in drugs]
+        } for drug in drugs['items']]
     except Exception as exc:
         logger.error(f"Error fetching drugs index: {exc}")
         return []

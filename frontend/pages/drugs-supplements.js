@@ -198,9 +198,16 @@ export async function getStaticProps() {
     // Organize drugs by first letter
     const drugsByLetter = {};
     'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(letter => {
-      drugsByLetter[letter] = drugsData.filter(drug => 
-        drug.name.toUpperCase().startsWith(letter)
-      );
+      drugsByLetter[letter] = drugsData.filter(drug => {
+        const title = drug.title || '';
+        const genericName = drug.generic_name || '';
+        const brandNames = drug.brand_names || '';
+        return (
+          title.toUpperCase().startsWith(letter) ||
+          genericName.toUpperCase().startsWith(letter) ||
+          brandNames.toUpperCase().split(',').some(name => name.trim().startsWith(letter))
+        );
+      });
     });
 
     return {
