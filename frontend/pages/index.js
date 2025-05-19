@@ -204,11 +204,11 @@ export default function Home({ initialTopStories, healthTopics }) {
            <ArticleCard 
               key="cholesterol-news"
               article={{
-              slug: 'managing-cholesterol',
-              image: 'https://images.unsplash.com/photo-1576671081837-49000212a370?auto=format&fit=crop&w=800&h=500',
-              summary: 'The right balance of treatment options can have a significant impact.',
-              category: { name: 'Heart Health' }
-            }}
+                slug: 'managing-cholesterol',
+                image: 'https://images.unsplash.com/photo-1576671081837-49000212a370?auto=format&fit=crop&w=800&h=500',
+                summary: 'The right balance of treatment options can have a significant impact.',
+                category: { name: 'Heart Health' }
+              }}
           />
         </div>
       </div>
