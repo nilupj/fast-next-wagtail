@@ -12,89 +12,42 @@ from news.models import NewsPage
 
 api_router = WagtailAPIRouter('wagtailapi')
 
-def drugs_index(request):
-    """Retrieve a complete index of all drugs"""
+def drug_index(request):
+    """Retrieve a listing of all drugs"""
     drugs = DrugPage.objects.live().order_by('title')
-    return JsonResponse([{
+    data = [{
         'id': drug.id,
         'title': drug.title,
         'slug': drug.slug,
         'generic_name': drug.generic_name,
         'brand_names': drug.brand_names,
-        'drug_class': drug.drug_class,
-        'image': drug.image.get_rendition('fill-800x500').url if drug.image else None,
-    } for drug in drugs], safe=False)
-
-def drugs_paths(request):
-    """Get all drug slugs for static path generation"""
-    slugs = [
-        drug.slug for drug in DrugPage.objects.live()
-    ]
-    return JsonResponse(slugs, safe=False)
+        'drug_class': drug.drug_class
+    } for drug in drugs]
+    return JsonResponse(data, safe=False)
 
 def drug_detail(request, slug):
-    """Get a single drug by its slug"""
+    """Retrieve details for a specific drug"""
     try:
         drug = DrugPage.objects.live().get(slug=slug)
+        data = {
+            'id': drug.id,
+            'title': drug.title,
+            'slug': drug.slug,
+            'generic_name': drug.generic_name,
+            'brand_names': drug.brand_names,
+            'drug_class': drug.drug_class,
+            'overview': str(drug.overview),
+            'uses': str(drug.uses),
+            'dosage': str(drug.dosage),
+            'side_effects': str(drug.side_effects),
+            'warnings': str(drug.warnings),
+            'interactions': str(drug.interactions),
+            'storage': str(drug.storage),
+            'pregnancy_category': drug.pregnancy_category,
+        }
+        return JsonResponse(data)
     except DrugPage.DoesNotExist:
-        raise Http404("Drug not found")
-    
-    # Record the view
-    drug.increase_view_count()
-    
-    # Prepare the response
-    data = {
-        'id': drug.id,
-        'title': drug.title,
-        'slug': drug.slug,
-        'generic_name': drug.generic_name,
-        'brand_names': drug.brand_names,
-        'drug_class': drug.drug_class,
-        'overview': str(drug.overview),
-        'uses': str(drug.uses),
-        'dosage': str(drug.dosage),
-        'side_effects': str(drug.side_effects),
-        'warnings': str(drug.warnings),
-        'interactions': str(drug.interactions),
-        'storage': str(drug.storage),
-        'pregnancy_category': drug.pregnancy_category,
-        'image': drug.image.get_rendition('fill-1200x600').url if drug.image else None,
-        'published_date': drug.first_published_at,
-        'updated_date': drug.last_published_at if drug.first_published_at != drug.last_published_at else None,
-        'view_count': drug.view_count,
-    }
-    
-    # Add category information if available
-    if drug.categories.exists():
-        data['categories'] = [{
-            'name': category.name,
-            'slug': category.slug,
-        } for category in drug.categories.all()]
-    
-    return JsonResponse(data)
-
-def search_drugs(request):
-    """Search drugs by query string"""
-    query = request.GET.get('q', '')
-    
-    if not query:
-        return JsonResponse([], safe=False)
-    
-    # Perform the search
-    drugs = DrugPage.objects.live().search(query)
-    
-    # Record the search query
-    Page.objects.live().search(query)
-    
-    return JsonResponse([{
-        'id': drug.id,
-        'title': drug.title,
-        'slug': drug.slug,
-        'generic_name': drug.generic_name,
-        'brand_names': drug.brand_names,
-        'drug_class': drug.drug_class,
-        'image': drug.image.get_rendition('fill-800x500').url if drug.image else None,
-    } for drug in drugs], safe=False)
+        return JsonResponse({'error': 'Drug not found'}, status=404)
 
 def news_latest(request):
     """Retrieve latest news articles"""
@@ -380,10 +333,8 @@ def well_being(request):
 
 # URLs for our custom API endpoints
 urlpatterns = [
-    path('drugs/index', drugs_index, name='drugs_index'),
-    path('drugs/paths', drugs_paths, name='drugs_paths'),
+    path('drugs/index', drug_index, name='drugs_index'),
     path('drugs/<slug:slug>', drug_detail, name='drug_detail'),
-    path('drugs/search', search_drugs, name='search_drugs'),
     path('news/latest', news_latest, name='news_latest'),
     path('news/<slug:slug>', news_detail, name='news_detail'),
     # Article endpoints
