@@ -120,17 +120,19 @@ export const fetchRelatedArticles = async (slug) => {
 // Drugs index (A-Z)
 export const fetchDrugsIndex = async () => {
   try {
-    const response = await fetch(`${API_URL}/drugs/index/`);
-    if (!response.ok) throw new Error('Failed to fetch drugs index');
-    const data = await response.json();
+    const response = await api.get('/api/drugs/index');
+    const data = response.data;
     return data.map(drug => ({
-      name: drug.title || drug.name,
-      slug: drug.slug,
-      type: drug.drug_class
+      id: drug.id,
+      title: drug.title,
+      meta: drug.meta,
+      generic_name: drug.generic_name,
+      brand_names: drug.brand_names,
+      drug_class: drug.drug_class
     }));
   } catch (error) {
     console.error('Error fetching drugs index:', error);
-    return [];
+    throw error;
   }
 };
 

@@ -39,7 +39,7 @@ async def fetch_from_cms(endpoint: str, params=None):
             logger.error(f"Unexpected error fetching {endpoint}: {exc}")
             raise HTTPException(status_code=500, detail=str(exc))
 
-@router.get("/drugs/index", response_model=List[DrugPreview])
+@router.get("/api/drugs/index", response_model=List[DrugPreview])
 async def get_drugs_index():
     """
     Retrieve a complete index of all drugs and supplements
