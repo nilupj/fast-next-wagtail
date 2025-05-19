@@ -48,15 +48,30 @@ async def get_drugs_index():
         drugs = await fetch_from_cms("v2/pages/?type=drugs.DrugPage&fields=*&limit=100")
         if not drugs or 'items' not in drugs:
             return []
-        # Ensure proper structure for each drug and include meta information
-        return [{
-            'id': drug.get('id'),
-            'title': drug.get('title'),
-            'meta': {'slug': drug.get('meta', {}).get('slug', drug.get('slug'))},
-            'drug_class': drug.get('drug_class'),
-            'generic_name': drug.get('generic_name'),
-            'brand_names': drug.get('brand_names')
-        } for drug in drugs['items']]
+        
+        # Process each drug entry
+        drug_list = []
+        for drug in drugs['items']:
+            # Get the key fields
+            title = drug.get('title', '')
+            generic_name = drug.get('generic_name', '')
+            brand_names = drug.get('brand_names', '')
+            
+            # Use generic name if available, otherwise use title
+            display_name = generic_name if generic_name else title
+            
+            # Create the drug entry
+            drug_entry = {
+                'id': drug.get('id'),
+                'title': display_name,
+                'meta': {'slug': drug.get('meta', {}).get('slug', drug.get('slug'))},
+                'drug_class': drug.get('drug_class'),
+                'generic_name': generic_name,
+                'brand_names': brand_names
+            }
+            drug_list.append(drug_entry)
+            
+        return drug_list
     except Exception as exc:
         logger.error(f"Error fetching drugs index: {exc}")
         raise HTTPException(status_code=500, detail=str(exc))

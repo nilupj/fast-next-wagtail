@@ -201,14 +201,8 @@ export async function getStaticProps() {
     const drugsByLetter = {};
     'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(letter => {
       drugsByLetter[letter] = drugsData.filter(drug => {
-        const title = drug.title || '';
-        const genericName = drug.generic_name || '';
-        const brandNames = drug.brand_names || '';
-        return (
-          title.toUpperCase().startsWith(letter) ||
-          genericName.toUpperCase().startsWith(letter) ||
-          brandNames.toUpperCase().split(',').some(name => name.trim().startsWith(letter))
-        );
+        const title = (drug.title || '').toUpperCase();
+        return title.startsWith(letter);
       });
     });
 
