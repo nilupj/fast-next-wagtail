@@ -45,21 +45,21 @@ async def get_drugs_index():
     Retrieve a complete index of all drugs and supplements
     """
     try:
-        drugs = await fetch_from_cms("v2/pages/?type=drugs.DrugPage&fields=*")
+        drugs = await fetch_from_cms("v2/pages/?type=drugs.DrugPage&fields=*&limit=100")
         if not drugs or 'items' not in drugs:
             return []
-        # Ensure proper structure for each drug
+        # Ensure proper structure for each drug and include meta information
         return [{
             'id': drug.get('id'),
             'title': drug.get('title'),
-            'slug': drug.get('slug'),
+            'meta': {'slug': drug.get('meta', {}).get('slug', drug.get('slug'))},
             'drug_class': drug.get('drug_class'),
             'generic_name': drug.get('generic_name'),
             'brand_names': drug.get('brand_names')
         } for drug in drugs['items']]
     except Exception as exc:
         logger.error(f"Error fetching drugs index: {exc}")
-        return []
+        raise HTTPException(status_code=500, detail=str(exc))
 
 @router.get("/drugs/{slug}", response_model=Drug)
 async def get_drug(slug: str = Path(..., description="The slug of the drug to retrieve")):
