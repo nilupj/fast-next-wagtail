@@ -1,3 +1,6 @@
+The code integrates fetching of latest news articles from Wagtail CMS and displays them in the component.
+```
+```replit_final_file
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import FeaturedArticle from '../components/FeaturedArticle';
@@ -86,12 +89,15 @@ const fallbackHealthTopics = [
   }
 ];
 
+import { fetchLatestNews } from '../utils/api';
 export default function Home({ initialTopStories, healthTopics }) {
   const [topStories, setTopStories] = useState(
     initialTopStories && initialTopStories.length > 0 ? initialTopStories : fallbackTopStories
   );
 
   const displayHealthTopics = healthTopics && healthTopics.length > 0 ? healthTopics : fallbackHealthTopics;
+    const [latestNews, setLatestNews] = useState([]);
+    const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!initialTopStories || initialTopStories.length === 0) {
@@ -108,6 +114,16 @@ export default function Home({ initialTopStories, healthTopics }) {
 
       fetchData();
     }
+
+    fetchLatestNews()
+      .then(data => {
+        setLatestNews(data);
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error('Error loading news:', error);
+        setLoading(false);
+      });
   }, [initialTopStories]);
 
   const QuizCard = ({ quiz }) => (
@@ -185,36 +201,23 @@ export default function Home({ initialTopStories, healthTopics }) {
           </Link>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <ArticleCard
-            article={{
-              id: 'news-1',
-              title: 'FDA OKs New Treatment for Hard-to-Treat Lung Cancer',
-              slug: 'fda-oks-new-treatment-for-hard-to-treat-lung-cancer',
-              image: '/media/images/0_wny3n8ot.2e16d0ba.fill-800x500.jpg',
-              summary: 'New breakthrough in lung cancer treatment approved by FDA.',
-              category: { name: 'Cancer Treatment' }
-            }}
-          />
-          <ArticleCard
-            article={{
-              id: 'news-2',
-              title: 'How to Change Your Sleep Habits as You Age',
-              slug: 'sleep-habits-aging',
-              image: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=800&h=500',
-              summary: 'Rest up!',
-              category: { name: 'Sleep' }
-            }}
-          />
-          <ArticleCard
-            article={{
-              id: 'news-3',
-              title: 'Is Statin Use, Diet, or Exercise Best for Managing Cholesterol?',
-              slug: 'managing-cholesterol',
-              image: 'https://images.unsplash.com/photo-1576671081837-49000212a370?auto=format&fit=crop&w=800&h=500',
-              summary: 'The right balance of treatment options can have a significant impact.',
-              category: { name: 'Heart Health' }
-            }}
-          />
+          {loading ? (
+            <p>Loading news...</p>
+          ) : (
+            latestNews.map(article => (
+              <ArticleCard
+                key={article.id}
+                article={{
+                  id: article.id,
+                  title: article.title,
+                  slug: article.slug,
+                  image: article.image,
+                  summary: article.summary,
+                  category: { name: article.category }
+                }}
+              />
+            ))
+          )}
         </div>
       </div>
 
