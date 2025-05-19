@@ -142,7 +142,7 @@ export default function DrugsSupplements({ drugsByLetter }) {
                       href={`/drugs/${drug.meta.slug}`}
                       className="py-2 text-primary hover:text-primary-light transition-colors border-b border-neutral-100"
                     >
-                      {drug.generic_name || drug.title}
+                      {drug.title}
                       {drug.brand_names && (
                         <span className="text-sm text-neutral-500 ml-2">({drug.brand_names})</span>
                       )}

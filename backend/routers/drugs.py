@@ -45,7 +45,7 @@ async def get_drugs_index():
     Retrieve a complete index of all drugs and supplements
     """
     try:
-        drugs = await fetch_from_cms("v2/pages/?type=drugs.DrugPage&fields=*&limit=100")
+        drugs = await fetch_from_cms("v2/pages/?type=drugs.DrugPage&fields=*&limit=1000")
         if not drugs or 'items' not in drugs:
             return []
         
@@ -60,18 +60,22 @@ async def get_drugs_index():
             # Use generic name if available, otherwise use title
             display_name = generic_name if generic_name else title
             
+            # Skip empty entries
+            if not display_name:
+                continue
+                
             # Create the drug entry
             drug_entry = {
                 'id': drug.get('id'),
                 'title': display_name,
-                'meta': {'slug': drug.get('meta', {}).get('slug', drug.get('slug'))},
-                'drug_class': drug.get('drug_class'),
+                'meta': {'slug': drug.get('meta', {}).get('slug', drug.get('slug', ''))},
+                'drug_class': drug.get('drug_class', ''),
                 'generic_name': generic_name,
                 'brand_names': brand_names
             }
             drug_list.append(drug_entry)
             
-        return drug_list
+        return sorted(drug_list, key=lambda x: x['title'].upper())
     except Exception as exc:
         logger.error(f"Error fetching drugs index: {exc}")
         raise HTTPException(status_code=500, detail=str(exc))
