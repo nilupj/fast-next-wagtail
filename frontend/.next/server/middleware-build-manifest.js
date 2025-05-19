@@ -25,11 +25,6 @@ globalThis.__BUILD_MANIFEST = {
       "static/chunks/main.js",
       "static/chunks/pages/_error.js"
     ],
-    "/conditions": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/conditions.js"
-    ],
     "/drugs-supplements": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
