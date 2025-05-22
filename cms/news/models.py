@@ -42,6 +42,7 @@ class ArticleCategory(models.Model):
         verbose_name = "Article Category"
         verbose_name_plural = "Article Categories"
 
+@register_snippet
 class NewsCategory(models.Model):
     name = models.CharField(max_length=255)
     slug = models.SlugField(unique=True, max_length=80)
