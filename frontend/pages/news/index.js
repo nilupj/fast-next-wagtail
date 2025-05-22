@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import Layout from '../../components/Layout';
 import Link from 'next/link';
 import { fetchLatestNews } from '../../utils/api';
@@ -6,8 +7,11 @@ import { fetchLatestNews } from '../../utils/api';
 export default function NewsIndex() {
   const [news, setNews] = useState([]);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
+    if (!router.isReady) return;
+    
     fetchLatestNews()
       .then(data => {
         setNews(data);
@@ -17,7 +21,7 @@ export default function NewsIndex() {
         console.error('Error loading news:', error);
         setLoading(false);
       });
-  }, []);
+  }, [router.isReady]);
 
   return (
     <Layout>
