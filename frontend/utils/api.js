@@ -129,6 +129,17 @@ export const fetchRelatedArticles = async (slug) => {
   }
 };
 
+// Latest news
+export const fetchLatestNews = async () => {
+  try {
+    const response = await api.get('/api/news/latest');
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching latest news:', error);
+    return [];
+  }
+};
+
 // Drugs index (A-Z)
 export const fetchDrugsIndex = async () => {
   try {
