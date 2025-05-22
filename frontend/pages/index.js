@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import FeaturedArticle from '../components/FeaturedArticle';
 import ArticleCard from '../components/ArticleCard';
-import { fetchTopStories, fetchHealthTopics, fetchLatestNews } from '../utils/api';
+import { fetchTopStories, fetchHealthTopics } from '../utils/api';
 
 const fallbackTopStories = [
   {
