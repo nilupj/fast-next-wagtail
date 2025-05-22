@@ -3,6 +3,5 @@
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
   "/news": "pages/news.js",
-  "/quizzes": "pages/quizzes.js",
   "/": "pages/index.js"
 }
