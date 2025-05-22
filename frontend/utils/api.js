@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://0.0.0.0:8001';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8001';
 
 const api = axios.create({
   baseURL: API_URL,
@@ -22,7 +22,7 @@ api.interceptors.request.use((config) => {
   return config;
 });
 api.interceptors.response.use(
-  response => response, 
+  response => response,
   error => {
     if (error.response) {
       console.error('API error:', error.response.data);
@@ -132,11 +132,21 @@ export const fetchRelatedArticles = async (slug) => {
 // Latest news
 export const fetchLatestNews = async () => {
   try {
-    const response = await api.get('/api/news/latest');
+    const response = await axios.get(`${API_URL}/api/news/latest`);
     return response.data;
   } catch (error) {
-    console.error('Error fetching latest news:', error);
-    return [];
+    console.error('Error fetching news:', error);
+    throw error;
+  }
+};
+
+export const fetchNewsArticle = async (slug) => {
+  try {
+    const response = await axios.get(`${API_URL}/api/news/${slug}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching news article:', error);
+    throw error;
   }
 };
 

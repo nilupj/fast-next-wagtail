@@ -51,14 +51,16 @@ def drug_detail(request, slug):
 
 def news_latest(request):
     """Retrieve latest news articles"""
-    news = NewsPage.objects.live().order_by('-first_published_at')[:10]
+    news = NewsPage.objects.live().order_by('-publish_date')[:10]
     data = [{
         'id': article.id,
         'title': article.title,
         'slug': article.slug,
         'subtitle': article.subtitle,
+        'summary': article.summary,
+        'category': {'name': article.category.name} if article.category else None,
         'image': article.image.get_rendition('fill-800x500').url if article.image else None,
-        'published_date': article.first_published_at,
+        'publish_date': article.publish_date,
     } for article in news]
     return JsonResponse(data, safe=False)
 
