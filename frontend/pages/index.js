@@ -90,20 +90,7 @@ export default function Home({ initialTopStories, healthTopics }) {
   const [topStories, setTopStories] = useState(
     initialTopStories && initialTopStories.length > 0 ? initialTopStories : fallbackTopStories
   );
-  const [latestNews, setLatestNews] = useState([]);
-
-  useEffect(() => {
-    const fetchNews = async () => {
-      try {
-        const news = await fetchLatestNews();
-        setLatestNews(news);
-      } catch (error) {
-        console.error('Error fetching latest news:', error);
-        setLatestNews([]);
-      }
-    };
-    fetchNews();
-  }, []);
+  
 
   const displayHealthTopics = healthTopics && healthTopics.length > 0 ? healthTopics : fallbackHealthTopics;
 
@@ -190,42 +177,7 @@ export default function Home({ initialTopStories, healthTopics }) {
         )}
       </div>
 
-      {/* Latest Health News */}
-      <div className="mb-12">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="section-title mb-0">LATEST HEALTH NEWS</h2>
-          <Link href="/news" className="text-primary hover:text-primary-dark font-medium text-sm transition-colors">
-            View All News
-          </Link>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {latestNews.map((article) => (
-            <ArticleCard 
-              key={article.id}
-              article={{
-                id: article.id,
-                title: article.title,
-                slug: article.slug,
-                image: article.image,
-                summary: article.subtitle || article.summary,
-                category: article.category ? { name: article.category.name } : null
-              }}
-            />
-          ))}
-          {latestNews.length === 0 && (
-            <p className="text-gray-500 col-span-3 text-center py-8">No news articles found</p>
-          )}
-           <ArticleCard 
-              key="cholesterol-news"
-              article={{
-                slug: 'managing-cholesterol',
-                image: 'https://images.unsplash.com/photo-1576671081837-49000212a370?auto=format&fit=crop&w=800&h=500',
-                summary: 'The right balance of treatment options can have a significant impact.',
-                category: { name: 'Heart Health' }
-              }}
-          />
-        </div>
-      </div>
+      
 
       {/* Health Quizzes */}
       <div className="mb-12">

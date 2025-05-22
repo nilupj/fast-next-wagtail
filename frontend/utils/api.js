@@ -233,4 +233,3 @@ export const getDrugBySlug = async (slug) => {
     throw new Error(error.response?.data?.detail || "Failed to fetch drug information");
   }
 };
-
