@@ -17,7 +17,7 @@ class NewsIndexPage(Page):
 
     def get_context(self, request):
         context = super().get_context(request)
-        context['news_items'] = NewsPage.objects.child_of(self).live().order_by('-publish_date')
+        context['news_items'] = NewsPage.objects.descendant_of(self).live().order_by('-publish_date')
         return context
 
     class Meta:
