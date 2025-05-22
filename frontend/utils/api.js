@@ -49,12 +49,39 @@ export const fetchTopStories = async () => {
 export const fetchHealthTopics = async () => {
   try {
     const response = await api.get('/api/articles/health-topics');
-    return response.data;
+    return response.data && response.data.length > 0 ? response.data : fallbackHealthTopics;
   } catch (error) {
     console.error('Error fetching health topics:', error);
-    return [];
+    return fallbackHealthTopics;
   }
 };
+
+const fallbackHealthTopics = [
+  {
+    id: 5,
+    title: 'Sleep Hygiene: Tips for Better Rest',
+    slug: 'sleep-hygiene-tips',
+    summary: 'Simple changes to improve your sleep quality and overall health.',
+    image: 'https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500&q=80',
+    category: { name: 'Wellness' }
+  },
+  {
+    id: 6,
+    title: 'Exercise for Beginners: Starting a Sustainable Routine',
+    slug: 'exercise-for-beginners',
+    summary: 'How to build an exercise habit that lasts without getting overwhelmed.',
+    image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500&q=80',
+    category: { name: 'Fitness' }
+  },
+  {
+    id: 7,
+    title: 'Stress Management Techniques That Actually Work',
+    slug: 'stress-management-techniques',
+    summary: 'Practical approaches to reduce stress and improve your mental wellbeing.',
+    image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=500&q=80',
+    category: { name: 'Mental Health' }
+  }
+];
 
 // Conditions index (A-Z)
 export const fetchConditionsIndex = async () => {
