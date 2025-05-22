@@ -1,9 +1,9 @@
 import axios from 'axios';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8001';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://0.0.0.0:8001';
 
 const api = axios.create({
-  baseURL: API_URL,
+  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api', // Unified base'http://0.0.0.0:8001',
   paramsSerializer: {
     encode: (param) => encodeURIComponent(param)
   },
@@ -162,8 +162,8 @@ export const fetchLatestNews = async () => {
     const response = await api.get('/api/news/latest');
     return response.data;
   } catch (error) {
-    console.error('Error fetching news:', error);
-    return [];
+    console.error('Error fetching news:', error.message || error);
+    throw error;  // Ensure you propagate the error if needed
   }
 };
 
