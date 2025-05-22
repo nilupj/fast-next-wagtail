@@ -5,6 +5,7 @@ from wagtail.fields import RichTextField
 from wagtail.admin.panels import FieldPanel
 from wagtail.search import index
 from wagtail.api import APIField
+from wagtail.snippets.models import register_snippet
 
 class NewsIndexPage(Page):
     """Landing page for health news."""
@@ -22,6 +23,24 @@ class NewsIndexPage(Page):
 
     class Meta:
         verbose_name = "News Index Page"
+@register_snippet
+class ArticleCategory(models.Model):
+    name = models.CharField(max_length=255)
+    slug = models.SlugField(unique=True, max_length=80)
+    description = models.TextField(blank=True)
+
+    panels = [
+        FieldPanel('name'),
+        FieldPanel('slug'),
+        FieldPanel('description'),
+    ]
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "Article Category"
+        verbose_name_plural = "Article Categories"
 
 class NewsCategory(models.Model):
     name = models.CharField(max_length=255)
