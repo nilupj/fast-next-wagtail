@@ -90,6 +90,22 @@ export default function Home({ initialTopStories, healthTopics }) {
   const [topStories, setTopStories] = useState(
     initialTopStories && initialTopStories.length > 0 ? initialTopStories : fallbackTopStories
   );
+  const [news, setNews] = useState([]);
+
+  useEffect(() => {
+    const fetchNews = async () => {
+      try {
+        const newsData = await fetchLatestNews();
+        if (newsData && newsData.length > 0) {
+          setNews(newsData);
+        }
+      } catch (error) {
+        console.error('Error fetching news:', error);
+      }
+    };
+
+    fetchNews();
+  }, []);
 
 
   const displayHealthTopics = healthTopics && healthTopics.length > 0 ? healthTopics : fallbackHealthTopics;
@@ -224,33 +240,19 @@ export default function Home({ initialTopStories, healthTopics }) {
           </Link>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <ArticleCard
-            article={{
-              slug: 'grief-parent-loss',
-              title: 'The Grief of Losing a Parent is Complex',
-              image: 'https://images.unsplash.com/photo-1495435229349-e86db7bfa013?auto=format&fit=crop&w=800&h=500',
-              summary: "Here's how to navigate this emotional, complicated situation.",
-              category: { name: 'Mental Health' }
-            }}
-          />
-          <ArticleCard
-            article={{
-              slug: 'sleep-habits-age',
-              title: 'How to Change Your Sleep Habits as You Age',
-              image: 'https://images.unsplash.com/photo-1579684288538-c76a2fab9617?auto=format&fit=crop&w=800&h=500',
-              summary: 'Rest up!',
-              category: { name: 'Sleep' }
-            }}
-          />
-          <ArticleCard
-            article={{
-              slug: 'managing-cholesterol',
-              title: 'Is Statin Use, Diet, or Exercise Best for Managing Cholesterol?',
-              image: 'https://images.unsplash.com/photo-1576671081837-49000212a370?auto=format&fit=crop&w=800&h=500',
-              summary: 'The right balance of treatment options can have a significant impact.',
-              category: { name: 'Heart Health' }
-            }}
-          />
+          {news && news.length > 0 ? (
+            news.map((article) => (
+              <ArticleCard key={article.id} article={article} />
+            ))
+          ) : (
+            <div className="py-16 text-center col-span-3">
+              <div className="animate-pulse">
+                <div className="mx-auto w-16 h-16 mb-4 rounded-full bg-neutral-200"></div>
+                <div className="mx-auto w-48 h-4 mb-4 rounded bg-neutral-200"></div>
+                <div className="mx-auto w-36 h-3 rounded bg-neutral-200"></div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
