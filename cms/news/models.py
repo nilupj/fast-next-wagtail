@@ -74,7 +74,8 @@ class NewsPage(Page):
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
-        related_name='news_pages'
+        related_name='news_pages',
+        verbose_name="Category"
     )
     
     image = models.ForeignKey(
