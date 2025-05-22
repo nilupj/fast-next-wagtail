@@ -90,7 +90,7 @@ export default function Home({ initialTopStories, healthTopics }) {
   const [topStories, setTopStories] = useState(
     initialTopStories && initialTopStories.length > 0 ? initialTopStories : fallbackTopStories
   );
-  
+
 
   const displayHealthTopics = healthTopics && healthTopics.length > 0 ? healthTopics : fallbackHealthTopics;
 
@@ -177,7 +177,7 @@ export default function Home({ initialTopStories, healthTopics }) {
         )}
       </div>
 
-      
+
 
       {/* Health Quizzes */}
       <div className="mb-12">
@@ -210,6 +210,45 @@ export default function Home({ initialTopStories, healthTopics }) {
               slug: 'nutrition-quiz',
               image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=800&h=500',
               description: 'Challenge yourself with this comprehensive quiz about nutrition and healthy eating habits.'
+            }}
+          />
+        </div>
+      </div>
+
+      {/* Latest Health News */}
+      <div className="mb-12">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="section-title mb-0">LATEST HEALTH NEWS</h2>
+          <Link href="/news" className="text-primary hover:text-primary-dark font-medium text-sm transition-colors">
+            View All News
+          </Link>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <ArticleCard
+            article={{
+              slug: 'grief-parent-loss',
+              title: 'The Grief of Losing a Parent is Complex',
+              image: 'https://images.unsplash.com/photo-1495435229349-e86db7bfa013?auto=format&fit=crop&w=800&h=500',
+              summary: "Here's how to navigate this emotional, complicated situation.",
+              category: { name: 'Mental Health' }
+            }}
+          />
+          <ArticleCard
+            article={{
+              slug: 'sleep-habits-age',
+              title: 'How to Change Your Sleep Habits as You Age',
+              image: 'https://images.unsplash.com/photo-1579684288538-c76a2fab9617?auto=format&fit=crop&w=800&h=500',
+              summary: 'Rest up!',
+              category: { name: 'Sleep' }
+            }}
+          />
+          <ArticleCard
+            article={{
+              slug: 'managing-cholesterol',
+              title: 'Is Statin Use, Diet, or Exercise Best for Managing Cholesterol?',
+              image: 'https://images.unsplash.com/photo-1576671081837-49000212a370?auto=format&fit=crop&w=800&h=500',
+              summary: 'The right balance of treatment options can have a significant impact.',
+              category: { name: 'Heart Health' }
             }}
           />
         </div>
