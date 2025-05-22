@@ -51,11 +51,11 @@ class NewsPage(Page):
     source = models.CharField(max_length=255, blank=True)
     
     category = models.ForeignKey(
-        NewsCategory,
+        'NewsCategory',
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
-        related_name='news'
+        related_name='news_pages'
     )
     
     image = models.ForeignKey(
